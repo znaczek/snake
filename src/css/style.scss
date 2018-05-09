@@ -1,0 +1,19 @@
+* {
+    box-sizing: border-box;
+}
+body {
+    background-color: #a4c70b;
+}
+
+.content {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+canvas {
+    height: 260Px;
+    width: 450px;
+    border: 2px solid $brand-secondary;
+}

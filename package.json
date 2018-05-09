@@ -1,0 +1,26 @@
+{
+    "name": "snake",
+    "version": "1.0.0",
+    "scripts": {
+        "build:dev": "webpack --env.NODE_ENV=dev",
+        "build:dev-watch": "webpack --env.NODE_ENV=dev --watch",
+        "build:prod": "webpack --env.NODE_ENV=production -p",
+        "lint": "./node_modules/.bin/eslint src"
+    },
+    "devDependencies": {
+        "autoprefixer": "^8.4.1",
+        "babel-core": "^6.26.0",
+        "babel-loader": "^7.1.2",
+        "babel-polyfill": "^6.26.0",
+        "babel-preset-env": "^1.6.1",
+        "css-loader": "^0.28.11",
+        "eslint": "^4.19.1",
+        "extract-text-webpack-plugin": "^3.0.2",
+        "node-sass": "^4.9.0",
+        "postcss-loader": "^2.1.4",
+        "precss": "^3.1.2",
+        "sass-loader": "^7.0.1",
+        "webpack": "^3.9.1"
+    },
+    "dependencies": {}
+}
