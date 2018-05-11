@@ -1,7 +1,7 @@
 import canvas from './canvas';
 import Snake from './snake';
 
-const speed = 1000;
+const SPEED = 1000;
 
 class Game {
     constructor(canvasElement) {
@@ -17,8 +17,10 @@ class Game {
     loop() {
         console.log('loop');
         canvas.clear();
+        canvas.drawGameBorder();
         this.snake.draw();
-        setTimeout(this.loop.bind(this), speed);
+        // canvas.getCtx().fillRect(0, 0, 100, 100);
+        setTimeout(this.loop.bind(this), SPEED);
     }
 }
 

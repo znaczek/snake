@@ -1,8 +1,10 @@
 let ctx = null;
 
-const canvasEl = {};
-const pixelHeight = 6;
-const pixelWidth = 6;
+const PIXEL_SIZE = 4;
+const CANVAS_WIDTH = 100;
+const CANVAS_HEIGHT = 50;
+const CANVAS_WIDTH_PX = PIXEL_SIZE * CANVAS_WIDTH;
+const CANVAS_HEIGHT_PX = PIXEL_SIZE * CANVAS_HEIGHT;
 
 class Canvas {
 
@@ -10,9 +12,12 @@ class Canvas {
         if (ctx !== null) {
             throw new Error('Canvas element is already set');
         }
-        canvasEl.width = canvas.clientWidth;
-        canvasEl.height = canvas.clientHeight;
+        console.log(canvas.style);
+        canvas.width = CANVAS_WIDTH_PX;
+        canvas.height = CANVAS_HEIGHT_PX;
+        canvas.style.display = 'block';
         ctx = canvas.getContext('2d');
+        ctx.scale(1, 1);
     }
 
     getCtx() {
@@ -20,11 +25,22 @@ class Canvas {
     }
 
     clear() {
-        ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
+        ctx.clearRect(0, 0, CANVAS_WIDTH_PX, CANVAS_HEIGHT_PX);
     }
 
     drawPixel(x, y) {
-        ctx.fillRect(x * pixelWidth + 1, y * pixelHeight + 1, pixelWidth -1 , pixelHeight -1);
+        ctx.fillRect(x * PIXEL_SIZE, y * PIXEL_SIZE, PIXEL_SIZE -1 , PIXEL_SIZE -1);
+    }
+
+    drawGameBorder() {
+        for (let i = 0; i < CANVAS_HEIGHT; i+=1) {
+            this.drawPixel(0, i);
+            this.drawPixel(99, i);
+        }
+        for (let i = 0; i < CANVAS_WIDTH; i+=1) {
+            this.drawPixel(i, 0);
+            this.drawPixel(i, 49);
+        }
     }
 }
 
