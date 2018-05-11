@@ -56,7 +56,7 @@ class Canvas {
         this.drawPixel(x + 4, y + 2);
     }
 
-    drawBodyPart(x, y) {
+    drawBody(x, y) {
         this.drawPixel(x + 2, y);
         this.drawPixel(x + 3, y);
         this.drawPixel(x + 4, y);
