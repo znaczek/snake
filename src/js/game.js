@@ -19,7 +19,6 @@ class Game {
         canvas.clear();
         canvas.drawGameBorder();
         this.snake.draw();
-        // canvas.getCtx().fillRect(0, 0, 100, 100);
         setTimeout(this.loop.bind(this), SPEED);
     }
 }

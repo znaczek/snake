@@ -2,8 +2,11 @@ import canvas from './canvas';
 
 class Snake {
     draw() {
-        canvas.drawPixel(0,0);
-
+        canvas.drawHead(30, 20);
+        canvas.drawBodyPart(25, 21);
+        canvas.drawBodyPart(21, 21);
+        canvas.drawBodyPart(17, 21);
+        canvas.drawTail(12, 21);
     }
 }
 

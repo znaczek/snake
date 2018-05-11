@@ -42,6 +42,39 @@ class Canvas {
             this.drawPixel(i, 49);
         }
     }
+
+    drawHead(x, y) {
+        this.drawPixel(x + 2, y);
+        this.drawPixel(x + 1, y + 1);
+        this.drawPixel(x + 3, y + 1);
+        this.drawPixel(x + 4, y + 1);
+        this.drawPixel(x + 1, y + 2);
+        this.drawPixel(x, y + 2);
+        this.drawPixel(x + 1, y + 2);
+        this.drawPixel(x + 2, y + 2);
+        this.drawPixel(x + 3, y + 2);
+        this.drawPixel(x + 4, y + 2);
+    }
+
+    drawBodyPart(x, y) {
+        this.drawPixel(x + 2, y);
+        this.drawPixel(x + 3, y);
+        this.drawPixel(x + 4, y);
+        this.drawPixel(x + 1, y + 1);
+        this.drawPixel(x + 2, y + 1);
+        this.drawPixel(x + 3, y + 1);
+    }
+
+    drawTail(x, y) {
+        this.drawPixel(x + 2, y);
+        this.drawPixel(x + 3, y);
+        this.drawPixel(x + 4, y);
+        this.drawPixel(x + 5, y);
+        this.drawPixel(x + 1, y + 1);
+        this.drawPixel(x + 2, y + 1);
+        this.drawPixel(x + 3, y + 1);
+        this.drawPixel(x + 4, y + 1);
+    }
 }
 
 const canvas = new Canvas();
