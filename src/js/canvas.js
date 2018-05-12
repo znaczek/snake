@@ -14,7 +14,6 @@ class Canvas {
         if (ctx !== null) {
             throw new Error('Canvas element is already set');
         }
-        console.log(canvas.style);
         canvas.width = CANVAS_WIDTH_PX;
         canvas.height = CANVAS_HEIGHT_PX;
         canvas.style.display = 'block';
@@ -43,6 +42,11 @@ class Canvas {
             this.drawPixel(i, 0);
             this.drawPixel(i, 49);
         }
+    }
+
+    prepareBoard() {
+        this.clear();
+        this.drawGameBorder();
     }
 
     drawHead(x, y, direction) {
