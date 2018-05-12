@@ -87,6 +87,28 @@ class Canvas {
                 this.drawPixel(x - 1, y - 1);
                 this.drawPixel(x - 1, y);
                 break;
+            case dirs.DIR_LEFT:
+                this.drawPixel(x - 3, y - 2);
+                this.drawPixel(x - 5, y - 1);
+                this.drawPixel(x - 4, y - 1);
+                this.drawPixel(x - 2, y - 1);
+                this.drawPixel(x - 5, y);
+                this.drawPixel(x - 4, y);
+                this.drawPixel(x - 3, y);
+                this.drawPixel(x - 2, y);
+                this.drawPixel(x - 1, y);
+                break;
+            case dirs.DIR_DOWN:
+                this.drawPixel(x - 1, y + 1);
+                this.drawPixel(x - 2, y + 2);
+                this.drawPixel(x - 1, y + 2);
+                this.drawPixel(x - 3, y + 3);
+                this.drawPixel(x - 1, y + 3);
+                this.drawPixel(x - 2, y + 4);
+                this.drawPixel(x - 1, y + 4);
+                this.drawPixel(x - 2, y + 5);
+                this.drawPixel(x - 1, y + 5);
+                break;
         }
     }
 
@@ -107,6 +129,22 @@ class Canvas {
                 this.drawPixel(x - 2, y - 1);
                 this.drawPixel(x - 1, y - 1);
                 this.drawPixel(x - 1, y);
+                break;
+            case dirs.DIR_LEFT:
+                this.drawPixel(x - 4, y - 1);
+                this.drawPixel(x - 3, y - 1);
+                this.drawPixel(x - 2, y - 1);
+                this.drawPixel(x - 3, y);
+                this.drawPixel(x - 2, y);
+                this.drawPixel(x - 1, y);
+                break;
+            case dirs.DIR_DOWN:
+                this.drawPixel(x - 1, y + 1);
+                this.drawPixel(x - 2, y + 2);
+                this.drawPixel(x - 1, y + 2);
+                this.drawPixel(x - 2, y + 3);
+                this.drawPixel(x - 1, y + 3);
+                this.drawPixel(x - 2, y + 4);
                 break;
         }
     }

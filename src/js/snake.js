@@ -55,26 +55,31 @@ const getInitialState = () => {
 
 class Snake {
     constructor() {
-        this.direction = DIR_RIGHT;
         this.body = getInitialState();
+        this.direction = DIR_RIGHT;
+        this.lastDirection = DIR_RIGHT;
     }
 
     turnLeft() {
+        this.lastDirection = this.direction;
         if (this.direction !== DIR_RIGHT) {
             this.direction = DIR_LEFT;
         }
     }
     turnRight() {
+        this.lastDirection = this.direction;
         if (this.direction !== DIR_LEFT) {
             this.direction = DIR_RIGHT;
         }
     }
     turnUp() {
+        this.lastDirection = this.direction;
         if (this.direction !== DIR_DOWN) {
             this.direction = DIR_UP;
         }
     }
     turnDown() {
+        this.lastDirection = this.direction;
         if (this.direction !== DIR_UP) {
             this.direction = DIR_DOWN;
         }
@@ -87,37 +92,69 @@ class Snake {
             x: head.pos.x,
             y: head.pos.y,
         };
-        switch (this.direction) {
-            case DIR_RIGHT:
-                pos.x += MOVE;
-                break;
-            case DIR_LEFT:
-                pos.x -= MOVE;
-                break;
-            case DIR_UP:
-                pos.y -= MOVE;
-                break;
-            case DIR_DOWN:
-                pos.y += MOVE;
-                break;
+        if (this.direction !== this.lastDirection) {
+            switch (this.lastDirection) {
+                case DIR_RIGHT:
+                    if (this.direction === DIR_UP) {
+                        pos.x += (MOVE + 1);
+                        pos.y -= 1;
+                    }
+                    break;
+                case DIR_UP:
+                    if (this.direction === DIR_LEFT) {
+                        pos.x -= 1;
+                        pos.y -= (MOVE - 1);
+                    }
+                    break;
+                case DIR_LEFT:
+                    if (this.direction === DIR_DOWN) {
+                        pos.x -= (MOVE - 1);
+                        pos.y -= 1;
+                    }
+                    break;
+                case DIR_DOWN:
+                    if (this.direction === DIR_RIGHT) {
+                        pos.x -= 1;
+                        pos.y += MOVE + 1;
+                    }
+                    break;
+            }
+        } else {
+            switch (this.direction) {
+                case DIR_RIGHT:
+                    pos.x += MOVE;
+                    break;
+                case DIR_LEFT:
+                    pos.x -= MOVE;
+                    break;
+                case DIR_UP:
+                    pos.y -= MOVE;
+                    break;
+                case DIR_DOWN:
+                    pos.y += MOVE;
+                    break;
+            }
         }
 
         this.body.unshift({
             type: 'head',
             pos: pos,
-            direction: this.direction,
+            direction: this.direction
         });
         this.body.pop();
+        this.lastDirection = this.direction;
     }
 
     draw() {
         for (let part of this.body) {
-            canvas.drawPart(part);
+            canvas.drawPart(part, this.lastDirection);
         }
     }
 
     reset () {
         this.body = getInitialState();
+        this.direction = DIR_RIGHT;
+        this.lastDirection = DIR_RIGHT;
     }
 
 }

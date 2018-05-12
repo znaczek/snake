@@ -2,7 +2,11 @@ import canvas from './canvas';
 import Snake from './snake';
 
 const SPEED = 1000;
-const moves = ['Right', 'Right', 'Right', 'Right', 'Up', 'Up', 'Up', 'Up'];
+const moves = ['Right', 'Right',
+    'Up', 'Up', 'Up',
+    'Left', 'Left', 'Left', 'Left', 'Left', 'Left',
+    'Down', 'Down', 'Down',
+    'Right', 'Right', 'Right', 'Right'];
 let i = 0;
 
 class Game {
