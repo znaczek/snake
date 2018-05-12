@@ -2,7 +2,7 @@ import canvas from './canvas';
 import Snake from './snake';
 
 const SPEED = 1000;
-const moves = ['Right', 'Right', 'Right', 'Right', 'Up', 'Up'];
+const moves = ['Right', 'Right', 'Right', 'Right', 'Up', 'Up', 'Up', 'Up'];
 let i = 0;
 
 class Game {
@@ -56,10 +56,11 @@ class Game {
     singleMove() {
         this.snake.reset();
         for (let j = 0; j < i; j += 1) {
-            canvas.prepareBoard();
             this.snake['turn' + moves[j]]();
-            this.snake.draw();
+            this.snake.move();
         }
+        canvas.prepareBoard();
+        this.snake.draw();
     }
 
     loop() {

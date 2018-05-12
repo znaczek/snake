@@ -15,31 +15,31 @@ const getInitialState = () => {
                 x: 30,
                 y: 20
             },
-            dir: DIR_RIGHT
+            direction: DIR_RIGHT,
         },
         {
             type: 'body',
             pos: {
-                x: 25,
-                y: 21
+                x: 26,
+                y: 20
             },
-            dir: DIR_RIGHT
+            direction: DIR_RIGHT,
         },
-        // {
-        //     type: 'body',
-        //     pos: {
-        //         x: 21,
-        //         y: 21
-        //     },
-        //     dir: DIR_RIGHT
-        // },
+        {
+            type: 'body',
+            pos: {
+                x: 22,
+                y: 20
+            },
+            direction: DIR_RIGHT,
+        },
         // {
         //     type: 'body',
         //     pos: {
         //         x: 17,
         //         y: 21
         //     },
-        //     dir: DIR_RIGHT
+        //     direction: DIR_RIGHT,
         // },
         // {
         //     type: 'tail',
@@ -47,7 +47,7 @@ const getInitialState = () => {
         //         x: 12,
         //         y: 21
         //     },
-        //     dir: DIR_RIGHT
+        //     direction: DIR_RIGHT,
         // }
     ];
     return Object.values(Object.assign({}, initialState));
@@ -80,53 +80,39 @@ class Snake {
         }
     }
 
+    move() {
+        const head = this.body[0];
+        head.type = 'body';
+        const pos = {
+            x: head.pos.x,
+            y: head.pos.y,
+        };
+        switch (this.direction) {
+            case DIR_RIGHT:
+                pos.x += MOVE;
+                break;
+            case DIR_LEFT:
+                pos.x -= MOVE;
+                break;
+            case DIR_UP:
+                pos.y -= MOVE;
+                break;
+            case DIR_DOWN:
+                pos.y += MOVE;
+                break;
+        }
+
+        this.body.unshift({
+            type: 'head',
+            pos: pos,
+            direction: this.direction,
+        });
+        this.body.pop();
+    }
+
     draw() {
-        console.log(this.body);
-        for (let i = 0; i < this.body.length; i += 1) {
-            const part = this.body[i];
-            const forwardPart = i > 0 ? this.body[i - i] : null;
-            const backwardPart = i < this.body.length ? this.body[i + i] : null;
-            switch (part.type) {
-                case 'head':
-                    switch (this.direction) {
-                        case DIR_RIGHT:
-                            part.pos.x += MOVE;
-                            break;
-                        case DIR_LEFT:
-                            part.pos.x -= MOVE;
-                            break;
-                        case DIR_UP:
-                            part.pos.y -= MOVE;
-                            break;
-                        case DIR_DOWN:
-                            part.pos.y += MOVE;
-                            break;
-                    }
-                    canvas.drawHead(part.pos.x, part.pos.y, this.direction);
-                    break;
-                case 'body':
-                    const newDirection = forwardPart.dir !== part.dir ? part.dir : this.direction;
-                    switch (newDirection) {
-                        case DIR_RIGHT:
-                            part.pos.x += MOVE;
-                            break;
-                        case DIR_LEFT:
-                            part.pos.x -= MOVE;
-                            break;
-                        case DIR_UP:
-                            part.pos.y -= MOVE;
-                            break;
-                        case DIR_DOWN:
-                            part.pos.y += MOVE;
-                            break;
-                    }
-                    canvas.drawBody(part.pos.x, part.pos.y);
-                    break;
-                case 'tail':
-                    canvas.drawTail(part.pos.x, part.pos.y);
-                    break;
-            }
-            part.dir = this.direction;
+        for (let part of this.body) {
+            canvas.drawPart(part);
         }
     }
 
