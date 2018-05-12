@@ -95,28 +95,20 @@ class Snake {
         if (this.direction !== this.lastDirection) {
             switch (this.lastDirection) {
                 case DIR_RIGHT:
-                    if (this.direction === DIR_UP) {
-                        pos.x += (MOVE + 1);
-                        pos.y -= 1;
-                    }
+                    pos.x += (MOVE + 1);
+                    pos.y -= 1;
                     break;
                 case DIR_UP:
-                    if (this.direction === DIR_LEFT) {
-                        pos.x -= 1;
-                        pos.y -= (MOVE - 1);
-                    }
+                    pos.x -= 1;
+                    pos.y -= (MOVE - 1);
                     break;
                 case DIR_LEFT:
-                    if (this.direction === DIR_DOWN) {
-                        pos.x -= (MOVE - 1);
-                        pos.y -= 1;
-                    }
+                    pos.x -= (MOVE - 1);
+                    pos.y -= 1;
                     break;
                 case DIR_DOWN:
-                    if (this.direction === DIR_RIGHT) {
-                        pos.x -= 1;
-                        pos.y += MOVE + 1;
-                    }
+                    pos.x -= 1;
+                    pos.y += MOVE + 1;
                     break;
             }
         } else {
