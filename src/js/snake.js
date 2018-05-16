@@ -25,10 +25,8 @@ const getInitialState = () => {
     const bodyLength = 8;
     const initialState = [buildPart('head', INIT_HEAD.x, INIT_HEAD.y)];
     for (let i = 1; i <= bodyLength; i += 1) {
-        console.log(INIT_HEAD.x + i * 4);
         initialState.push(buildPart('body', INIT_HEAD.x - i * 4, INIT_HEAD.y));
     }
-    console.log(initialState);
     return Object.values(Object.assign({}, initialState));
 };
 
@@ -122,6 +120,7 @@ class Snake {
         for (let i = 0; i < this.body.length; i += 1) {
             canvas.drawPart(this.body[i]);
         }
+        canvas.drawMask();
     }
 
     reset () {

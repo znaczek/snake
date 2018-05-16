@@ -122,7 +122,24 @@ class Canvas {
     }
 
     drawGamePixel(x, y) {
-        this.drawPixel(x + BOARD.start.x, y + BOARD.start.y);
+        let gameX = x + BOARD.start.x;
+        let gameY = y + BOARD.start.y
+        if (this.doesPixelProtrude(gameX, gameY)) {
+            this.fillStyle = '#a4c70b';
+        }
+        this.drawPixel(gameX, gameY);
+    }
+
+    doesPixelProtrude(x, y) {
+        return x < 0 || x > BOARD_WIDTH || y < 0 || y > BOARD_HEIGHT;
+    }
+
+    drawMask() {
+        ctx.save();
+        ctx.strokeStyle = '#a4c70b';
+        ctx.lineWidth = PIXEL_SIZE;
+        ctx.strokeRect(1.5 * PIXEL_SIZE, 1.5 * PIXEL_SIZE, CANVAS_WIDTH_PX - 3 * PIXEL_SIZE, CANVAS_HEIGHT_PX - 3 * PIXEL_SIZE);
+        ctx.restore();
     }
 
     drawGameBorder() {
@@ -134,11 +151,6 @@ class Canvas {
             this.drawPixel(i, 0);
             this.drawPixel(i, CANVAS_HEIGHT - 1);
         }
-
-        ctx.save();
-        ctx.fillStyle = "white";
-        ctx.fillRect(BOARD.start.x * PIXEL_SIZE , BOARD.start.y * PIXEL_SIZE, BOARD.end.x * PIXEL_SIZE , BOARD.end.y * PIXEL_SIZE);
-        ctx.restore();
     }
 
     prepareBoard() {
@@ -161,37 +173,56 @@ class Canvas {
         }
     }
 
-    drawPart(part) {
+    drawPart(part, isCopy = false) {
+        let points;
+        let doesPartProtrude = false;
         switch (part.type) {
             case 'head':
-                for (let pixel of head[part.direction]) {
-                    this.drawGamePixel(part.pos.x + pixel[0], part.pos.y + pixel[1]);
-                }
+                points = head[part.direction];
                 break;
             case 'body':
-                for (let pixel of body[part.direction]) {
-                    this.drawGamePixel(part.pos.x + pixel[0], part.pos.y + pixel[1]);
-                }
+                points = body[part.direction];
                 break;
+        }
+
+        for (let pixel of points) {
+            let x = part.pos.x + pixel[0];
+            let y = part.pos.y + pixel[1];
+            this.drawGamePixel(x, y);
+            if (this.doesPixelProtrude(x, y)) {
+                doesPartProtrude = true;
+            }
+        }
+
+        if (doesPartProtrude && !isCopy) {
+            this.clonePartTrail(part);
         }
     }
 
-    clonePart(part) {
-        const copy = Object.assign({}, part);
+    clonePartTrail(part) {
+        let copy = {
+            type: part.type,
+            pos: {
+                x: part.pos.x,
+                y: part.pos.y
+            },
+            direction: part.direction
+        };
         switch (copy.direction) {
             case dirs.DIR_RIGHT:
-                copy.pos.x += CANVAS_WIDTH - 4;
+                copy.pos.x += (BOARD_WIDTH + 2);
                 break;
             case dirs.DIR_LEFT:
-                copy.pos.x -= 4;
+                copy.pos.x -= (BOARD_WIDTH + 2);
                 break;
             case dirs.DIR_UP:
-                copy.pos.y -= 4;
+                copy.pos.y -= (BOARD_HEIGHT + 2);
                 break;
             case dirs.DIR_DOWN:
-                copy.pos.y += 4;
+                copy.pos.y += (BOARD_HEIGHT + 2);
                 break;
         }
+        this.drawPart(copy, true);
     }
 
 }
