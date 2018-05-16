@@ -6,50 +6,29 @@ export const DIR_RIGHT = 'right';
 export const DIR_LEFT = 'left';
 export const DIR_UP = 'up';
 export const DIR_DOWN = 'down';
+const INIT_HEAD = {
+    x: 34,
+    y: 18,
+};
+const buildPart = (part, x, y) => {
+    return {
+        type: part,
+        pos: {
+            x: x,
+            y: y
+        },
+        direction: DIR_RIGHT,
+    };
+};
 
 const getInitialState = () => {
-    const initialState = [
-        {
-            type: 'head',
-            pos: {
-                x: 30,
-                y: 20
-            },
-            direction: DIR_RIGHT,
-        },
-        {
-            type: 'body',
-            pos: {
-                x: 26,
-                y: 20
-            },
-            direction: DIR_RIGHT,
-        },
-        {
-            type: 'body',
-            pos: {
-                x: 22,
-                y: 20
-            },
-            direction: DIR_RIGHT,
-        },
-        // {
-        //     type: 'body',
-        //     pos: {
-        //         x: 17,
-        //         y: 21
-        //     },
-        //     direction: DIR_RIGHT,
-        // },
-        // {
-        //     type: 'tail',
-        //     pos: {
-        //         x: 12,
-        //         y: 21
-        //     },
-        //     direction: DIR_RIGHT,
-        // }
-    ];
+    const bodyLength = 8;
+    const initialState = [buildPart('head', INIT_HEAD.x, INIT_HEAD.y)];
+    for (let i = 1; i <= bodyLength; i += 1) {
+        console.log(INIT_HEAD.x + i * 4);
+        initialState.push(buildPart('body', INIT_HEAD.x - i * 4, INIT_HEAD.y));
+    }
+    console.log(initialState);
     return Object.values(Object.assign({}, initialState));
 };
 
@@ -128,6 +107,8 @@ class Snake {
             }
         }
 
+        canvas.handleBounrady(pos, this.direction);
+
         this.body.unshift({
             type: 'head',
             pos: pos,
@@ -138,8 +119,8 @@ class Snake {
     }
 
     draw() {
-        for (let part of this.body) {
-            canvas.drawPart(part, this.lastDirection);
+        for (let i = 0; i < this.body.length; i += 1) {
+            canvas.drawPart(this.body[i]);
         }
     }
 

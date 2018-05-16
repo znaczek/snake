@@ -3,10 +3,102 @@ import * as dirs from './snake';
 let ctx = null;
 
 const PIXEL_SIZE = 6;
-const CANVAS_WIDTH = 100;
-const CANVAS_HEIGHT = 50;
+const CANVAS_WIDTH = 96;
+const CANVAS_HEIGHT = 40;
 const CANVAS_WIDTH_PX = PIXEL_SIZE * CANVAS_WIDTH;
 const CANVAS_HEIGHT_PX = PIXEL_SIZE * CANVAS_HEIGHT;
+const BOARD_HEIGHT = CANVAS_HEIGHT - 6;
+const BOARD_WIDTH = CANVAS_WIDTH - 6;
+const BOARD = {
+    start: {
+        x: 2,
+        y: 2
+    },
+    end: {
+        x: 2 + BOARD_WIDTH,
+        y: 2 + BOARD_HEIGHT
+    }
+};
+const head = {
+    [dirs.DIR_RIGHT]: [
+        [2, -2],
+        [1, -1],
+        [3, -1],
+        [4, -1],
+        [0, 0],
+        [1, 0],
+        [2, 0],
+        [3, 0],
+        [4, 0]
+    ],
+    [dirs.DIR_UP]: [
+        [-2, -4],
+        [-1, -4],
+        [-2, -3],
+        [-1, -3],
+        [-3, -2],
+        [-1, -2],
+        [-2, -1],
+        [-1, -1],
+        [-1, 0]
+    ],
+    [dirs.DIR_LEFT]: [
+        [-3, -2],
+        [-5, -1],
+        [-4, -1],
+        [-2, -1],
+        [-5, 0],
+        [-4, 0],
+        [-3, 0],
+        [-2, 0],
+        [-1, 0]
+    ],
+    [dirs.DIR_DOWN]: [
+        [-1, 1],
+        [-2, 2],
+        [-1, 2],
+        [-3, 3],
+        [-1, 3],
+        [-2, 4],
+        [-1, 4],
+        [-2, 5],
+        [-1, 5]
+    ]
+};
+const body = {
+    [dirs.DIR_RIGHT]: [
+        [1, -1],
+        [2, -1],
+        [3, -1],
+        [0, 0],
+        [1, 0],
+        [2, 0]
+    ],
+    [dirs.DIR_UP]: [
+        [-2, -3],
+        [-2, -2],
+        [-1, -2],
+        [-2, -1],
+        [-1, -1],
+        [-1, 0]
+    ],
+    [dirs.DIR_LEFT]: [
+        [-4, -1],
+        [-3, -1],
+        [-2, -1],
+        [-3, 0],
+        [-2, 0],
+        [-1, 0]
+    ],
+    [dirs.DIR_DOWN]: [
+        [-1, 1],
+        [-2, 2],
+        [-1, 2],
+        [-2, 3],
+        [-1, 3],
+        [-2, 4]
+    ]
+};
 
 class Canvas {
 
@@ -21,10 +113,6 @@ class Canvas {
         ctx.scale(1, 1);
     }
 
-    getCtx() {
-        return ctx;
-    }
-
     clear() {
         ctx.clearRect(0, 0, CANVAS_WIDTH_PX, CANVAS_HEIGHT_PX);
     }
@@ -33,15 +121,24 @@ class Canvas {
         ctx.fillRect(x * PIXEL_SIZE, y * PIXEL_SIZE, PIXEL_SIZE -1 , PIXEL_SIZE -1);
     }
 
+    drawGamePixel(x, y) {
+        this.drawPixel(x + BOARD.start.x, y + BOARD.start.y);
+    }
+
     drawGameBorder() {
         for (let i = 0; i < CANVAS_HEIGHT; i+=1) {
             this.drawPixel(0, i);
-            this.drawPixel(99, i);
+            this.drawPixel(CANVAS_WIDTH - 1, i);
         }
         for (let i = 0; i < CANVAS_WIDTH; i+=1) {
             this.drawPixel(i, 0);
-            this.drawPixel(i, 49);
+            this.drawPixel(i, CANVAS_HEIGHT - 1);
         }
+
+        ctx.save();
+        ctx.fillStyle = "white";
+        ctx.fillRect(BOARD.start.x * PIXEL_SIZE , BOARD.start.y * PIXEL_SIZE, BOARD.end.x * PIXEL_SIZE , BOARD.end.y * PIXEL_SIZE);
+        ctx.restore();
     }
 
     prepareBoard() {
@@ -49,116 +146,54 @@ class Canvas {
         this.drawGameBorder();
     }
 
+    handleBounrady(pos, direction) {
+        if (direction === dirs.DIR_RIGHT && pos.x + 5 > BOARD.end.x) {
+            pos.x -= (BOARD_WIDTH + 2);
+        }
+        if (direction === dirs.DIR_LEFT && pos.x - 5 < 0) {
+            pos.x += (BOARD_WIDTH + 2);
+        }
+        if (direction === dirs.DIR_DOWN && pos.y + 5 > BOARD.end.y) {
+            pos.y -= (BOARD_HEIGHT + 2);
+        }
+        if (direction === dirs.DIR_UP && pos.y - 5 < 0) {
+            pos.y += (BOARD_HEIGHT + 2);
+        }
+    }
+
     drawPart(part) {
         switch (part.type) {
             case 'head':
-                this.drawHead(part.pos.x, part.pos.y, part.direction);
+                for (let pixel of head[part.direction]) {
+                    this.drawGamePixel(part.pos.x + pixel[0], part.pos.y + pixel[1]);
+                }
                 break;
             case 'body':
-                this.drawBody(part.pos.x, part.pos.y, part.direction);
-                break;
-            case 'tail':
-                this.drawTail(part.pos.x, part.pos.y, part.direction);
+                for (let pixel of body[part.direction]) {
+                    this.drawGamePixel(part.pos.x + pixel[0], part.pos.y + pixel[1]);
+                }
                 break;
         }
     }
 
-    drawHead(x, y, direction) {
-        switch (direction) {
+    clonePart(part) {
+        const copy = Object.assign({}, part);
+        switch (copy.direction) {
             case dirs.DIR_RIGHT:
-                this.drawPixel(x + 2, y -2);
-                this.drawPixel(x + 1, y -1);
-                this.drawPixel(x + 3, y - 1);
-                this.drawPixel(x + 4, y - 1);
-                this.drawPixel(x, y);
-                this.drawPixel(x + 1, y);
-                this.drawPixel(x + 2, y);
-                this.drawPixel(x + 3, y);
-                this.drawPixel(x + 4, y);
-                break;
-            case dirs.DIR_UP:
-                this.drawPixel(x - 2, y - 4);
-                this.drawPixel(x - 1, y - 4);
-                this.drawPixel(x - 2, y - 3);
-                this.drawPixel(x - 1, y - 3);
-                this.drawPixel(x - 3, y - 2);
-                this.drawPixel(x - 1, y - 2);
-                this.drawPixel(x - 2, y - 1);
-                this.drawPixel(x - 1, y - 1);
-                this.drawPixel(x - 1, y);
+                copy.pos.x += CANVAS_WIDTH - 4;
                 break;
             case dirs.DIR_LEFT:
-                this.drawPixel(x - 3, y - 2);
-                this.drawPixel(x - 5, y - 1);
-                this.drawPixel(x - 4, y - 1);
-                this.drawPixel(x - 2, y - 1);
-                this.drawPixel(x - 5, y);
-                this.drawPixel(x - 4, y);
-                this.drawPixel(x - 3, y);
-                this.drawPixel(x - 2, y);
-                this.drawPixel(x - 1, y);
-                break;
-            case dirs.DIR_DOWN:
-                this.drawPixel(x - 1, y + 1);
-                this.drawPixel(x - 2, y + 2);
-                this.drawPixel(x - 1, y + 2);
-                this.drawPixel(x - 3, y + 3);
-                this.drawPixel(x - 1, y + 3);
-                this.drawPixel(x - 2, y + 4);
-                this.drawPixel(x - 1, y + 4);
-                this.drawPixel(x - 2, y + 5);
-                this.drawPixel(x - 1, y + 5);
-                break;
-        }
-    }
-
-    drawBody(x, y, direction) {
-        switch (direction) {
-            case dirs.DIR_RIGHT:
-                this.drawPixel(x + 1, y - 1);
-                this.drawPixel(x + 2, y - 1);
-                this.drawPixel(x + 3, y - 1);
-                this.drawPixel(x, y);
-                this.drawPixel(x + 1, y);
-                this.drawPixel(x + 2, y);
+                copy.pos.x -= 4;
                 break;
             case dirs.DIR_UP:
-                this.drawPixel(x - 2, y - 3);
-                this.drawPixel(x - 2, y - 2);
-                this.drawPixel(x - 1, y - 2);
-                this.drawPixel(x - 2, y - 1);
-                this.drawPixel(x - 1, y - 1);
-                this.drawPixel(x - 1, y);
-                break;
-            case dirs.DIR_LEFT:
-                this.drawPixel(x - 4, y - 1);
-                this.drawPixel(x - 3, y - 1);
-                this.drawPixel(x - 2, y - 1);
-                this.drawPixel(x - 3, y);
-                this.drawPixel(x - 2, y);
-                this.drawPixel(x - 1, y);
+                copy.pos.y -= 4;
                 break;
             case dirs.DIR_DOWN:
-                this.drawPixel(x - 1, y + 1);
-                this.drawPixel(x - 2, y + 2);
-                this.drawPixel(x - 1, y + 2);
-                this.drawPixel(x - 2, y + 3);
-                this.drawPixel(x - 1, y + 3);
-                this.drawPixel(x - 2, y + 4);
+                copy.pos.y += 4;
                 break;
         }
     }
 
-    drawTail(x, y, direction) {
-        this.drawPixel(x + 2, y);
-        this.drawPixel(x + 3, y);
-        this.drawPixel(x + 4, y);
-        this.drawPixel(x + 5, y);
-        this.drawPixel(x + 1, y + 1);
-        this.drawPixel(x + 2, y + 1);
-        this.drawPixel(x + 3, y + 1);
-        this.drawPixel(x + 4, y + 1);
-    }
 }
 
 const canvas = new Canvas();
