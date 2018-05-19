@@ -1,5 +1,5 @@
 import * as dirs from './snake';
-
+import {head, body} from './drawData';
 let ctx = null;
 
 const PIXEL_SIZE = 6;
@@ -18,86 +18,6 @@ const BOARD = {
         x: 2 + BOARD_WIDTH,
         y: 2 + BOARD_HEIGHT
     }
-};
-const head = {
-    [dirs.DIR_RIGHT]: [
-        [2, -2],
-        [1, -1],
-        [3, -1],
-        [4, -1],
-        [0, 0],
-        [1, 0],
-        [2, 0],
-        [3, 0],
-        [4, 0]
-    ],
-    [dirs.DIR_UP]: [
-        [-2, -4],
-        [-1, -4],
-        [-2, -3],
-        [-1, -3],
-        [-3, -2],
-        [-1, -2],
-        [-2, -1],
-        [-1, -1],
-        [-1, 0]
-    ],
-    [dirs.DIR_LEFT]: [
-        [-3, -2],
-        [-5, -1],
-        [-4, -1],
-        [-2, -1],
-        [-5, 0],
-        [-4, 0],
-        [-3, 0],
-        [-2, 0],
-        [-1, 0]
-    ],
-    [dirs.DIR_DOWN]: [
-        [-1, 1],
-        [-2, 2],
-        [-1, 2],
-        [-3, 3],
-        [-1, 3],
-        [-2, 4],
-        [-1, 4],
-        [-2, 5],
-        [-1, 5]
-    ]
-};
-const body = {
-    [dirs.DIR_RIGHT]: [
-        [1, -1],
-        [2, -1],
-        [3, -1],
-        [0, 0],
-        [1, 0],
-        [2, 0]
-    ],
-    [dirs.DIR_UP]: [
-        [-2, -3],
-        [-2, -2],
-        [-1, -2],
-        [-2, -1],
-        [-1, -1],
-        [-1, 0]
-    ],
-    [dirs.DIR_LEFT]: [
-        [-4, -1],
-        [-3, -1],
-        [-2, -1],
-        [-3, 0],
-        [-2, 0],
-        [-1, 0]
-    ],
-    [dirs.DIR_DOWN]: [
-        [-1, 1],
-        [-2, 2],
-        [-1, 2],
-        [-2, 3],
-        [-1, 3],
-        [-2, 4]
-    ]
 };
 
 class Canvas {
@@ -173,15 +93,15 @@ class Canvas {
         }
     }
 
-    drawPart(part, isCopy = false) {
+    drawPart(part, prevPart = null, nextPart = null, isCopy = false) {
         let points;
         let doesPartProtrude = false;
         switch (part.type) {
             case 'head':
-                points = head[part.direction];
+                points = head[part.direction]['normal'];
                 break;
             case 'body':
-                points = body[part.direction];
+                points = body[part.direction]['normal'];
                 break;
         }
 
@@ -195,11 +115,11 @@ class Canvas {
         }
 
         if (doesPartProtrude && !isCopy) {
-            this.clonePartTrail(part);
+            this.clonePartTrail(part, prevPart, nextPart);
         }
     }
 
-    clonePartTrail(part) {
+    clonePartTrail(part, prevPart, nextPart) {
         let copy = {
             type: part.type,
             pos: {
@@ -222,7 +142,7 @@ class Canvas {
                 copy.pos.y += (BOARD_HEIGHT + 2);
                 break;
         }
-        this.drawPart(copy, true);
+        this.drawPart(copy, prevPart, nextPart, true);
     }
 
 }
