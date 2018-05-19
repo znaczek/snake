@@ -96,12 +96,19 @@ class Canvas {
     drawPart(part, prevPart = null, nextPart = null, isCopy = false) {
         let points;
         let doesPartProtrude = false;
+        if (!nextPart) {
+            nextPart = part;
+        }
+        if (!prevPart) {
+            prevPart = part;
+        }
+
         switch (part.type) {
             case 'head':
-                points = head[part.direction]['normal'];
+                points = head[part.direction][prevPart.direction][nextPart.direction];
                 break;
             case 'body':
-                points = body[part.direction]['normal'];
+                points = body[part.direction][prevPart.direction][nextPart.direction];
                 break;
         }
 
