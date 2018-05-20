@@ -22,7 +22,7 @@ const buildPart = (part, x, y) => {
 };
 
 const getInitialState = () => {
-    const bodyLength = 3;
+    const bodyLength = 6;
     const initialState = [buildPart('head', INIT_HEAD.x, INIT_HEAD.y)];
     for (let i = 1; i <= bodyLength; i += 1) {
         initialState.push(buildPart('body', INIT_HEAD.x - i * 4, INIT_HEAD.y));
