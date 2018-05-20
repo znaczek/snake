@@ -1,5 +1,5 @@
 import * as dirs from './snake';
-import {head, body} from './drawData';
+import {head, body, tail} from './drawData';
 let ctx = null;
 
 const PIXEL_SIZE = 6;
@@ -109,6 +109,9 @@ class Canvas {
                 break;
             case 'body':
                 points = body[part.direction][prevPart.direction][nextPart.direction];
+                break;
+            case 'tail':
+                points = tail[part.direction][prevPart.direction][nextPart.direction];
                 break;
         }
 

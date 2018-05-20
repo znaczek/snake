@@ -22,11 +22,12 @@ const buildPart = (part, x, y) => {
 };
 
 const getInitialState = () => {
-    const bodyLength = 6;
+    const bodyLength = 4;
     const initialState = [buildPart('head', INIT_HEAD.x, INIT_HEAD.y)];
     for (let i = 1; i <= bodyLength; i += 1) {
         initialState.push(buildPart('body', INIT_HEAD.x - i * 4, INIT_HEAD.y));
     }
+    initialState.push(buildPart('tail', INIT_HEAD.x - (bodyLength + 1) * 4, INIT_HEAD.y));
     return Object.values(Object.assign({}, initialState));
 };
 
@@ -113,6 +114,7 @@ class Snake {
             direction: this.direction
         });
         this.body.pop();
+        this.body[this.body.length - 1].type = 'tail';
         this.lastDirection = this.direction;
     }
 
