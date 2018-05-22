@@ -26,6 +26,7 @@ class Game {
         canvas.clear();
         this.snake = new Snake();
         this.appleGenerator = new AppleGenerator();
+        this.handleApple();
         this.bindEvents();
         this.loop();
         this.testMove();
@@ -78,6 +79,7 @@ class Game {
         }
         if (this.snake.didEatApple(this.apple)) {
             this.apple = this.appleGenerator.generate();
+            this.snake.grow();
         }
         canvas.drawApple(this.apple);
     }
