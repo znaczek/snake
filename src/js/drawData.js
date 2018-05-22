@@ -1,8 +1,12 @@
-import * as dirs from './snake';
+export const DIR_RIGHT = 'right';
+export const DIR_LEFT = 'left';
+export const DIR_UP = 'up';
+export const DIR_DOWN = 'down';
+
 export const head = {
-    [dirs.DIR_RIGHT]: {
-        [dirs.DIR_RIGHT]: {
-            [dirs.DIR_RIGHT]: [
+    [DIR_RIGHT]: {
+        [DIR_RIGHT]: {
+            [DIR_RIGHT]: [
                 [2, -2],
                 [1, -1],
                 [3, -1],
@@ -13,7 +17,7 @@ export const head = {
                 [3, 0],
                 [4, 0]
             ],
-            [dirs.DIR_UP]: [
+            [DIR_UP]: [
                 [2, -2],
                 [0, -1],
                 [1, -1],
@@ -24,7 +28,7 @@ export const head = {
                 [3, 0],
                 [4, 0]
             ],
-            [dirs.DIR_DOWN]: [
+            [DIR_DOWN]: [
                 [2, -2],
                 [1, -1],
                 [3, -1],
@@ -37,9 +41,9 @@ export const head = {
             ],
         },
     },
-    [dirs.DIR_UP]: {
-        [dirs.DIR_UP]: {
-            [dirs.DIR_UP]: [
+    [DIR_UP]: {
+        [DIR_UP]: {
+            [DIR_UP]: [
                 [-2, -4],
                 [-1, -4],
                 [-2, -3],
@@ -50,7 +54,7 @@ export const head = {
                 [-1, -1],
                 [-1, 0]
             ],
-            [dirs.DIR_LEFT]: [
+            [DIR_LEFT]: [
                 [-2, -4],
                 [-1, -4],
                 [-2, -3],
@@ -61,7 +65,7 @@ export const head = {
                 [-1, -1],
                 [-2, 0]
             ],
-            [dirs.DIR_RIGHT]: [
+            [DIR_RIGHT]: [
                 [-2, -4],
                 [-1, -4],
                 [-2, -3],
@@ -74,9 +78,9 @@ export const head = {
             ]
         },
     },
-    [dirs.DIR_LEFT]: {
-        [dirs.DIR_LEFT]: {
-            [dirs.DIR_LEFT]: [
+    [DIR_LEFT]: {
+        [DIR_LEFT]: {
+            [DIR_LEFT]: [
                 [-3, -2],
                 [-5, -1],
                 [-4, -1],
@@ -87,7 +91,7 @@ export const head = {
                 [-2, 0],
                 [-1, 0]
             ],
-            [dirs.DIR_DOWN]: [
+            [DIR_DOWN]: [
                 [-3, -2],
                 [-5, -1],
                 [-4, -1],
@@ -98,7 +102,7 @@ export const head = {
                 [-2, 0],
                 [-1, 0]
             ],
-            [dirs.DIR_UP]: [
+            [DIR_UP]: [
                 [-3, -2],
                 [-5, -1],
                 [-4, -1],
@@ -111,9 +115,9 @@ export const head = {
             ]
         },
     },
-    [dirs.DIR_DOWN]: {
-        [dirs.DIR_DOWN]: {
-            [dirs.DIR_DOWN]: [
+    [DIR_DOWN]: {
+        [DIR_DOWN]: {
+            [DIR_DOWN]: [
                 [-1, 1],
                 [-2, 2],
                 [-1, 2],
@@ -124,7 +128,7 @@ export const head = {
                 [-2, 5],
                 [-1, 5]
             ],
-            [dirs.DIR_RIGHT]: [
+            [DIR_RIGHT]: [
                 [-1, 1],
                 [-2, 2],
                 [-1, 2],
@@ -135,7 +139,7 @@ export const head = {
                 [-2, 5],
                 [-1, 5]
             ],
-            [dirs.DIR_LEFT]: [
+            [DIR_LEFT]: [
                 [-2, 1],
                 [-2, 2],
                 [-1, 2],
@@ -150,9 +154,9 @@ export const head = {
     }
 };
 export const body = {
-    [dirs.DIR_RIGHT]: {
-        [dirs.DIR_RIGHT]: {
-            [dirs.DIR_RIGHT]: [
+    [DIR_RIGHT]: {
+        [DIR_RIGHT]: {
+            [DIR_RIGHT]: [
                 [1, -1],
                 [2, -1],
                 [3, -1],
@@ -160,7 +164,7 @@ export const body = {
                 [1, 0],
                 [2, 0]
             ],
-            [dirs.DIR_UP]: [
+            [DIR_UP]: [
                 [0, -1],
                 [1, -1],
                 [2, -1],
@@ -168,7 +172,7 @@ export const body = {
                 [1, 0],
                 [2, 0]
             ],
-            [dirs.DIR_DOWN]: [
+            [DIR_DOWN]: [
                 [1, -1],
                 [2, -1],
                 [3, -1],
@@ -177,8 +181,8 @@ export const body = {
                 [2, 0]
             ],
         },
-        [dirs.DIR_UP]: {
-            [dirs.DIR_RIGHT]: [
+        [DIR_UP]: {
+            [DIR_RIGHT]: [
                 [1, -1],
                 [2, -1],
                 [0, 0],
@@ -186,7 +190,7 @@ export const body = {
                 [2, 0],
                 [3, 0],
             ],
-            [dirs.DIR_UP]: [
+            [DIR_UP]: [
                 [0, -1],
                 [1, -1],
                 [2, -1],
@@ -194,7 +198,7 @@ export const body = {
                 [2, 0],
                 [3, 0],
             ],
-            [dirs.DIR_DOWN]: [
+            [DIR_DOWN]: [
                 [1, -1],
                 [2, -1],
                 [0, 0],
@@ -203,8 +207,8 @@ export const body = {
                 [3, 0],
             ],
         },
-        [dirs.DIR_DOWN]: {
-            [dirs.DIR_RIGHT]: [
+        [DIR_DOWN]: {
+            [DIR_RIGHT]: [
                 [1, -1],
                 [2, -1],
                 [3, -1],
@@ -212,7 +216,7 @@ export const body = {
                 [1, 0],
                 [2, 0]
             ],
-            [dirs.DIR_UP]: [
+            [DIR_UP]: [
                 [0, -1],
                 [1, -1],
                 [2, -1],
@@ -220,7 +224,7 @@ export const body = {
                 [1, 0],
                 [2, 0]
             ],
-            [dirs.DIR_DOWN]: [
+            [DIR_DOWN]: [
                 [1, -1],
                 [2, -1],
                 [3, -1],
@@ -230,9 +234,9 @@ export const body = {
             ],
         }
     },
-    [dirs.DIR_UP]: {
-        [dirs.DIR_UP]: {
-            [dirs.DIR_UP]: [
+    [DIR_UP]: {
+        [DIR_UP]: {
+            [DIR_UP]: [
                 [-2, -3],
                 [-2, -2],
                 [-1, -2],
@@ -240,7 +244,7 @@ export const body = {
                 [-1, -1],
                 [-1, 0]
             ],
-            [dirs.DIR_LEFT]: [
+            [DIR_LEFT]: [
                 [-2, -3],
                 [-2, -2],
                 [-1, -2],
@@ -248,7 +252,7 @@ export const body = {
                 [-1, -1],
                 [-2, 0]
             ],
-            [dirs.DIR_RIGHT]: [
+            [DIR_RIGHT]: [
                 [-2, -3],
                 [-2, -2],
                 [-1, -2],
@@ -257,8 +261,8 @@ export const body = {
                 [-1, 0]
             ]
         },
-        [dirs.DIR_LEFT]: {
-            [dirs.DIR_UP]: [
+        [DIR_LEFT]: {
+            [DIR_UP]: [
                 [-1, -3],
                 [-2, -2],
                 [-1, -2],
@@ -266,7 +270,7 @@ export const body = {
                 [-1, -1],
                 [-1, 0]
             ],
-            [dirs.DIR_LEFT]: [
+            [DIR_LEFT]: [
                 [-1, -3],
                 [-2, -2],
                 [-1, -2],
@@ -274,7 +278,7 @@ export const body = {
                 [-1, -1],
                 [-2, 0]
             ],
-            [dirs.DIR_RIGHT]: [
+            [DIR_RIGHT]: [
                 [-1, -3],
                 [-2, -2],
                 [-1, -2],
@@ -283,8 +287,8 @@ export const body = {
                 [-1, 0]
             ]
         },
-        [dirs.DIR_RIGHT]: {
-            [dirs.DIR_UP]: [
+        [DIR_RIGHT]: {
+            [DIR_UP]: [
                 [-2, -3],
                 [-2, -2],
                 [-1, -2],
@@ -292,7 +296,7 @@ export const body = {
                 [-1, -1],
                 [-1, 0]
             ],
-            [dirs.DIR_LEFT]: [
+            [DIR_LEFT]: [
                 [-2, -3],
                 [-2, -2],
                 [-1, -2],
@@ -300,7 +304,7 @@ export const body = {
                 [-1, -1],
                 [-2, 0]
             ],
-            [dirs.DIR_RIGHT]: [
+            [DIR_RIGHT]: [
                 [-2, -3],
                 [-2, -2],
                 [-1, -2],
@@ -310,9 +314,9 @@ export const body = {
             ]
         }
     },
-    [dirs.DIR_LEFT]: {
-        [dirs.DIR_LEFT]: {
-            [dirs.DIR_LEFT]: [
+    [DIR_LEFT]: {
+        [DIR_LEFT]: {
+            [DIR_LEFT]: [
                 [-4, -1],
                 [-3, -1],
                 [-2, -1],
@@ -320,7 +324,7 @@ export const body = {
                 [-2, 0],
                 [-1, 0]
             ],
-            [dirs.DIR_DOWN]: [
+            [DIR_DOWN]: [
                 [-4, -1],
                 [-3, -1],
                 [-2, -1],
@@ -328,33 +332,7 @@ export const body = {
                 [-2, 0],
                 [-1, 0]
             ],
-            [dirs.DIR_UP]: [
-                [-4, -1],
-                [-3, -1],
-                [-2, -1],
-                [-1, -1],
-                [-3, 0],
-                [-2, 0],
-            ]
-        },
-        [dirs.DIR_DOWN]: {
-            [dirs.DIR_LEFT]: [
-                [-4, -1],
-                [-3, -1],
-                [-2, -1],
-                [-3, 0],
-                [-2, 0],
-                [-1, 0]
-            ],
-            [dirs.DIR_DOWN]: [
-                [-4, -1],
-                [-3, -1],
-                [-2, -1],
-                [-3, 0],
-                [-2, 0],
-                [-1, 0]
-            ],
-            [dirs.DIR_UP]: [
+            [DIR_UP]: [
                 [-4, -1],
                 [-3, -1],
                 [-2, -1],
@@ -363,8 +341,34 @@ export const body = {
                 [-2, 0],
             ]
         },
-        [dirs.DIR_UP]: {
-            [dirs.DIR_LEFT]: [
+        [DIR_DOWN]: {
+            [DIR_LEFT]: [
+                [-4, -1],
+                [-3, -1],
+                [-2, -1],
+                [-3, 0],
+                [-2, 0],
+                [-1, 0]
+            ],
+            [DIR_DOWN]: [
+                [-4, -1],
+                [-3, -1],
+                [-2, -1],
+                [-3, 0],
+                [-2, 0],
+                [-1, 0]
+            ],
+            [DIR_UP]: [
+                [-4, -1],
+                [-3, -1],
+                [-2, -1],
+                [-1, -1],
+                [-3, 0],
+                [-2, 0],
+            ]
+        },
+        [DIR_UP]: {
+            [DIR_LEFT]: [
                 [-3, -1],
                 [-2, -1],
                 [-4, 0],
@@ -372,7 +376,7 @@ export const body = {
                 [-2, 0],
                 [-1, 0]
             ],
-            [dirs.DIR_DOWN]: [
+            [DIR_DOWN]: [
                 [-3, -1],
                 [-2, -1],
                 [-4, 0],
@@ -380,7 +384,7 @@ export const body = {
                 [-2, 0],
                 [-1, 0]
             ],
-            [dirs.DIR_UP]: [
+            [DIR_UP]: [
                 [-4, 0],
                 [-3, -1],
                 [-2, -1],
@@ -390,9 +394,9 @@ export const body = {
             ]
         }
     },
-    [dirs.DIR_DOWN]: {
-        [dirs.DIR_DOWN]: {
-            [dirs.DIR_DOWN]: [
+    [DIR_DOWN]: {
+        [DIR_DOWN]: {
+            [DIR_DOWN]: [
                 [-1, 1],
                 [-2, 2],
                 [-1, 2],
@@ -400,7 +404,7 @@ export const body = {
                 [-1, 3],
                 [-2, 4]
             ],
-            [dirs.DIR_RIGHT]: [
+            [DIR_RIGHT]: [
                 [-1, 1],
                 [-2, 2],
                 [-1, 2],
@@ -408,7 +412,7 @@ export const body = {
                 [-1, 3],
                 [-2, 4]
             ],
-            [dirs.DIR_LEFT]: [
+            [DIR_LEFT]: [
                 [-2, 1],
                 [-2, 2],
                 [-1, 2],
@@ -417,8 +421,8 @@ export const body = {
                 [-2, 4]
             ]
         },
-        [dirs.DIR_RIGHT]: {
-            [dirs.DIR_DOWN]: [
+        [DIR_RIGHT]: {
+            [DIR_DOWN]: [
                 [-1, 1],
                 [-2, 2],
                 [-1, 2],
@@ -426,7 +430,7 @@ export const body = {
                 [-1, 3],
                 [-2, 4]
             ],
-            [dirs.DIR_RIGHT]: [
+            [DIR_RIGHT]: [
                 [-1, 1],
                 [-2, 2],
                 [-1, 2],
@@ -434,7 +438,7 @@ export const body = {
                 [-1, 3],
                 [-2, 4]
             ],
-            [dirs.DIR_LEFT]: [
+            [DIR_LEFT]: [
                 [-2, 1],
                 [-2, 2],
                 [-1, 2],
@@ -443,8 +447,8 @@ export const body = {
                 [-2, 4]
             ]
         },
-        [dirs.DIR_LEFT]: {
-            [dirs.DIR_DOWN]: [
+        [DIR_LEFT]: {
+            [DIR_DOWN]: [
                 [-1, 1],
                 [-2, 2],
                 [-1, 2],
@@ -452,7 +456,7 @@ export const body = {
                 [-1, 3],
                 [-1, 4]
             ],
-            [dirs.DIR_RIGHT]: [
+            [DIR_RIGHT]: [
                 [-1, 1],
                 [-2, 2],
                 [-1, 2],
@@ -460,7 +464,7 @@ export const body = {
                 [-1, 3],
                 [-1, 4]
             ],
-            [dirs.DIR_LEFT]: [
+            [DIR_LEFT]: [
                 [-2, 1],
                 [-2, 2],
                 [-1, 2],
@@ -473,9 +477,9 @@ export const body = {
 };
 
 export const tail = {
-    [dirs.DIR_RIGHT]: {
-        [dirs.DIR_RIGHT]: {
-            [dirs.DIR_RIGHT]: [
+    [DIR_RIGHT]: {
+        [DIR_RIGHT]: {
+            [DIR_RIGHT]: [
                 [0, -1],
                 [1, -1],
                 [2, -1],
@@ -487,8 +491,8 @@ export const tail = {
                 [2, 0]
             ],
         },
-        [dirs.DIR_UP]: {
-            [dirs.DIR_RIGHT]: [
+        [DIR_UP]: {
+            [DIR_RIGHT]: [
                 [0, -1],
                 [1, -1],
                 [2, -1],
@@ -500,8 +504,8 @@ export const tail = {
                 [3, 0],
             ],
         },
-        [dirs.DIR_DOWN]: {
-            [dirs.DIR_RIGHT]: [
+        [DIR_DOWN]: {
+            [DIR_RIGHT]: [
                 [0, -1],
                 [1, -1],
                 [2, -1],
@@ -514,9 +518,9 @@ export const tail = {
             ],
         }
     },
-    [dirs.DIR_UP]: {
-        [dirs.DIR_UP]: {
-            [dirs.DIR_UP]: [
+    [DIR_UP]: {
+        [DIR_UP]: {
+            [DIR_UP]: [
                 [-2, -3],
                 [-2, -2],
                 [-1, -2],
@@ -528,8 +532,8 @@ export const tail = {
                 [-1, 2],
             ],
         },
-        [dirs.DIR_LEFT]: {
-            [dirs.DIR_UP]: [
+        [DIR_LEFT]: {
+            [DIR_UP]: [
                 [-1, -3],
                 [-2, -2],
                 [-1, -2],
@@ -541,8 +545,8 @@ export const tail = {
                 [-1, 2],
             ],
         },
-        [dirs.DIR_RIGHT]: {
-            [dirs.DIR_UP]: [
+        [DIR_RIGHT]: {
+            [DIR_UP]: [
                 [-2, -3],
                 [-2, -2],
                 [-1, -2],
@@ -555,9 +559,9 @@ export const tail = {
             ]
         }
     },
-    [dirs.DIR_LEFT]: {
-        [dirs.DIR_LEFT]: {
-            [dirs.DIR_LEFT]: [
+    [DIR_LEFT]: {
+        [DIR_LEFT]: {
+            [DIR_LEFT]: [
                 [-4, -1],
                 [-3, -1],
                 [-2, -1],
@@ -569,8 +573,8 @@ export const tail = {
                 [1, 0]
             ],
         },
-        [dirs.DIR_DOWN]: {
-            [dirs.DIR_LEFT]: [
+        [DIR_DOWN]: {
+            [DIR_LEFT]: [
                 [-4, -1],
                 [-3, -1],
                 [-2, -1],
@@ -582,8 +586,8 @@ export const tail = {
                 [1, 0]
             ],
         },
-        [dirs.DIR_UP]: {
-            [dirs.DIR_LEFT]: [
+        [DIR_UP]: {
+            [DIR_LEFT]: [
                 [-3, -1],
                 [-2, -1],
                 [-1, -1],
@@ -596,9 +600,9 @@ export const tail = {
             ]
         }
     },
-    [dirs.DIR_DOWN]: {
-        [dirs.DIR_DOWN]: {
-            [dirs.DIR_DOWN]: [
+    [DIR_DOWN]: {
+        [DIR_DOWN]: {
+            [DIR_DOWN]: [
                 [-1, -1],
                 [-1, 0],
                 [-2, 1],
@@ -610,8 +614,8 @@ export const tail = {
                 [-2, 4]
             ],
         },
-        [dirs.DIR_RIGHT]: {
-            [dirs.DIR_DOWN]: [
+        [DIR_RIGHT]: {
+            [DIR_DOWN]: [
                 [-1, -1],
                 [-1, 0],
                 [-2, 1],
@@ -623,8 +627,8 @@ export const tail = {
                 [-2, 4]
             ],
         },
-        [dirs.DIR_LEFT]: {
-            [dirs.DIR_DOWN]: [
+        [DIR_LEFT]: {
+            [DIR_DOWN]: [
                 [-1, -1],
                 [-1, 0],
                 [-2, 1],

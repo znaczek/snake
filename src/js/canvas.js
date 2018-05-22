@@ -1,14 +1,13 @@
-import * as dirs from './snake';
-import {head, body, tail} from './drawData';
+import * as config from './config';
+import {DIR_RIGHT, DIR_DOWN, DIR_UP, DIR_LEFT, head, body, tail} from './drawData';
+
 let ctx = null;
 
 const PIXEL_SIZE = 6;
-const CANVAS_WIDTH = 96;
-const CANVAS_HEIGHT = 40;
-const CANVAS_WIDTH_PX = PIXEL_SIZE * CANVAS_WIDTH;
-const CANVAS_HEIGHT_PX = PIXEL_SIZE * CANVAS_HEIGHT;
-const BOARD_HEIGHT = CANVAS_HEIGHT - 6;
-const BOARD_WIDTH = CANVAS_WIDTH - 6;
+const CANVAS_WIDTH_PX = PIXEL_SIZE * config.CANVAS_WIDTH;
+const CANVAS_HEIGHT_PX = PIXEL_SIZE * config.CANVAS_HEIGHT;
+const BOARD_HEIGHT = config.CANVAS_HEIGHT - 6;
+const BOARD_WIDTH = config.CANVAS_WIDTH - 6;
 const BOARD = {
     start: {
         x: 2,
@@ -43,7 +42,7 @@ class Canvas {
 
     drawGamePixel(x, y) {
         let gameX = x + BOARD.start.x;
-        let gameY = y + BOARD.start.y
+        let gameY = y + BOARD.start.y;
         if (this.doesPixelProtrude(gameX, gameY)) {
             this.fillStyle = '#a4c70b';
         }
@@ -63,13 +62,13 @@ class Canvas {
     }
 
     drawGameBorder() {
-        for (let i = 0; i < CANVAS_HEIGHT; i+=1) {
+        for (let i = 0; i < config.CANVAS_HEIGHT; i+=1) {
             this.drawPixel(0, i);
-            this.drawPixel(CANVAS_WIDTH - 1, i);
+            this.drawPixel(config.CANVAS_WIDTH - 1, i);
         }
-        for (let i = 0; i < CANVAS_WIDTH; i+=1) {
+        for (let i = 0; i < config.CANVAS_WIDTH; i+=1) {
             this.drawPixel(i, 0);
-            this.drawPixel(i, CANVAS_HEIGHT - 1);
+            this.drawPixel(i, config.CANVAS_HEIGHT - 1);
         }
     }
 
@@ -79,16 +78,16 @@ class Canvas {
     }
 
     handleBounrady(pos, direction) {
-        if (direction === dirs.DIR_RIGHT && pos.x + 5 > BOARD.end.x) {
+        if (direction === DIR_RIGHT && pos.x + 5 > BOARD.end.x) {
             pos.x -= (BOARD_WIDTH + 2);
         }
-        if (direction === dirs.DIR_LEFT && pos.x - 5 < 0) {
+        if (direction === DIR_LEFT && pos.x - 5 < 0) {
             pos.x += (BOARD_WIDTH + 2);
         }
-        if (direction === dirs.DIR_DOWN && pos.y + 5 > BOARD.end.y) {
+        if (direction === DIR_DOWN && pos.y + 5 > BOARD.end.y) {
             pos.y -= (BOARD_HEIGHT + 2);
         }
-        if (direction === dirs.DIR_UP && pos.y - 5 < 0) {
+        if (direction === DIR_UP && pos.y - 5 < 0) {
             pos.y += (BOARD_HEIGHT + 2);
         }
     }
@@ -139,24 +138,30 @@ class Canvas {
             direction: part.direction
         };
         switch (copy.direction) {
-            case dirs.DIR_RIGHT:
+            case DIR_RIGHT:
                 copy.pos.x += (BOARD_WIDTH + 2);
                 break;
-            case dirs.DIR_LEFT:
+            case DIR_LEFT:
                 copy.pos.x -= (BOARD_WIDTH + 2);
                 break;
-            case dirs.DIR_UP:
+            case DIR_UP:
                 copy.pos.y -= (BOARD_HEIGHT + 2);
                 break;
-            case dirs.DIR_DOWN:
+            case DIR_DOWN:
                 copy.pos.y += (BOARD_HEIGHT + 2);
                 break;
         }
         this.drawPart(copy, prevPart, nextPart, true);
     }
 
+    drawApple({x, y}) {
+        this.drawGamePixel(x + 1, y);
+        this.drawGamePixel(x , y + 1);
+        this.drawGamePixel(x + 2, y + 1);
+        this.drawGamePixel(x +1, y + 2);
+    }
+
 }
 
 const canvas = new Canvas();
-
 export default canvas;

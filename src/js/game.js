@@ -1,5 +1,6 @@
 import canvas from './canvas';
 import Snake from './snake';
+import AppleGenerator from './appleGenerator';
 
 const SPEED = 1000;
 const moves = [
@@ -24,8 +25,10 @@ class Game {
     init() {
         canvas.clear();
         this.snake = new Snake();
+        this.appleGenerator = new AppleGenerator();
         this.bindEvents();
         this.loop();
+        this.testMove();
     }
 
     bindEvents() {
@@ -33,9 +36,7 @@ class Game {
             switch (e.keyCode) {
                 case 37: //left
                     this.snake.turnLeft();
-            canvas.prepareBoard();
-            this.snake.move();
-            this.snake.draw();
+                    this.testMove();
                     // if (i > 0) {
                     //     i -= 1;
                     //     this.singleMove();
@@ -43,9 +44,7 @@ class Game {
                     break;
                 case 39: //right
                     this.snake.turnRight();
-            canvas.prepareBoard();
-            this.snake.move();
-            this.snake.draw();
+                    this.testMove();
                     // if (i < moves.length) {
                     //     i += 1;
                     //     this.singleMove();
@@ -53,15 +52,11 @@ class Game {
                     break;
                 case 38: //up
                     this.snake.turnUp();
-            canvas.prepareBoard();
-            this.snake.move();
-            this.snake.draw();
+                    this.testMove();
                     break;
                 case 40: //up
                     this.snake.turnDown();
-            canvas.prepareBoard();
-            this.snake.move();
-            this.snake.draw();
+                    this.testMove();
                     break;
                 case 32:  //space
                     if (this.interval) {
@@ -76,6 +71,17 @@ class Game {
         });
     }
 
+    handleApple() {
+        if (!this.apple) {
+            this.apple = this.appleGenerator.generate();
+            return;
+        }
+        if (this.snake.didEatApple(this.apple)) {
+            this.apple = this.appleGenerator.generate();
+        }
+        canvas.drawApple(this.apple);
+    }
+
     singleMove() {
         this.snake.reset();
         for (let j = 0; j < i; j += 1) {
@@ -86,10 +92,19 @@ class Game {
         this.snake.draw();
     }
 
-    loop() {
+    testMove() {
         canvas.prepareBoard();
+        this.snake.move();
+        this.handleApple();
         this.snake.draw();
-        // this.interval = setTimeout(this.loop.bind(this), SPEED);
+    }
+
+    loop() {
+        // canvas.prepareBoard();
+        // this.snake.move();
+        // this.handleApple();
+        // this.snake.draw();
+        this.interval = setTimeout(this.loop.bind(this), SPEED);
     }
 }
 

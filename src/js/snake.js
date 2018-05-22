@@ -1,11 +1,7 @@
 import canvas from './canvas';
+import {DIR_RIGHT, DIR_DOWN, DIR_UP, DIR_LEFT, head} from './drawData';
 
 const MOVE = 4;
-
-export const DIR_RIGHT = 'right';
-export const DIR_LEFT = 'left';
-export const DIR_UP = 'up';
-export const DIR_DOWN = 'down';
 const INIT_HEAD = {
     x: 34,
     y: 18,
@@ -131,6 +127,53 @@ class Snake {
         this.body = getInitialState();
         this.direction = DIR_RIGHT;
         this.lastDirection = DIR_RIGHT;
+    }
+
+    didEatApple({x, y}) {
+        return this.didHit(x + 1, y + 1);
+    }
+
+    didHit(x, y) {
+        const headBoundary = this.getHeadBoundary();
+        return x >= headBoundary.begin.x && x <= headBoundary.end.x &&
+            y >= headBoundary.begin.y && y <= headBoundary.end.y
+        ;
+    }
+
+    getHeadBoundary() {
+        const bodyHead = this.body[0];
+        const headData = head[bodyHead.direction][bodyHead.direction][this.body[1].direction];
+        let minX = 1000;
+        let maxX = 0;
+        let minY = 1000;
+        let maxY = 0;
+        headData.forEach((elem) => {
+            const x = bodyHead.pos.x + elem[0];
+            const y = bodyHead.pos.y + elem[1];
+            if (x < minX) {
+                minX = x;
+            }
+            if (x > maxX) {
+                maxX = x;
+            }
+            if (y < minY) {
+                minY = y;
+            }
+            if (y > maxY) {
+                maxY = y;
+            }
+        });
+
+        return {
+            begin: {
+                x: minX,
+                y: minY,
+            },
+            end: {
+                x: maxX,
+                y: maxY,
+            }
+        };
     }
 
 }
