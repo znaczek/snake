@@ -30,10 +30,12 @@ class Game {
         this.bindEvents();
         this.loop();
         this.testMove();
+        this.gameOn = true;
     }
 
     bindEvents() {
         document.addEventListener('keydown', (e) => {
+            if (!this.gameOn) return;
             switch (e.keyCode) {
                 case 37: //left
                     this.snake.turnLeft();
@@ -94,11 +96,39 @@ class Game {
         this.snake.draw();
     }
 
+    checkCollision() {
+        if (this.snake.hasCollision()) {
+            this.endGame();
+            return true;
+        }
+        return false;
+    }
+
+    endGame() {
+        this.gameOn = false;
+        clearTimeout(this.interval);
+        this.snake.endGame();
+        let i = 0;
+        canvas.prepareBoard();
+        this.handleApple();
+        this.snake.draw();
+        setInterval(() => {
+            canvas.prepareBoard();
+            this.handleApple();
+            if (i % 2) {
+                this.snake.draw();
+            }
+            i += 1;
+        }, 500);
+    }
+
     testMove() {
         canvas.prepareBoard();
         this.snake.move();
-        this.handleApple();
-        this.snake.draw();
+        if (!this.checkCollision()) {
+            this.handleApple();
+            this.snake.draw();
+        }
     }
 
     loop() {

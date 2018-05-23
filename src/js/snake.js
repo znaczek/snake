@@ -1,6 +1,6 @@
 import * as config from './config';
 import canvas from './canvas';
-import {DIR_RIGHT, DIR_DOWN, DIR_UP, DIR_LEFT, head} from './drawData';
+import {DIR_RIGHT, DIR_DOWN, DIR_UP, DIR_LEFT, head, tail, body} from './drawData';
 
 const INIT_HEAD = {
     x: 34,
@@ -36,7 +36,11 @@ class Snake {
     }
 
     getBodyData() {
-        return Object.values(Object.assign({}, this.body));
+        return JSON.parse(JSON.stringify(this.body));
+    }
+
+    getOldBodyData() {
+        return JSON.parse(JSON.stringify(this.oldBody));
     }
 
     turnLeft() {
@@ -65,13 +69,13 @@ class Snake {
     }
 
     move() {
-        const head = this.getBodyData()[0];
+        this.oldBody = this.getBodyData();
+        const head = this.body[0];
         head.type = 'body';
         const pos = {
             x: head.pos.x,
             y: head.pos.y,
         };
-        this.oldBody = this.getBodyData();
         if (this.direction !== this.lastDirection) {
             switch (this.lastDirection) {
                 case DIR_RIGHT:
@@ -141,22 +145,36 @@ class Snake {
     }
 
     didHit(x, y) {
-        const headBoundary = this.getHeadBoundary();
+        const headBoundary = this.getPartBoundary(0);
         return x >= headBoundary.begin.x && x <= headBoundary.end.x &&
             y >= headBoundary.begin.y && y <= headBoundary.end.y
         ;
     }
 
-    getHeadBoundary() {
-        const bodyHead = this.getBodyData()[0];
-        const headData = head[bodyHead.direction][bodyHead.direction][this.getBodyData()[1].direction];
+    getPartBoundary(index) {
+        const part = this.getBodyData()[index];
+        const prevPart = index > 0 ? this.getBodyData()[index - 1] : this.getBodyData()[index];
+        const nextPart = index < this.getBodyData().length - 1 ?  this.getBodyData()[index + 1] : this.getBodyData()[index];
+        let partData;
+        switch (part.type) {
+            case 'head':
+                partData = head[part.direction][prevPart.direction][nextPart.direction];
+                break;
+            case 'body':
+                partData = body[part.direction][prevPart.direction][nextPart.direction];
+                break;
+            case 'tail':
+                partData = tail[part.direction][prevPart.direction][nextPart.direction];
+                break;
+        }
+
         let minX = 1000;
         let maxX = 0;
         let minY = 1000;
         let maxY = 0;
-        headData.forEach((elem) => {
-            const x = bodyHead.pos.x + elem[0];
-            const y = bodyHead.pos.y + elem[1];
+        partData.forEach((elem) => {
+            const x = part.pos.x + elem[0];
+            const y = part.pos.y + elem[1];
             if (x < minX) {
                 minX = x;
             }
@@ -186,6 +204,52 @@ class Snake {
     grow() {
         this.body[this.body.length - 1].type = 'body';
         this.body.push(this.oldBody[this.oldBody.length - 1]);
+    }
+
+    hasCollision() {
+        return this.checkSelfCollision();
+    }
+
+    getNose() {
+        const headElem = this.body[0];
+        switch (headElem.direction) {
+            case DIR_RIGHT:
+                return {
+                    x: headElem.pos.x + 4,
+                    y: headElem.pos.y,
+                };
+            case DIR_UP:
+                return {
+                    x: headElem.pos.x - 1,
+                    y: headElem.pos.y - 4,
+                };
+            case DIR_LEFT:
+                return {
+                    x: headElem.pos.x - 5,
+                    y: headElem.pos.y,
+                };
+            case DIR_DOWN:
+                return {
+                    x: headElem.pos.x -1,
+                    y: headElem.pos.y +5,
+                };
+
+        }
+        return this.getPartBoundary(0);
+    }
+    checkSelfCollision() {
+        const nose = this.getNose();
+        return this.getBodyData().filter((part, index) => {
+            if (index === 0) return false;
+            const elem = this.getPartBoundary(index);
+            return nose.x >= elem.begin.x && nose.x <= elem.end.x &&
+                nose.y >= elem.begin.y && nose.y <= elem.end.y
+            ;
+        }).length > 0;
+    }
+
+    endGame() {
+        this.body = this.getOldBodyData();
     }
 
 }
