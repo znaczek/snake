@@ -1,30 +1,23 @@
-import canvas from './canvas';
-import Snake from './snake';
-import AppleGenerator from './appleGenerator';
+import {Canvas} from './canvas';
+import {Snake} from './snake';
+import * as config from '../config';
+import {AppleGenerator} from './factory/apple.factory';
+import {Apple} from './model/apple.model';
 
-const SPEED = 1000;
-const moves = [
-    'Right', 'Right',
-    'Up', 'Up', 'Up',
-    'Left', 'Left', 'Left', 'Left', 'Left', 'Left',
-    'Down', 'Down', 'Down',
-    'Right', 'Right', 'Right', 'Right',
-    'Right', 'Right',
-    'Down', 'Down', 'Down',
-    'Left', 'Left', 'Left', 'Left', 'Left', 'Left',
-    'Up', 'Up', 'Up',
-    'Right', 'Right', 'Right', 'Right'
-];
-let i = 0;
+export class Game {
+    private snake: Snake;
+    private appleGenerator: AppleGenerator;
+    private gameOn: boolean;
+    private interval: number;
+    private apple: Apple;
+    private _i: number;
 
-class Game {
-    constructor(canvasElement) {
-        canvas.setElement(canvasElement);
+    constructor(private canvas: Canvas) {
     }
 
-    init() {
-        canvas.clear();
-        this.snake = new Snake();
+    public init(): void {
+        this.canvas.clear();
+        this.snake = new Snake(this.canvas);
         this.appleGenerator = new AppleGenerator();
         this.handleApple();
         this.bindEvents();
@@ -33,35 +26,37 @@ class Game {
         this.gameOn = true;
     }
 
-    bindEvents() {
+    private bindEvents(): void {
         document.addEventListener('keydown', (e) => {
-            if (!this.gameOn) return;
+            if (!this.gameOn) {
+                return;
+            }
             switch (e.keyCode) {
-                case 37: //left
+                case 37: // left
                     this.snake.turnLeft();
                     this.testMove();
                     // if (i > 0) {
-                    //     i -= 1;
+                    //     this._i -= 1;
                     //     this.singleMove();
                     // }
                     break;
-                case 39: //right
+                case 39: // right
                     this.snake.turnRight();
                     this.testMove();
                     // if (i < moves.length) {
-                    //     i += 1;
+                    //     this._i += 1;
                     //     this.singleMove();
                     // }
                     break;
-                case 38: //up
+                case 38: // up
                     this.snake.turnUp();
                     this.testMove();
                     break;
-                case 40: //up
+                case 40: // up
                     this.snake.turnDown();
                     this.testMove();
                     break;
-                case 32:  //space
+                case 32:  // space
                     if (this.interval) {
                         clearTimeout(this.interval);
                         this.interval = null;
@@ -74,7 +69,7 @@ class Game {
         });
     }
 
-    handleApple() {
+    private handleApple(): void {
         if (!this.apple) {
             this.apple = this.appleGenerator.generate();
             return;
@@ -83,20 +78,37 @@ class Game {
             this.apple = this.appleGenerator.generate();
             this.snake.grow();
         }
-        canvas.drawApple(this.apple);
+        this.canvas.drawApple(this.apple);
     }
 
-    singleMove() {
+    private singleMove(): void {
         this.snake.reset();
-        for (let j = 0; j < i; j += 1) {
-            this.snake['turn' + moves[j]]();
+        for (let j = 0; j < this._i; j += 1) {
+            switch (config.MOVES[j]) {
+                case 'left': {
+                    this.snake.turnLeft();
+                    break;
+                }
+                case 'right': {
+                    this.snake.turnRight();
+                    break;
+                }
+                case 'up': {
+                    this.snake.turnUp();
+                    break;
+                }
+                case 'down': {
+                    this.snake.turnDown();
+                    break;
+                }
+            }
             this.snake.move();
         }
-        canvas.prepareBoard();
+        this.canvas.prepareBoard();
         this.snake.draw();
     }
 
-    checkCollision() {
+    private checkCollision(): boolean {
         if (this.snake.hasCollision()) {
             this.endGame();
             return true;
@@ -104,16 +116,16 @@ class Game {
         return false;
     }
 
-    endGame() {
+    private endGame(): void {
         this.gameOn = false;
         clearTimeout(this.interval);
         this.snake.endGame();
         let i = 0;
-        canvas.prepareBoard();
+        this.canvas.prepareBoard();
         this.handleApple();
         this.snake.draw();
         setInterval(() => {
-            canvas.prepareBoard();
+            this.canvas.prepareBoard();
             this.handleApple();
             if (i % 2) {
                 this.snake.draw();
@@ -122,8 +134,8 @@ class Game {
         }, 500);
     }
 
-    testMove() {
-        canvas.prepareBoard();
+    private testMove(): void {
+        this.canvas.prepareBoard();
         this.snake.move();
         if (!this.checkCollision()) {
             this.handleApple();
@@ -131,13 +143,11 @@ class Game {
         }
     }
 
-    loop() {
-        // canvas.prepareBoard();
+    private loop(): void {
+        // this.canvas.prepareBoard();
         // this.snake.move();
         // this.handleApple();
         // this.snake.draw();
-        this.interval = setTimeout(this.loop.bind(this), SPEED);
+        this.interval = setTimeout(this.loop.bind(this), config.SPEED);
     }
 }
-
-export default Game;

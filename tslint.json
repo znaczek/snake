@@ -1,0 +1,50 @@
+{
+    "extends": [
+        "tslint:recommended"
+    ],
+    "defaultSeverity": "warning",
+    "rules": {
+        "space-before-function-paren": false,
+        "whitespace": false,
+        "quotemark": {
+            "options": [
+                "single",
+                "avoid-escape"
+            ]
+        },
+        "max-line-length": {
+            "options": [
+                180
+            ]
+        },
+        "no-console": {
+            "options": [
+                true,
+                "log"
+            ],
+            "severity": "default"
+        },
+
+        "ordered-imports": false,
+        "object-literal-sort-keys": false,
+        "no-empty": false,
+        "interface-name": {
+            "options": [
+                true,
+                "never-prefix"
+            ]
+        },
+        "trailing-comma": [
+            true,
+            {
+                "multiline": "always",
+                "singleline": "never"
+            }
+        ],
+        "no-angle-bracket-type-assertion": false,
+        "no-string-literal": {
+            "severity": "warning"
+        },
+        "variable-name": [true, "check-format", "allow-leading-underscore", "ban-keywords"]
+    }
+}
