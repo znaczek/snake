@@ -1,52 +1,43 @@
 const path = require('path');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-module.exports = (env) => {
-    const CSSExtract = new ExtractTextPlugin('style.css');
-
+module.exports = (env, argv) => {
+    const mode = argv.mode;
+    console.log(mode);
     const config = {
-        entry: ['babel-polyfill', path.join(__dirname, 'src', 'app.js')],
-        output: {
-            path: path.join(__dirname, 'public'),
-            filename: 'app.js',
-        },
+        entry: './src/index.ts',
         module: {
             rules: [
                 {
-                    test: /\.js$/,
-                    exclude: /node_modules/,
-                    use: {
-                        loader: 'babel-loader',
-                        options: {
-                            presets: ['env'],
-                        }
-                    }
-                }, {
-                    test: /\.s?css$/,
-                    use: CSSExtract.extract({
-                        use: [{
-                            loader: 'css-loader',
-                        }, {
-                            loader: 'postcss-loader',
-                            options: {
-                                plugins: function () {
-                                    return [
-                                        require('precss'),
-                                        require('autoprefixer')
-                                    ];
-                                }
-                            }
-                        }, {
-                            loader: 'sass-loader' // compiles Sass to CSS
-                        }]
-                    })
+                    test: /\.ts$/,
+                    use: 'ts-loader',
+                    exclude: /node_modules/
+                },
+                {
+                    test: /\.css$/,
+                    use: [ 'style-loader', 'css-loader' ]
                 }
             ]
         },
-        plugins: [CSSExtract]
+        resolve: {
+            extensions: ['.ts', '.js' ]
+        },
+        output: {
+            filename: 'bundle.js',
+            path: path.resolve(__dirname, 'dist')
+        },
+        devServer: {
+            contentBase: path.join(__dirname, 'dist'),
+            historyApiFallback: true,
+            index: './src/index.html',
+            compress: true,
+            port: 9000
+        }
     };
 
-    if (env.NODE_ENV === 'dev') {
+    if (mode === 'production') {
+        config.mode = 'production';
+    } else {
+        config.mode = 'development';
         config.devtool = 'inline-source-map';
     }
 

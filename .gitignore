@@ -1,4 +1,4 @@
 .idea/
-public/app.js
+public/index.ts
 public/style.css
 node_modules/
