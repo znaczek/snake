@@ -3,6 +3,8 @@ import {Snake} from './snake';
 import * as config from '../config';
 import {AppleFactory} from './factory/apple.factory';
 import {Apple} from './model/apple.model';
+import {Observable} from 'rxjs/index';
+import {takeWhile} from 'rxjs/internal/operators';
 
 export class Game {
     private snake: Snake;
@@ -12,7 +14,8 @@ export class Game {
     private _i: number;
 
     constructor(private canvas: Canvas,
-                private appleFactory: AppleFactory) {
+                private appleFactory: AppleFactory,
+                private onClick: Observable<Event>) {
     }
 
     public init(): void {
@@ -26,7 +29,8 @@ export class Game {
     }
 
     private bindEvents(): void {
-        document.addEventListener('keydown', (e) => {
+        this.onClick.pipe(takeWhile(() => this.gameOn))
+            .subscribe((e: KeyboardEvent) => {
             if (!this.gameOn) {
                 return;
             }

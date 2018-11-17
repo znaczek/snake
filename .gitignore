@@ -2,3 +2,4 @@
 public/index.ts
 public/style.css
 node_modules/
+dist/
