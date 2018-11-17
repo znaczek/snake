@@ -108,12 +108,8 @@ export class Game {
         this.snake.draw();
     }
 
-    private checkCollision(): boolean {
-        if (this.snake.hasCollision()) {
-            this.endGame();
-            return true;
-        }
-        return false;
+    private hasCollision(): boolean {
+        return this.snake.hasCollision();
     }
 
     private endGame(): void {
@@ -137,9 +133,11 @@ export class Game {
     private testMove(): void {
         this.canvas.prepareBoard();
         this.snake.move();
-        if (!this.checkCollision()) {
+        if (!this.hasCollision()) {
             this.handleApple();
             this.snake.draw();
+        } else {
+            this.endGame();
         }
     }
 
@@ -148,6 +146,6 @@ export class Game {
         // this.snake.move();
         // this.handleApple();
         // this.snake.draw();
-        this.interval = setTimeout(this.loop.bind(this), config.SPEED);
+        this.interval = setTimeout(this.loop, config.SPEED);
     }
 }

@@ -32,10 +32,12 @@ export class Canvas {
         this.ctx.save();
         this.ctx.strokeStyle = COLORS.GREEN;
         this.ctx.lineWidth = config.PIXEL_SIZE;
-        this.ctx.strokeRect(1.5 * config.PIXEL_SIZE, 1.5
-            * config.PIXEL_SIZE, config.CANVAS_WIDTH_PX - 3
-            * config.PIXEL_SIZE, config.CANVAS_HEIGHT_PX - 3
-            * config.PIXEL_SIZE);
+        this.ctx.strokeRect(
+            1.5 * config.PIXEL_SIZE,
+            1.5 * config.PIXEL_SIZE,
+            config.CANVAS_WIDTH_PX - 3 * config.PIXEL_SIZE,
+            config.CANVAS_HEIGHT_PX - 3 * config.PIXEL_SIZE,
+        );
         this.ctx.restore();
     }
 
@@ -160,9 +162,6 @@ export class Canvas {
             pixel.y + config.BOARD.start.y,
         );
 
-        if (this.doesPixelProtrude(gamePixel)) {
-            this.ctx.fillStyle = COLORS.GREEN;
-        }
         this.drawPixel(gamePixel);
     }
 
