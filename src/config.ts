@@ -1,3 +1,14 @@
+/**
+ * Default parameters:
+ * CANVAS_WIDTH = 96;
+ * CANVAS_HEIGHT = 40;
+ * MOVE = 4;
+ * PIXEL_SIZE = 6;
+ * INIT_LENGTH = 3;
+ * INIT_HEAD = {x: 34, y: 18};
+ */
+
+export const DEBUG = false;
 export const CANVAS_WIDTH = 96;
 export const CANVAS_HEIGHT = 40;
 export const MOVE = 4;
@@ -25,9 +36,11 @@ export const MOVES: string[] = [
 
 export const COLORS = {
     GREEN: '#a4c70b',
+    BLACK: '#000',
+    RED: '#f00',
 };
 
-export const PIXEL_SIZE = 10;
+export const PIXEL_SIZE = 6;
 export const CANVAS_WIDTH_PX = PIXEL_SIZE * CANVAS_WIDTH;
 export const CANVAS_HEIGHT_PX = PIXEL_SIZE * CANVAS_HEIGHT;
 export const BOARD_HEIGHT = CANVAS_HEIGHT - PIXEL_SIZE;

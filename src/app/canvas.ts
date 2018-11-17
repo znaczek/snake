@@ -30,7 +30,13 @@ export class Canvas {
 
     public drawMask(): void {
         this.ctx.save();
-        this.ctx.strokeStyle = COLORS.GREEN;
+        if (!config.DEBUG) {
+            this.ctx.strokeStyle = COLORS.GREEN;
+        } else {
+            this.ctx.strokeStyle = COLORS.RED;
+            this.drawGrid();
+        }
+
         this.ctx.lineWidth = config.PIXEL_SIZE;
         this.ctx.strokeRect(
             1.5 * config.PIXEL_SIZE,
@@ -121,6 +127,25 @@ export class Canvas {
             this.drawPixel(new Pixel(i, 0));
             this.drawPixel(new Pixel(i, config.CANVAS_HEIGHT - 1));
         }
+    }
+
+    private drawGrid(): void {
+        this.ctx.save();
+        this.ctx.lineWidth = 0.5;
+        this.ctx.strokeStyle = COLORS.BLACK;
+        for (let i = 0; i < config.CANVAS_HEIGHT; i+=1) {
+            this.ctx.beginPath();
+            this.ctx.moveTo(0, i * config.PIXEL_SIZE);
+            this.ctx.lineTo(config.CANVAS_WIDTH * config.PIXEL_SIZE, i * config.PIXEL_SIZE);
+            this.ctx.stroke();
+        }
+        for (let i = 0; i < config.CANVAS_WIDTH; i+=1) {
+            this.ctx.beginPath();
+            this.ctx.moveTo(i * config.PIXEL_SIZE, 0);
+            this.ctx.lineTo(i * config.PIXEL_SIZE, config.CANVAS_HEIGHT * config.PIXEL_SIZE);
+            this.ctx.stroke();
+        }
+        this.ctx.restore();
     }
 
     private clonePartTrail(part: BodyPart, prevPart: BodyPart, nextPart: BodyPart): void {

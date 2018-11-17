@@ -129,6 +129,20 @@ export class Snake {
         return this.didHit(new Position(apple.x + 1, apple.y + 1));
     }
 
+    public withinApple(apple: Apple): boolean {
+        for (let i = 0; i < this.body.length; i += 1) {
+            const partBoundary: Rectangle = this.getPartBoundary(i);
+
+            const result = apple.x >= partBoundary.begin.x && apple.x <= partBoundary.end.x &&
+                apple.y >= partBoundary.begin.y && apple.y <= partBoundary.end.y
+                ;
+            if (result) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public didHit(position: Position): boolean {
         const headBoundary: Rectangle = this.getPartBoundary(0);
         return position.x >= headBoundary.begin.x && position.x <= headBoundary.end.x &&
@@ -143,6 +157,19 @@ export class Snake {
 
     public hasCollision(): boolean {
         return this.checkSelfCollision();
+    }
+
+    public getPixels(): Pixel[] {
+        const boundary: Pixel[] = [];
+        for (let i = 0; i < this.body.length; i += 1) {
+            const partBoundary: Rectangle = this.getPartBoundary(i);
+            for (let j = partBoundary.begin.x; j <= partBoundary.end.x; j += 1) {
+                for (let k = partBoundary.begin.y; k <= partBoundary.end.y; k += 1) {
+                    boundary.push(new Pixel(j, k));
+                }
+            }
+        }
+        return boundary;
     }
 
     private buildInitialPart (type: BodyPartEnum, position: Position): BodyPart {

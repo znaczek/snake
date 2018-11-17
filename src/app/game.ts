@@ -1,24 +1,23 @@
 import {Canvas} from './canvas';
 import {Snake} from './snake';
 import * as config from '../config';
-import {AppleGenerator} from './factory/apple.factory';
+import {AppleFactory} from './factory/apple.factory';
 import {Apple} from './model/apple.model';
 
 export class Game {
     private snake: Snake;
-    private appleGenerator: AppleGenerator;
     private gameOn: boolean;
     private interval: number;
     private apple: Apple;
     private _i: number;
 
-    constructor(private canvas: Canvas) {
+    constructor(private canvas: Canvas,
+                private appleFactory: AppleFactory) {
     }
 
     public init(): void {
         this.canvas.clear();
         this.snake = new Snake(this.canvas);
-        this.appleGenerator = new AppleGenerator();
         this.handleApple();
         this.bindEvents();
         this.loop();
@@ -71,14 +70,13 @@ export class Game {
 
     private handleApple(): void {
         if (!this.apple) {
-            this.apple = this.appleGenerator.generate();
+            this.apple = this.appleFactory.generate(this.snake.getPixels());
             return;
         }
         if (this.snake.didEatApple(this.apple)) {
-            this.apple = this.appleGenerator.generate();
+            this.apple = this.appleFactory.generate(this.snake.getPixels());
             this.snake.grow();
         }
-        this.canvas.drawApple(this.apple);
     }
 
     private singleMove(): void {
@@ -118,11 +116,10 @@ export class Game {
         this.snake.endGame();
         let i = 0;
         this.canvas.prepareBoard();
-        this.handleApple();
-        this.snake.draw();
+        this.draw();
         setInterval(() => {
             this.canvas.prepareBoard();
-            this.handleApple();
+            this.canvas.drawApple(this.apple);
             if (i % 2) {
                 this.snake.draw();
             }
@@ -135,17 +132,22 @@ export class Game {
         this.snake.move();
         if (!this.hasCollision()) {
             this.handleApple();
-            this.snake.draw();
+            this.draw();
         } else {
             this.endGame();
         }
+    }
+
+    private draw() {
+        this.snake.draw();
+        this.canvas.drawApple(this.apple);
     }
 
     private loop(): void {
         // this.canvas.prepareBoard();
         // this.snake.move();
         // this.handleApple();
-        // this.snake.draw();
-        this.interval = setTimeout(this.loop, config.SPEED);
+        // this.draw();
+        this.interval = setTimeout(this.loop.bind(this), config.SPEED);
     }
 }
