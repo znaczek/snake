@@ -8,9 +8,11 @@
  * INIT_HEAD = {x: 34, y: 18};
  */
 
-export const DEBUG = false;
-export const CANVAS_WIDTH = 96;
-export const CANVAS_HEIGHT = 40;
+export const DEBUG = true;
+export const PIXEL_SIZE = 6;
+export const TOP_BAR_HEIGHT = 8;
+export const GAME_CANVAS_WIDTH = 96;
+export const GAME_CANVAS_HEIGHT = 40;
 export const MOVE = 4;
 export const SPEED = 1000;
 
@@ -40,11 +42,14 @@ export const COLORS = {
     RED: '#f00',
 };
 
-export const PIXEL_SIZE = 6;
+export const CANVAS_WIDTH = GAME_CANVAS_WIDTH;
+export const CANVAS_HEIGHT = GAME_CANVAS_HEIGHT + TOP_BAR_HEIGHT;
 export const CANVAS_WIDTH_PX = PIXEL_SIZE * CANVAS_WIDTH;
 export const CANVAS_HEIGHT_PX = PIXEL_SIZE * CANVAS_HEIGHT;
-export const BOARD_HEIGHT = CANVAS_HEIGHT - PIXEL_SIZE;
-export const BOARD_WIDTH = CANVAS_WIDTH - PIXEL_SIZE;
+export const GAME_CANVAS_WIDTH_PX = PIXEL_SIZE* GAME_CANVAS_WIDTH;
+export const GAME_CANVAS_HEIGHT_PX = PIXEL_SIZE * GAME_CANVAS_HEIGHT;
+export const BOARD_HEIGHT = GAME_CANVAS_HEIGHT - PIXEL_SIZE;
+export const BOARD_WIDTH = GAME_CANVAS_WIDTH - PIXEL_SIZE;
 export const BOARD = {
     start: {
         x: 2,

@@ -40,9 +40,9 @@ export class Canvas {
         this.ctx.lineWidth = config.PIXEL_SIZE;
         this.ctx.strokeRect(
             1.5 * config.PIXEL_SIZE,
-            1.5 * config.PIXEL_SIZE,
-            config.CANVAS_WIDTH_PX - 3 * config.PIXEL_SIZE,
-            config.CANVAS_HEIGHT_PX - 3 * config.PIXEL_SIZE,
+            (1.5 + config.TOP_BAR_HEIGHT) * config.PIXEL_SIZE,
+            config.GAME_CANVAS_WIDTH_PX - 3 * config.PIXEL_SIZE,
+            config.GAME_CANVAS_HEIGHT_PX - 3 * config.PIXEL_SIZE,
         );
         this.ctx.restore();
     }
@@ -114,18 +114,29 @@ export class Canvas {
         this.drawGamePixel(new Pixel(apple.x +1, apple.y + 2));
     }
 
+    public drawPixel(pixel: Pixel): void {
+        this.ctx.fillStyle = 'black';
+        this.ctx.fillRect(
+            pixel.x * config.PIXEL_SIZE,
+            pixel.y * config.PIXEL_SIZE,
+            config.PIXEL_SIZE -1 ,
+            config.PIXEL_SIZE -1,
+        );
+    }
+
     private doesPixelProtrude(position: Position): boolean {
         return position.x < 0 || position.x > config.BOARD_WIDTH || position.y < 0 || position.y > config.BOARD_HEIGHT;
     }
 
     private drawGameBorder(): void {
-        for (let i = 0; i < config.CANVAS_HEIGHT; i+=1) {
-            this.drawPixel(new Pixel(0, i));
-            this.drawPixel(new Pixel(config.CANVAS_WIDTH - 1, i));
+        for (let i = 0; i < config.GAME_CANVAS_HEIGHT; i+=1) {
+            this.drawGamePixel(new Pixel(0 - 2, i - 2));
+            this.drawGamePixel(new Pixel(config.GAME_CANVAS_WIDTH - 3, i -2));
         }
-        for (let i = 0; i < config.CANVAS_WIDTH; i+=1) {
-            this.drawPixel(new Pixel(i, 0));
-            this.drawPixel(new Pixel(i, config.CANVAS_HEIGHT - 1));
+        for (let i = 0; i < config.GAME_CANVAS_WIDTH; i+=1) {
+            this.drawGamePixel(new Pixel(i - 2, 0 - 4));
+            this.drawGamePixel(new Pixel(i - 2, 0 - 2));
+            this.drawGamePixel(new Pixel(i - 2, config.GAME_CANVAS_HEIGHT - 3));
         }
     }
 
@@ -133,16 +144,28 @@ export class Canvas {
         this.ctx.save();
         this.ctx.lineWidth = 0.5;
         this.ctx.strokeStyle = COLORS.BLACK;
-        for (let i = 0; i < config.CANVAS_HEIGHT; i+=1) {
+        for (let i = 0; i < config.GAME_CANVAS_HEIGHT; i+=1) {
             this.ctx.beginPath();
-            this.ctx.moveTo(0, i * config.PIXEL_SIZE);
-            this.ctx.lineTo(config.CANVAS_WIDTH * config.PIXEL_SIZE, i * config.PIXEL_SIZE);
+            this.ctx.moveTo(
+                0,
+                (i + config.TOP_BAR_HEIGHT) * config.PIXEL_SIZE,
+            );
+            this.ctx.lineTo(
+                config.GAME_CANVAS_WIDTH * config.PIXEL_SIZE,
+                (i + config.TOP_BAR_HEIGHT) * config.PIXEL_SIZE,
+            );
             this.ctx.stroke();
         }
-        for (let i = 0; i < config.CANVAS_WIDTH; i+=1) {
+        for (let i = 0; i < config.GAME_CANVAS_WIDTH; i+=1) {
             this.ctx.beginPath();
-            this.ctx.moveTo(i * config.PIXEL_SIZE, 0);
-            this.ctx.lineTo(i * config.PIXEL_SIZE, config.CANVAS_HEIGHT * config.PIXEL_SIZE);
+            this.ctx.moveTo(
+                i * config.PIXEL_SIZE,
+                (config.TOP_BAR_HEIGHT) * config.PIXEL_SIZE,
+            );
+            this.ctx.lineTo(
+                i * config.PIXEL_SIZE,
+                (config.GAME_CANVAS_HEIGHT + config.TOP_BAR_HEIGHT) * config.PIXEL_SIZE,
+            );
             this.ctx.stroke();
         }
         this.ctx.restore();
@@ -172,19 +195,11 @@ export class Canvas {
         this.drawPart(copy, prevPart, nextPart, true);
     }
 
-    private drawPixel(pixel: Pixel): void {
-        this.ctx.fillRect(
-            pixel.x * config.PIXEL_SIZE,
-            pixel.y * config.PIXEL_SIZE,
-            config.PIXEL_SIZE -1 ,
-            config.PIXEL_SIZE -1,
-        );
-    }
-
     private drawGamePixel(pixel: Pixel): void {
         const gamePixel = new Pixel(
             pixel.x + config.BOARD.start.x,
-            pixel.y + config.BOARD.start.y,
+            pixel.y + config.BOARD.start.y + config.TOP_BAR_HEIGHT,
+            // pixel.y + config.BOARD.start.y,
         );
 
         this.drawPixel(gamePixel);

@@ -7,8 +7,8 @@ export class AppleFactory {
     private readonly allAvailableApplePositions: Position[] = [];
 
     constructor() {
-        const xMaxAppleBeginCoord = this.getMaxAppleBeginCoord(config.CANVAS_WIDTH);
-        const yMaxAppleBeginCoord = this.getMaxAppleBeginCoord(config.CANVAS_HEIGHT);
+        const xMaxAppleBeginCoord = this.getMaxAppleBeginCoord(config.GAME_CANVAS_WIDTH);
+        const yMaxAppleBeginCoord = this.getMaxAppleBeginCoord(config.GAME_CANVAS_HEIGHT);
         for (let i = 0; i <= xMaxAppleBeginCoord; i += config.MOVE) {
             for (let j = 0; j <= yMaxAppleBeginCoord; j += config.MOVE) {
                 this.allAvailableApplePositions.push(

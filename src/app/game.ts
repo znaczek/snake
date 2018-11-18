@@ -5,17 +5,21 @@ import {AppleFactory} from './factory/apple.factory';
 import {Apple} from './model/apple.model';
 import {Observable} from 'rxjs/index';
 import {takeWhile} from 'rxjs/internal/operators';
+import {TextWriter} from './text-writer';
+import {Position} from './model/position.model';
 
 export class Game {
     private snake: Snake;
     private gameOn: boolean;
     private interval: number;
     private apple: Apple;
+    private points: number = 0;
     private _i: number;
 
     constructor(private canvas: Canvas,
                 private appleFactory: AppleFactory,
-                private onClick: Observable<Event>) {
+                private onClick: Observable<Event>,
+                private textWriter: TextWriter) {
     }
 
     public init(): void {
@@ -80,6 +84,7 @@ export class Game {
         if (this.snake.didEatApple(this.apple)) {
             this.apple = this.appleFactory.generate(this.snake.getPixels());
             this.snake.grow();
+            this.points += 1;
         }
     }
 
@@ -145,6 +150,8 @@ export class Game {
     private draw() {
         this.snake.draw();
         this.canvas.drawApple(this.apple);
+        this.textWriter.setPosition(new Position(0, 0));
+        this.textWriter.write(TextWriter.padStart(this.points.toString(), '0', 4));
     }
 
     private loop(): void {
