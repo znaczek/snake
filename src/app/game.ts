@@ -1,23 +1,25 @@
 import {Canvas} from './canvas';
 import {Snake} from './snake';
 import * as config from '../config';
-import {AppleFactory} from './factory/apple.factory';
+import {MealFactory} from './factory/apple.factory';
 import {Apple} from './model/apple.model';
 import {Observable} from 'rxjs/index';
 import {takeWhile} from 'rxjs/internal/operators';
 import {TextWriter} from './text-writer';
 import {Position} from './model/position.model';
+import {Bug} from './model/bug.model';
 
 export class Game {
     private snake: Snake;
     private gameOn: boolean;
     private interval: number;
     private apple: Apple;
+    private bug: Bug = null;
     private points: number = 0;
     private _i: number;
 
     constructor(private canvas: Canvas,
-                private appleFactory: AppleFactory,
+                private mealFactory: MealFactory,
                 private onClick: Observable<Event>,
                 private textWriter: TextWriter) {
     }
@@ -25,7 +27,7 @@ export class Game {
     public init(): void {
         this.canvas.clear();
         this.snake = new Snake(this.canvas);
-        this.handleApple();
+        this.provideApple();
         this.bindEvents();
         this.loop();
         this.testMove();
@@ -76,15 +78,10 @@ export class Game {
         });
     }
 
-    private handleApple(): void {
+    private provideApple(): void {
         if (!this.apple) {
-            this.apple = this.appleFactory.generate(this.snake.getPixels());
+            this.apple = this.mealFactory.generateApple(this.snake.getPixels());
             return;
-        }
-        if (this.snake.didEatApple(this.apple)) {
-            this.apple = this.appleFactory.generate(this.snake.getPixels());
-            this.snake.grow();
-            this.points += 1;
         }
     }
 
@@ -137,28 +134,62 @@ export class Game {
     }
 
     private testMove(): void {
+        this.handleMove();
+    }
+
+    private draw() {
+        this.snake.draw();
+        this.canvas.drawApple(this.apple);
+        this.canvas.drawBug(this.bug);
+        this.textWriter.setPosition(new Position(0, 0));
+        this.textWriter.write(TextWriter.padStart(this.points.toString(), '0', 4));
+    }
+
+    private loop(): void {
+        // this.handleMove();
+        this.interval = setTimeout(this.loop.bind(this), config.SPEED);
+    }
+
+    private handleMove(): void {
         this.canvas.prepareBoard();
         this.snake.move();
         if (!this.hasCollision()) {
-            this.handleApple();
+            this.provideApple();
+            this.refreshBug();
+            this.handleEating();
             this.draw();
         } else {
             this.endGame();
         }
     }
 
-    private draw() {
-        this.snake.draw();
-        this.canvas.drawApple(this.apple);
-        this.textWriter.setPosition(new Position(0, 0));
-        this.textWriter.write(TextWriter.padStart(this.points.toString(), '0', 4));
+    private handleEating(): void {
+        if (this.snake.didEat(this.apple)) {
+            this.apple = this.mealFactory.generateApple(this.snake.getPixels());
+            this.handleBugGeneration();
+            this.snake.grow();
+            this.points += 1;
+        } else if (this.snake.didEat(this.bug)) {
+            this.snake.grow();
+            this.points += this.bug.value;
+            this.bug = null;
+            this.handleBugGeneration();
+        }
     }
 
-    private loop(): void {
-        // this.canvas.prepareBoard();
-        // this.snake.move();
-        // this.handleApple();
-        // this.draw();
-        this.interval = setTimeout(this.loop.bind(this), config.SPEED);
+    private handleBugGeneration(): void {
+        if (!this.bug && (Math.random() * 100 > 50)) {
+            this.bug = this.mealFactory.generateBug(this.snake.getPixels());
+        }
+    }
+
+    private refreshBug(): void {
+        if (!this.bug) {
+            return;
+        }
+        this.bug.value -= 1;
+        if (this.bug.value === 0) {
+            this.bug = null;
+        }
     }
 }

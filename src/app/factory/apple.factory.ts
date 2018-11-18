@@ -2,8 +2,10 @@ import * as config from '../../config';
 import {Apple} from '../model/apple.model';
 import {Pixel} from '../model/pixel.model';
 import {Position} from '../model/position.model';
+import {Bug} from '../model/bug.model';
+import {BugTypesEnum} from '../enums/bug-types.enum';
 
-export class AppleFactory {
+export class MealFactory {
     private readonly allAvailableApplePositions: Position[] = [];
 
     constructor() {
@@ -18,23 +20,40 @@ export class AppleFactory {
         }
     }
 
-    public generate(forbiddenPixels: Pixel[]): Apple {
-        const availableApples: Pixel[] = [];
+    public generateApple(forbiddenPixels: Pixel[]): Apple {
+        const chosenPosition: Position = this.getAvailableStartPosition(forbiddenPixels, 3, 3);
+        return new Apple(chosenPosition.x, chosenPosition.y);
+    }
+
+    public generateBug(forbiddenPixels: Pixel[]): Bug {
+        const chosenPosition: Position = this.getAvailableStartPosition(forbiddenPixels, 3, 7);
+        const bugTypesValues = Object.keys(BugTypesEnum)
+            .map((n) => Number.parseInt(n, 10))
+            .filter((n) => n === parseInt(n.toString(), 10));
+        const type = Math.floor((Math.random() * bugTypesValues.length));
+        return new Bug(chosenPosition.x, chosenPosition.y, type);
+    }
+
+    private getAvailableStartPosition(
+            forbiddenPixels: Pixel[],
+            xSpace: number,
+            ySpace: number,
+        ): Position {
+        const availablePositions: Pixel[] = [];
         this.allAvailableApplePositions.forEach((availableApple) => {
             const forbiddenPixelsNotOnApple = forbiddenPixels.filter((forbidden) => {
                 return forbidden.x < availableApple.x ||
-                    forbidden.x > availableApple.x + 2 ||
+                    forbidden.x > availableApple.x + xSpace ||
                     forbidden.y < availableApple.y ||
-                    forbidden.y > availableApple.y + 2;
+                    forbidden.y > availableApple.y + ySpace;
             });
             if (forbiddenPixelsNotOnApple.length === forbiddenPixels.length) {
-                availableApples.push(new Apple(availableApple.x, availableApple.y));
+                availablePositions.push(new Apple(availableApple.x, availableApple.y));
             } else {
                 forbiddenPixels = forbiddenPixelsNotOnApple;
             }
         });
-
-        return availableApples[Math.floor(Math.random() * (availableApples.length))];
+        return availablePositions[Math.floor(Math.random() * (availablePositions.length))];
     }
 
     private getMaxAppleBeginCoord(max: number): number {

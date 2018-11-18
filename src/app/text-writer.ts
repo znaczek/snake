@@ -1,6 +1,6 @@
 import {Position} from './model/position.model';
 import {Canvas} from './canvas';
-import {charData} from './data/charData';
+import {charData} from './data/char.data';
 import {Pixel} from './model/pixel.model';
 import {Char} from './model/char';
 
@@ -10,9 +10,7 @@ export class TextWriter {
         if (amountToPad <= 0) {
             return text;
         }
-        console.log(amountToPad);
         const prefix: string = new Array(amountToPad + 1).join(char.toString());
-        console.log(prefix);
         return prefix + text;
     }
 
@@ -27,7 +25,6 @@ export class TextWriter {
     }
 
     public write(text: string): void {
-        console.log(text);
         text.split('').forEach((char) => this.writeChar(char));
     }
 

@@ -1,5 +1,5 @@
 import * as config from '../config';
-import {drawData} from './data/drawData';
+import {drawData} from './data/draw.data';
 import {COLORS} from '../config';
 import {DirectionEnum} from './enums/direction.enum';
 import {Position} from './model/position.model';
@@ -7,6 +7,8 @@ import {BodyPart} from './model/body-part.model';
 import {BodyPartEnum} from './enums/body-part.enum';
 import {Pixel} from './model/pixel.model';
 import {Apple} from './model/apple.model';
+import {bugData} from './data/bug.data';
+import {Bug} from './model/bug.model';
 
 export class Canvas {
     private ctx: CanvasRenderingContext2D = null;
@@ -112,6 +114,24 @@ export class Canvas {
         this.drawGamePixel(new Pixel(apple.x , apple.y + 1));
         this.drawGamePixel(new Pixel(apple.x + 2, apple.y + 1));
         this.drawGamePixel(new Pixel(apple.x +1, apple.y + 2));
+    }
+
+    public drawBug(bug: Bug): void {
+
+        if (!bug) {
+            return;
+        }
+        const bugPixels = bugData[bug.type];
+        if (!bugPixels) {
+            return;
+        }
+
+        bugPixels.forEach((pixel: Pixel) => {
+            this.drawGamePixel(new Pixel(
+                bug.x + pixel.x,
+                bug.y + pixel.y,
+            ));
+        });
     }
 
     public drawPixel(pixel: Pixel): void {

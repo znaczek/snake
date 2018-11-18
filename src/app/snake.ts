@@ -7,8 +7,9 @@ import {Position} from './model/position.model';
 import {BodyPart} from './model/body-part.model';
 import {clone} from './utils/utils';
 import {Pixel} from './model/pixel.model';
-import {drawData} from './data/drawData';
+import {drawData} from './data/draw.data';
 import {Rectangle} from './model/rectangle.model';
+import {Bug} from './model/bug.model';
 
 export class Snake {
     private canvas: Canvas;
@@ -125,22 +126,11 @@ export class Snake {
         this.lastDirection = DirectionEnum.RIGHT;
     }
 
-    public didEatApple(apple: Apple): boolean {
-        return this.didHit(new Position(apple.x + 1, apple.y + 1));
-    }
-
-    public withinApple(apple: Apple): boolean {
-        for (let i = 0; i < this.body.length; i += 1) {
-            const partBoundary: Rectangle = this.getPartBoundary(i);
-
-            const result = apple.x >= partBoundary.begin.x && apple.x <= partBoundary.end.x &&
-                apple.y >= partBoundary.begin.y && apple.y <= partBoundary.end.y
-                ;
-            if (result) {
-                return true;
-            }
+    public didEat(meal: Apple | Bug): boolean {
+        if (!meal) {
+            return false;
         }
-        return false;
+        return this.didHit(new Position(meal.x + 1, meal.y + 1));
     }
 
     public didHit(position: Position): boolean {
