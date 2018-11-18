@@ -8,6 +8,7 @@ import {takeWhile} from 'rxjs/internal/operators';
 import {TextWriter} from './text-writer';
 import {Position} from './model/position.model';
 import {Bug} from './model/bug.model';
+import {getRectangleFromPixels} from './utils/utils';
 
 export class Game {
     private snake: Snake;
@@ -106,10 +107,8 @@ export class Game {
                     break;
                 }
             }
-            this.snake.move();
         }
-        this.canvas.prepareBoard();
-        this.snake.draw();
+        this.handleMove();
     }
 
     private hasCollision(): boolean {
@@ -118,19 +117,7 @@ export class Game {
 
     private endGame(): void {
         this.gameOn = false;
-        clearTimeout(this.interval);
-        this.snake.endGame();
-        let i = 0;
-        this.canvas.prepareBoard();
-        this.draw();
-        setInterval(() => {
-            this.canvas.prepareBoard();
-            this.canvas.drawApple(this.apple);
-            if (i % 2) {
-                this.snake.draw();
-            }
-            i += 1;
-        }, 500);
+        // Todo
     }
 
     private testMove(): void {
@@ -138,11 +125,21 @@ export class Game {
     }
 
     private draw() {
+        this.canvas.prepareBoard();
         this.snake.draw();
         this.canvas.drawApple(this.apple);
         this.canvas.drawBug(this.bug);
-        this.textWriter.setPosition(new Position(0, 0));
-        this.textWriter.write(TextWriter.padStart(this.points.toString(), '0', 4));
+        const pointsPixels = this.textWriter.write(TextWriter.padStart(this.points.toString(), '0', 4));
+        this.canvas.drawPixels(pointsPixels, new Position(1, 0));
+        if (this.bug) {
+            const bugPointsLeftTextPixels = this.textWriter.write(TextWriter.padStart(this.bug.value.toString(), '0', 2));
+            const bugPointsPixelsRectangle = getRectangleFromPixels(bugPointsLeftTextPixels);
+
+            const xBugPointsOffset = config.CANVAS_WIDTH - 1 - (bugPointsPixelsRectangle.end.x - bugPointsPixelsRectangle.begin.x);
+            const xBugOffset = xBugPointsOffset - 2 - Bug.width;
+            this.canvas.drawPixels(this.bug.getPixels(), new Position(xBugOffset, 1));
+            this.canvas.drawPixels(bugPointsLeftTextPixels, new Position(xBugPointsOffset, 0));
+        }
     }
 
     private loop(): void {
@@ -151,12 +148,12 @@ export class Game {
     }
 
     private handleMove(): void {
-        this.canvas.prepareBoard();
         this.snake.move();
         if (!this.hasCollision()) {
             this.provideApple();
             this.refreshBug();
             this.handleEating();
+
             this.draw();
         } else {
             this.endGame();
@@ -187,7 +184,7 @@ export class Game {
         if (!this.bug) {
             return;
         }
-        // this.bug.value -= 1;
+        this.bug.value -= 1;
         if (this.bug.value === 0) {
             this.bug = null;
         }

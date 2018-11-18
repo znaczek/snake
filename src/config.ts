@@ -8,7 +8,7 @@
  * INIT_HEAD = {x: 34, y: 18};
  */
 
-export const DEBUG = true;
+export const DEBUG = false;
 export const PIXEL_SIZE = 6;
 export const TOP_BAR_HEIGHT = 8;
 export const GAME_CANVAS_WIDTH = 96;

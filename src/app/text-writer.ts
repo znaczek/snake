@@ -5,6 +5,8 @@ import {Pixel} from './model/pixel.model';
 import {Char} from './model/char';
 
 export class TextWriter {
+    private position: Position;
+
     public static padStart(text: string, char: string, amount: number): string {
         const amountToPad = amount - text.length;
         if (amountToPad <= 0) {
@@ -14,21 +16,14 @@ export class TextWriter {
         return prefix + text;
     }
 
-    private position: Position = new Position(0, 0);
-
-    constructor(private canvas: Canvas) {
+    public write(text: string): Pixel[] {
+        this.position = new Position(0, 0);
+        return text.split('').reduce((acc: Pixel[], currChar: string) => {
+            return [...acc, ...this.writeChar(currChar)];
+        }, []);
     }
 
-    public setPosition(position: Position): void {
-        this.position.x = position.x;
-        this.position.y = position.y;
-    }
-
-    public write(text: string): void {
-        text.split('').forEach((char) => this.writeChar(char));
-    }
-
-    private writeChar(charIndex: string): void {
+    private writeChar(charIndex: string): Pixel[] {
         if (charIndex.length !== 1) {
             throw new Error('Bad input character: ' + charIndex);
         }
@@ -37,13 +32,15 @@ export class TextWriter {
             return;
         }
 
+        const pixels: Pixel[] = [];
         char.pixels.forEach((pixel: Pixel) => {
             const p = new Pixel(
                 this.position.x + pixel.x,
                 this.position.y + pixel.y,
             );
-            this.canvas.drawPixel(p);
+            pixels.push(p);
         });
         this.position.x += char.width;
+        return pixels;
     }
 }

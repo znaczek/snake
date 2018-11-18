@@ -15,7 +15,7 @@ export class App {
         this.mealFactory = new MealFactory();
         this.onClick = fromEvent(document, 'keydown');
         this.canvas = new Canvas(canvas);
-        this.textWriter = new TextWriter(this.canvas);
+        this.textWriter = new TextWriter();
         this.canvas.init();
         this.game = new Game(this.canvas, this.mealFactory, this.onClick, this.textWriter);
         this.game.init();

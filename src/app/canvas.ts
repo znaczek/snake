@@ -120,12 +120,8 @@ export class Canvas {
         if (!bug) {
             return;
         }
-        const bugPixels = bugData[bug.type];
-        if (!bugPixels) {
-            return;
-        }
 
-        bugPixels.forEach((pixel: Pixel) => {
+        bug.getPixels().forEach((pixel: Pixel) => {
             this.drawGamePixel(new Pixel(
                 bug.x + pixel.x,
                 bug.y + pixel.y,
@@ -141,6 +137,15 @@ export class Canvas {
             config.PIXEL_SIZE -1 ,
             config.PIXEL_SIZE -1,
         );
+    }
+
+    public drawPixels(pixels: Pixel[], start: Position): void {
+        pixels.forEach((pixel: Pixel) => this.drawPixel(
+            new Pixel(
+                start.x + pixel.x,
+                start.y + pixel.y,
+            ),
+        ));
     }
 
     private doesPixelProtrude(position: Position): boolean {
