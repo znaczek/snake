@@ -1,15 +1,14 @@
 import * as config from '../config';
-import {Apple} from './model/apple.model';
 import {Canvas} from './canvas';
 import {DirectionEnum} from './enums/direction.enum';
 import {BodyPartEnum} from './enums/body-part.enum';
 import {Position} from './model/position.model';
 import {BodyPart} from './model/body-part.model';
-import {clone} from './utils/utils';
+import {clone, getRectangleFromPixels, isOverlapping} from './utils/utils';
 import {Pixel} from './model/pixel.model';
 import {drawData} from './data/draw.data';
 import {Rectangle} from './model/rectangle.model';
-import {Bug} from './model/bug.model';
+import {Eatable} from './interfaces/eatable';
 
 export class Snake {
     private canvas: Canvas;
@@ -126,18 +125,15 @@ export class Snake {
         this.lastDirection = DirectionEnum.RIGHT;
     }
 
-    public didEat(meal: Apple | Bug): boolean {
+    public didEat(meal: Eatable): boolean {
         if (!meal) {
             return false;
         }
-        return this.didHit(new Position(meal.x + 1, meal.y + 1));
+        return this.didHit(meal);
     }
 
-    public didHit(position: Position): boolean {
-        const headBoundary: Rectangle = this.getPartBoundary(0);
-        return position.x >= headBoundary.begin.x && position.x <= headBoundary.end.x &&
-            position.y >= headBoundary.begin.y && position.y <= headBoundary.end.y
-        ;
+    public didHit(meal: Eatable): boolean {
+        return isOverlapping(meal.getBoundary(), this.getPartBoundary(0));
     }
 
     public grow(): void {
@@ -212,31 +208,12 @@ export class Snake {
                 break;
         }
 
-        let minX = 1000;
-        let maxX = 0;
-        let minY = 1000;
-        let maxY = 0;
+        const partPixels: Pixel[] = [];
         partData.forEach((elem: Pixel) => {
-            const x = part.position.x + elem.x;
-            const y = part.position.y + elem.y;
-            if (x < minX) {
-                minX = x;
-            }
-            if (x > maxX) {
-                maxX = x;
-            }
-            if (y < minY) {
-                minY = y;
-            }
-            if (y > maxY) {
-                maxY = y;
-            }
+            partPixels.push(new Pixel(part.position.x + elem.x, part.position.y + elem.y));
         });
 
-        return new Rectangle(
-            new Position(minX, minY),
-            new Position(maxX, maxY),
-        );
+        return getRectangleFromPixels(partPixels);
     }
 
     private getNose(): Pixel {

@@ -187,7 +187,7 @@ export class Game {
         if (!this.bug) {
             return;
         }
-        this.bug.value -= 1;
+        // this.bug.value -= 1;
         if (this.bug.value === 0) {
             this.bug = null;
         }

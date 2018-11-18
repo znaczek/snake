@@ -21,12 +21,12 @@ export class MealFactory {
     }
 
     public generateApple(forbiddenPixels: Pixel[]): Apple {
-        const chosenPosition: Position = this.getAvailableStartPosition(forbiddenPixels, 3, 3);
+        const chosenPosition: Position = this.getAvailableStartPosition(forbiddenPixels, Apple.width, Apple.height);
         return new Apple(chosenPosition.x, chosenPosition.y);
     }
 
     public generateBug(forbiddenPixels: Pixel[]): Bug {
-        const chosenPosition: Position = this.getAvailableStartPosition(forbiddenPixels, 3, 7);
+        const chosenPosition: Position = this.getAvailableStartPosition(forbiddenPixels, Bug.width, Bug.height);
         const bugTypesValues = Object.keys(BugTypesEnum)
             .map((n) => Number.parseInt(n, 10))
             .filter((n) => n === parseInt(n.toString(), 10));
@@ -43,9 +43,9 @@ export class MealFactory {
         this.allAvailableApplePositions.forEach((availableApple) => {
             const forbiddenPixelsNotOnApple = forbiddenPixels.filter((forbidden) => {
                 return forbidden.x < availableApple.x ||
-                    forbidden.x > availableApple.x + xSpace ||
+                    forbidden.x >= availableApple.x + xSpace ||
                     forbidden.y < availableApple.y ||
-                    forbidden.y > availableApple.y + ySpace;
+                    forbidden.y >= availableApple.y + ySpace;
             });
             if (forbiddenPixelsNotOnApple.length === forbiddenPixels.length) {
                 availablePositions.push(new Apple(availableApple.x, availableApple.y));

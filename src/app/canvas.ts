@@ -117,7 +117,6 @@ export class Canvas {
     }
 
     public drawBug(bug: Bug): void {
-
         if (!bug) {
             return;
         }
