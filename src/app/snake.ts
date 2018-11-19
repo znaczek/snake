@@ -97,7 +97,7 @@ export class Snake {
             }
         }
 
-        this.canvas.handleBounrady(headPosition, this.direction);
+        this.handleBounrady(headPosition, this.direction);
 
         this.body.unshift(new BodyPart(
             BodyPartEnum.HEAD,
@@ -107,16 +107,6 @@ export class Snake {
         this.body.pop();
         this.body[this.body.length - 1].type = BodyPartEnum.TAIL;
         this.lastDirection = this.direction;
-    }
-
-    public draw(): void {
-        const body = this.getBodyData();
-        for (let i = 0; i < body.length; i += 1) {
-            const prevPart = (i > 0) ? body[i - 1] : null;
-            const nextPart = (i < body.length) ? body[i + 1] : null;
-            this.canvas.drawPart(body[i], prevPart, nextPart);
-        }
-        this.canvas.drawMask();
     }
 
     public reset (): void {
@@ -145,7 +135,7 @@ export class Snake {
         return this.checkSelfCollision();
     }
 
-    public getPixels(): Pixel[] {
+    public getBodyBoundaryPixels(): Pixel[] {
         const boundary: Pixel[] = [];
         for (let i = 0; i < this.body.length; i += 1) {
             const partBoundary: Rectangle = this.getPartBoundary(i);
@@ -156,6 +146,27 @@ export class Snake {
             }
         }
         return boundary;
+    }
+
+    public getPixels(): Pixel[] {
+        return this.body.reduce((acc: Pixel[], _, index: number) => {
+            return [...acc, ...this.getPartPixels(index)];
+        }, []);
+    }
+
+    private handleBounrady(position: Position, direction: DirectionEnum): void {
+        if (direction === DirectionEnum.RIGHT && position.x + 5 > config.BOARD.end.x) {
+            position.x -= (config.BOARD_WIDTH + 2);
+        }
+        if (direction === DirectionEnum.LEFT && position.x - 5 < 0) {
+            position.x += (config.BOARD_WIDTH + 2);
+        }
+        if (direction === DirectionEnum.DOWN && position.y + 5 > config.BOARD.end.y) {
+            position.y -= (config.BOARD_HEIGHT + 2);
+        }
+        if (direction === DirectionEnum.UP && position.y - 5 < 0) {
+            position.y += (config.BOARD_HEIGHT + 2);
+        }
     }
 
     private buildInitialPart (type: BodyPartEnum, position: Position): BodyPart {
@@ -191,7 +202,7 @@ export class Snake {
         return clone(this.oldBody);
     }
 
-    private getPartBoundary(index: number): Rectangle {
+    private getPartPixels(index: number): Pixel[] {
         const part: BodyPart = this.body[index];
         const prevPart: BodyPart = index > 0 ? this.body[index - 1] : this.body[index];
         const nextPart: BodyPart = index < this.body.length - 1 ? this.body[index + 1] : this.body[index];
@@ -212,8 +223,11 @@ export class Snake {
         partData.forEach((elem: Pixel) => {
             partPixels.push(new Pixel(part.position.x + elem.x, part.position.y + elem.y));
         });
+        return partPixels;
+    }
 
-        return getRectangleFromPixels(partPixels);
+    private getPartBoundary(index: number): Rectangle {
+        return getRectangleFromPixels(this.getPartPixels(index));
     }
 
     private getNose(): Pixel {

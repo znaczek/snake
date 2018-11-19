@@ -12,8 +12,8 @@ export class App {
     private onClick: Observable<Event>;
 
     public init(canvas: HTMLCanvasElement) {
-        this.mealFactory = new MealFactory();
         this.onClick = fromEvent(document, 'keydown');
+        this.mealFactory = new MealFactory();
         this.canvas = new Canvas(canvas);
         this.textWriter = new TextWriter();
         this.canvas.init();

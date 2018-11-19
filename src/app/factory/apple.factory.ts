@@ -6,14 +6,14 @@ import {Bug} from '../model/bug.model';
 import {BugTypesEnum} from '../enums/bug-types.enum';
 
 export class MealFactory {
-    private readonly allAvailableApplePositions: Position[] = [];
+    private readonly allAvailableMealPositions: Position[] = [];
 
     constructor() {
         const xMaxAppleBeginCoord = this.getMaxAppleBeginCoord(config.GAME_CANVAS_WIDTH);
         const yMaxAppleBeginCoord = this.getMaxAppleBeginCoord(config.GAME_CANVAS_HEIGHT);
         for (let i = 0; i <= xMaxAppleBeginCoord; i += config.MOVE) {
             for (let j = 0; j <= yMaxAppleBeginCoord; j += config.MOVE) {
-                this.allAvailableApplePositions.push(
+                this.allAvailableMealPositions.push(
                     new Pixel(i, j),
                 );
             }
@@ -40,17 +40,23 @@ export class MealFactory {
             ySpace: number,
         ): Position {
         const availablePositions: Pixel[] = [];
-        this.allAvailableApplePositions.forEach((availableApple) => {
-            const forbiddenPixelsNotOnApple = forbiddenPixels.filter((forbidden) => {
-                return forbidden.x < availableApple.x ||
-                    forbidden.x >= availableApple.x + xSpace ||
-                    forbidden.y < availableApple.y ||
-                    forbidden.y >= availableApple.y + ySpace;
+        this.allAvailableMealPositions.forEach((availableMealPosition) => {
+            const pixelsForFutureChecking: Pixel[] = [];
+            const forbiddenPixelsNotOnGivenAvailablePosition = forbiddenPixels.filter((forbidden) => {
+                const isAboveOrOnLeft = forbidden.x < availableMealPosition.x || forbidden.y < availableMealPosition.y;
+                const isBelowOrOnRight = forbidden.x >= availableMealPosition.x + xSpace ||
+                    forbidden.y >= availableMealPosition.y + ySpace;
+                const shouldBeCheckedInFuture = forbidden.x >= availableMealPosition.x + config.MOVE ||
+                    forbidden.y >= availableMealPosition.y + config.MOVE;
+                if (shouldBeCheckedInFuture) {
+                    pixelsForFutureChecking.push(forbidden);
+                }
+                return isAboveOrOnLeft || isBelowOrOnRight;
             });
-            if (forbiddenPixelsNotOnApple.length === forbiddenPixels.length) {
-                availablePositions.push(new Apple(availableApple.x, availableApple.y));
+            if (forbiddenPixelsNotOnGivenAvailablePosition.length === forbiddenPixels.length) {
+                availablePositions.push(new Position(availableMealPosition.x, availableMealPosition.y));
             } else {
-                forbiddenPixels = forbiddenPixelsNotOnApple;
+                forbiddenPixels = pixelsForFutureChecking;
             }
         });
         return availablePositions[Math.floor(Math.random() * (availablePositions.length))];

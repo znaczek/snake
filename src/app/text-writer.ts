@@ -1,12 +1,10 @@
 import {Position} from './model/position.model';
-import {Canvas} from './canvas';
 import {charData} from './data/char.data';
 import {Pixel} from './model/pixel.model';
 import {Char} from './model/char';
+import {GameText} from './model/game-text.model';
 
 export class TextWriter {
-    private position: Position;
-
     public static padStart(text: string, char: string, amount: number): string {
         const amountToPad = amount - text.length;
         if (amountToPad <= 0) {
@@ -16,11 +14,15 @@ export class TextWriter {
         return prefix + text;
     }
 
-    public write(text: string): Pixel[] {
-        this.position = new Position(0, 0);
-        return text.split('').reduce((acc: Pixel[], currChar: string) => {
-            return [...acc, ...this.writeChar(currChar)];
-        }, []);
+    private position: Position;
+
+    public write(text: string, start?: Position): GameText {
+        this.position = start || new Position(0, 0);
+        const pixels: Pixel[] = [];
+        text.split('').forEach((char: string) => {
+            pixels.push(...this.writeChar(char));
+        });
+        return new GameText(pixels, start, this.position);
     }
 
     private writeChar(charIndex: string): Pixel[] {

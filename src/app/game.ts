@@ -6,9 +6,11 @@ import {Apple} from './model/apple.model';
 import {Observable} from 'rxjs/index';
 import {takeWhile} from 'rxjs/internal/operators';
 import {TextWriter} from './text-writer';
-import {Position} from './model/position.model';
 import {Bug} from './model/bug.model';
-import {getRectangleFromPixels} from './utils/utils';
+import {charData} from './data/char.data';
+import {Position} from './model/position.model';
+import {isOverlapping} from './utils/utils';
+import {Pixel} from './model/pixel.model';
 
 export class Game {
     private snake: Snake;
@@ -81,9 +83,17 @@ export class Game {
 
     private provideApple(): void {
         if (!this.apple) {
-            this.apple = this.mealFactory.generateApple(this.snake.getPixels());
+            this.apple = this.mealFactory.generateApple(this.getForbiddenPixelsForApple());
             return;
         }
+    }
+
+    private getForbiddenPixelsForApple(): Pixel[] {
+        return this.snake.getBodyBoundaryPixels().concat(this.bug ? this.bug.getBoundary().getPixels() : []);
+    }
+
+    private getForbiddenPixelsForBug(): Pixel[] {
+        return this.snake.getBodyBoundaryPixels().concat(this.apple.getBoundary().getPixels());
     }
 
     private singleMove(): void {
@@ -126,19 +136,18 @@ export class Game {
 
     private draw() {
         this.canvas.prepareBoard();
-        this.snake.draw();
-        this.canvas.drawApple(this.apple);
-        this.canvas.drawBug(this.bug);
-        const pointsPixels = this.textWriter.write(TextWriter.padStart(this.points.toString(), '0', 4));
-        this.canvas.drawPixels(pointsPixels, new Position(1, 0));
+        this.canvas.drawMask();
+        this.canvas.drawGamePixels(this.snake.getPixels());
+        this.canvas.drawGamePixels(this.apple.getPixels());
+        const pointsText = this.textWriter.write(TextWriter.padStart(this.points.toString(), '0', 4), new Position(1, 0));
+        this.canvas.drawPixels(pointsText.getPixels());
         if (this.bug) {
-            const bugPointsLeftTextPixels = this.textWriter.write(TextWriter.padStart(this.bug.value.toString(), '0', 2));
-            const bugPointsPixelsRectangle = getRectangleFromPixels(bugPointsLeftTextPixels);
-
-            const xBugPointsOffset = config.CANVAS_WIDTH - 1 - (bugPointsPixelsRectangle.end.x - bugPointsPixelsRectangle.begin.x);
+            this.canvas.drawGamePixels(this.bug.getPixels());
+            const bugPointsLeftText = this.textWriter.write(TextWriter.padStart(this.bug.value.toString(), '0', 2));
+            const xBugPointsOffset = config.CANVAS_WIDTH - (2 * charData[0].width);
             const xBugOffset = xBugPointsOffset - 2 - Bug.width;
-            this.canvas.drawPixels(this.bug.getPixels(), new Position(xBugOffset, 1));
-            this.canvas.drawPixels(bugPointsLeftTextPixels, new Position(xBugPointsOffset, 0));
+            this.canvas.drawPixels(this.bug.getPixelsRelative(new Position(xBugOffset, 1)));
+            this.canvas.drawPixels(bugPointsLeftText.getPixels(new Position(xBugPointsOffset, 0)));
         }
     }
 
@@ -162,7 +171,7 @@ export class Game {
 
     private handleEating(): void {
         if (this.snake.didEat(this.apple)) {
-            this.apple = this.mealFactory.generateApple(this.snake.getPixels());
+            this.apple = this.mealFactory.generateApple(this.getForbiddenPixelsForApple());
             this.handleBugGeneration();
             this.snake.grow();
             this.points += 1;
@@ -175,8 +184,8 @@ export class Game {
     }
 
     private handleBugGeneration(): void {
-        if (!this.bug && (Math.random() * 100 > 50)) {
-            this.bug = this.mealFactory.generateBug(this.snake.getPixels());
+        if (!this.bug && (Math.random() * 100 > 0)) {
+            this.bug = this.mealFactory.generateBug(this.getForbiddenPixelsForBug());
         }
     }
 

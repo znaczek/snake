@@ -54,21 +54,6 @@ export class Canvas {
         this.drawGameBorder();
     }
 
-    public handleBounrady(position: Position, direction: DirectionEnum): void {
-        if (direction === DirectionEnum.RIGHT && position.x + 5 > config.BOARD.end.x) {
-            position.x -= (config.BOARD_WIDTH + 2);
-        }
-        if (direction === DirectionEnum.LEFT && position.x - 5 < 0) {
-            position.x += (config.BOARD_WIDTH + 2);
-        }
-        if (direction === DirectionEnum.DOWN && position.y + 5 > config.BOARD.end.y) {
-            position.y -= (config.BOARD_HEIGHT + 2);
-        }
-        if (direction === DirectionEnum.UP && position.y - 5 < 0) {
-            position.y += (config.BOARD_HEIGHT + 2);
-        }
-    }
-
     public drawPart(
         part: BodyPart,
         prevPart: BodyPart = null,
@@ -109,26 +94,6 @@ export class Canvas {
         }
     }
 
-    public drawApple(apple: Apple): void {
-        this.drawGamePixel(new Pixel(apple.x + 1, apple.y));
-        this.drawGamePixel(new Pixel(apple.x , apple.y + 1));
-        this.drawGamePixel(new Pixel(apple.x + 2, apple.y + 1));
-        this.drawGamePixel(new Pixel(apple.x +1, apple.y + 2));
-    }
-
-    public drawBug(bug: Bug): void {
-        if (!bug) {
-            return;
-        }
-
-        bug.getPixels().forEach((pixel: Pixel) => {
-            this.drawGamePixel(new Pixel(
-                bug.x + pixel.x,
-                bug.y + pixel.y,
-            ));
-        });
-    }
-
     public drawPixel(pixel: Pixel): void {
         this.ctx.fillStyle = 'black';
         this.ctx.fillRect(
@@ -139,12 +104,24 @@ export class Canvas {
         );
     }
 
-    public drawPixels(pixels: Pixel[], start: Position): void {
+    public drawPixels(pixels: Pixel[]): void {
         pixels.forEach((pixel: Pixel) => this.drawPixel(
-            new Pixel(
-                start.x + pixel.x,
-                start.y + pixel.y,
-            ),
+            new Pixel(pixel.x, pixel.y),
+        ));
+    }
+
+    public drawGamePixel(pixel: Pixel): void {
+        const gamePixel = new Pixel(
+            pixel.x + config.BOARD.start.x,
+            pixel.y + config.BOARD.start.y + config.TOP_BAR_HEIGHT,
+        );
+
+        this.drawPixel(gamePixel);
+    }
+
+    public drawGamePixels(pixels: Pixel[]): void {
+        pixels.forEach((pixel: Pixel) => this.drawGamePixel(
+            new Pixel(pixel.x, pixel.y),
         ));
     }
 
@@ -217,16 +194,6 @@ export class Canvas {
                 break;
         }
         this.drawPart(copy, prevPart, nextPart, true);
-    }
-
-    private drawGamePixel(pixel: Pixel): void {
-        const gamePixel = new Pixel(
-            pixel.x + config.BOARD.start.x,
-            pixel.y + config.BOARD.start.y + config.TOP_BAR_HEIGHT,
-            // pixel.y + config.BOARD.start.y,
-        );
-
-        this.drawPixel(gamePixel);
     }
 
 }
