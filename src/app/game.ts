@@ -1,15 +1,14 @@
 import {Canvas} from './canvas';
 import {Snake} from './snake';
 import * as config from '../config';
-import {MealFactory} from './factory/apple.factory';
+import {MealFactory} from './factory/meal.factory';
 import {Apple} from './model/apple.model';
 import {Observable} from 'rxjs/index';
-import {takeWhile} from 'rxjs/internal/operators';
+import {takeWhile} from 'rxjs/operators';
 import {TextWriter} from './text-writer';
 import {Bug} from './model/bug.model';
 import {charData} from './data/char.data';
 import {Position} from './model/position.model';
-import {isOverlapping} from './utils/utils';
 import {Pixel} from './model/pixel.model';
 
 export class Game {
@@ -19,7 +18,6 @@ export class Game {
     private apple: Apple;
     private bug: Bug = null;
     private points: number = 0;
-    private _i: number;
 
     constructor(private canvas: Canvas,
                 private mealFactory: MealFactory,
@@ -34,6 +32,18 @@ export class Game {
         this.bindEvents();
         this.loop();
         this.testMove();
+
+        // this.bug = this.mealFactory.generateBug(this.getForbiddenPixelsForBug());
+        // this.canvas.drawGamePixels(this.bug.getPixels());
+        // const i = setInterval(() => {
+        //     // this.draw();
+        //     const apple = this.mealFactory.generateApple(this.getForbiddenPixelsForApple());
+        //     this.canvas.drawGamePixels(apple.getPixels());
+        //     if (isOverlapping(this.apple.getBoundary(), bug.getBoundary())) {
+        //         console.log('koniec');
+        //         clearTimeout(i);
+        //     }
+        // }, 10);
         this.gameOn = true;
     }
 
@@ -47,18 +57,10 @@ export class Game {
                 case 37: // left
                     this.snake.turnLeft();
                     this.testMove();
-                    // if (i > 0) {
-                    //     this._i -= 1;
-                    //     this.singleMove();
-                    // }
                     break;
                 case 39: // right
                     this.snake.turnRight();
                     this.testMove();
-                    // if (i < moves.length) {
-                    //     this._i += 1;
-                    //     this.singleMove();
-                    // }
                     break;
                 case 38: // up
                     this.snake.turnUp();
@@ -94,31 +96,6 @@ export class Game {
 
     private getForbiddenPixelsForBug(): Pixel[] {
         return this.snake.getBodyBoundaryPixels().concat(this.apple.getBoundary().getPixels());
-    }
-
-    private singleMove(): void {
-        this.snake.reset();
-        for (let j = 0; j < this._i; j += 1) {
-            switch (config.MOVES[j]) {
-                case 'left': {
-                    this.snake.turnLeft();
-                    break;
-                }
-                case 'right': {
-                    this.snake.turnRight();
-                    break;
-                }
-                case 'up': {
-                    this.snake.turnUp();
-                    break;
-                }
-                case 'down': {
-                    this.snake.turnDown();
-                    break;
-                }
-            }
-        }
-        this.handleMove();
     }
 
     private hasCollision(): boolean {

@@ -23,19 +23,6 @@ export const INIT_HEAD = {
 
 export const INIT_LENGTH = 3;
 
-export const MOVES: string[] = [
-    'Right', 'Right',
-    'Up', 'Up', 'Up',
-    'Left', 'Left', 'Left', 'Left', 'Left', 'Left',
-    'Down', 'Down', 'Down',
-    'Right', 'Right', 'Right', 'Right',
-    'Right', 'Right',
-    'Down', 'Down', 'Down',
-    'Left', 'Left', 'Left', 'Left', 'Left', 'Left',
-    'Up', 'Up', 'Up',
-    'Right', 'Right', 'Right', 'Right',
-];
-
 export const COLORS = {
     GREEN: '#a4c70b',
     BLACK: '#000',

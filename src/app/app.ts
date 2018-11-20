@@ -1,6 +1,6 @@
 import {Game} from './game';
 import {Canvas} from './canvas';
-import {MealFactory} from './factory/apple.factory';
+import {MealFactory} from './factory/meal.factory';
 import {fromEvent, Observable} from 'rxjs';
 import {TextWriter} from './text-writer';
 

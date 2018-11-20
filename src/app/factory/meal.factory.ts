@@ -4,29 +4,38 @@ import {Pixel} from '../model/pixel.model';
 import {Position} from '../model/position.model';
 import {Bug} from '../model/bug.model';
 import {BugTypesEnum} from '../enums/bug-types.enum';
+import {MealsEnum} from '../enums/meals.enum';
 
 export class MealFactory {
-    private readonly allAvailableMealPositions: Position[] = [];
+    private readonly allAvailableMealPositions: {[index in MealsEnum]: Position[]} = {
+        [MealsEnum.APPLE]: [],
+        [MealsEnum.BUG]: [],
+    };
 
     constructor() {
-        const xMaxAppleBeginCoord = this.getMaxAppleBeginCoord(config.GAME_CANVAS_WIDTH);
-        const yMaxAppleBeginCoord = this.getMaxAppleBeginCoord(config.GAME_CANVAS_HEIGHT);
-        for (let i = 0; i <= xMaxAppleBeginCoord; i += config.MOVE) {
-            for (let j = 0; j <= yMaxAppleBeginCoord; j += config.MOVE) {
-                this.allAvailableMealPositions.push(
-                    new Pixel(i, j),
-                );
+        for (let x = 0; x <= config.GAME_CANVAS_WIDTH; x += config.MOVE) {
+            for (let y = 0; y <= config.GAME_CANVAS_HEIGHT; y += config.MOVE) {
+                if (x <= config.GAME_CANVAS_WIDTH - Apple.width - config.MOVE &&
+                    y <= config.GAME_CANVAS_HEIGHT - Apple.height - config.MOVE
+                ) {
+                    this.allAvailableMealPositions[MealsEnum.APPLE].push(new Pixel(x, y));
+                }
+                if (x <= config.GAME_CANVAS_WIDTH - Bug.width - config.MOVE &&
+                    y <= config.GAME_CANVAS_HEIGHT - Bug.height - config.MOVE
+                ) {
+                    this.allAvailableMealPositions[MealsEnum.BUG].push(new Pixel(x, y));
+                }
             }
         }
     }
 
     public generateApple(forbiddenPixels: Pixel[]): Apple {
-        const chosenPosition: Position = this.getAvailableStartPosition(forbiddenPixels, Apple.width, Apple.height);
+        const chosenPosition: Position = this.getAvailableStartPosition(MealsEnum.APPLE, forbiddenPixels, Apple.width, Apple.height);
         return new Apple(chosenPosition.x, chosenPosition.y);
     }
 
     public generateBug(forbiddenPixels: Pixel[]): Bug {
-        const chosenPosition: Position = this.getAvailableStartPosition(forbiddenPixels, Bug.width, Bug.height);
+        const chosenPosition: Position = this.getAvailableStartPosition(MealsEnum.BUG, forbiddenPixels, Bug.width, Bug.height);
         const bugTypesValues = Object.keys(BugTypesEnum)
             .map((n) => Number.parseInt(n, 10))
             .filter((n) => n === parseInt(n.toString(), 10));
@@ -35,12 +44,13 @@ export class MealFactory {
     }
 
     private getAvailableStartPosition(
+            type: MealsEnum,
             forbiddenPixels: Pixel[],
             xSpace: number,
             ySpace: number,
         ): Position {
         const availablePositions: Pixel[] = [];
-        this.allAvailableMealPositions.forEach((availableMealPosition) => {
+        this.allAvailableMealPositions[type].forEach((availableMealPosition) => {
             const pixelsForFutureChecking: Pixel[] = [];
             const forbiddenPixelsNotOnGivenAvailablePosition = forbiddenPixels.filter((forbidden) => {
                 const isAboveOrOnLeft = forbidden.x < availableMealPosition.x || forbidden.y < availableMealPosition.y;
@@ -60,10 +70,6 @@ export class MealFactory {
             }
         });
         return availablePositions[Math.floor(Math.random() * (availablePositions.length))];
-    }
-
-    private getMaxAppleBeginCoord(max: number): number {
-        return max - config.MOVE * 2;
     }
 
 }
