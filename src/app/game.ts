@@ -101,7 +101,9 @@ export class Game {
 
     private draw() {
         this.canvas.prepareBoard();
-        this.canvas.drawGamePixels(this.snake.getPixels());
+        this.canvas.drawGamePixels(this.snake.getPixels(
+            this.bug ? [this.apple.getPixels(), this.bug.getPixels()] : [this.apple.getPixels()],
+        ));
         this.canvas.drawGamePixels(this.apple.getPixels());
         const pointsText = this.textWriter.write(TextWriter.padStart(this.points.toString(), '0', 4), new Position(1, 0));
         this.canvas.drawPixels(pointsText.getPixels());

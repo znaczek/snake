@@ -113,9 +113,44 @@ export class Snake {
         return boundary;
     }
 
-    public getPixels(): Pixel[] {
+    public getPixels(mealPixels: Pixel[][]): Pixel[] {
         return this.body.reduce((acc: Pixel[], _, index: number) => {
-            return [...acc, ...this.getPartPixels(index)];
+            const pixels: Pixel[] = this.getPartPixels(index);
+            if (index === 0) {
+                const futureHeadPosition = this.handleBoundary(this.getNewHeadPosition(this.body[0].position));
+                const futureHead = new BodyPart(
+                    BodyPartEnum.HEAD,
+                    futureHeadPosition,
+                    this.body[0].direction,
+                );
+                mealPixels.forEach((pxs) => {
+                    if (isOverlapping(getRectangleFromPixels(pxs),getRectangleFromPixels(this.getPartPixels(0, futureHead)))) {
+                        switch (this.body[0].direction) {
+                            case DirectionEnum.RIGHT: {
+                                pixels[0].y -= 1;
+                                pixels[1].y += 1;
+                                break;
+                            }
+                            case DirectionEnum.UP: {
+                                pixels[0].x += 1;
+                                pixels[1].x -= 1;
+                                break;
+                            }
+                            case DirectionEnum.LEFT: {
+                                pixels[0].y += 1;
+                                pixels[1].y -= 1;
+                                break;
+                            }
+                            case DirectionEnum.DOWN: {
+                                pixels[0].x += 1;
+                                pixels[1].x -= 1;
+                                break;
+                            }
+                        }
+                    }
+                });
+            }
+            return [...acc, ...pixels];
         }, []);
     }
 
@@ -228,7 +263,7 @@ export class Snake {
         return clone(this.oldBody);
     }
 
-    private getPartPixels(index: number): Pixel[] {
+    private getPartPixels(index: number, relativePart: BodyPart = null): Pixel[] {
         const part: BodyPart = this.body[index];
         const prevPart: BodyPart = index > 0 ? this.body[index - 1] : this.body[index];
         const nextPart: BodyPart = index < this.body.length - 1 ? this.body[index + 1] : this.body[index];
@@ -245,8 +280,12 @@ export class Snake {
                 break;
         }
         const partPixels: Pixel[] = [];
+        const sourcePart = relativePart ? relativePart : part;
         partData.forEach((elem: Pixel) => {
-            partPixels.push(new Pixel(part.position.x + elem.x, part.position.y + elem.y));
+            partPixels.push(new Pixel(
+                sourcePart.position.x + elem.x,
+                sourcePart.position.y + elem.y
+            ));
         });
         return partPixels;
     }
