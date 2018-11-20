@@ -33,17 +33,6 @@ export class Game {
         this.loop();
         this.testMove();
 
-        // this.bug = this.mealFactory.generateBug(this.getForbiddenPixelsForBug());
-        // this.canvas.drawGamePixels(this.bug.getPixels());
-        // const i = setInterval(() => {
-        //     // this.draw();
-        //     const apple = this.mealFactory.generateApple(this.getForbiddenPixelsForApple());
-        //     this.canvas.drawGamePixels(apple.getPixels());
-        //     if (isOverlapping(this.apple.getBoundary(), bug.getBoundary())) {
-        //         console.log('koniec');
-        //         clearTimeout(i);
-        //     }
-        // }, 10);
         this.gameOn = true;
     }
 
@@ -79,7 +68,6 @@ export class Game {
                     }
                     break;
             }
-
         });
     }
 
@@ -99,7 +87,7 @@ export class Game {
     }
 
     private hasCollision(): boolean {
-        return this.snake.hasCollision();
+        return this.snake.checkSelfCollision();
     }
 
     private endGame(): void {
@@ -113,7 +101,6 @@ export class Game {
 
     private draw() {
         this.canvas.prepareBoard();
-        this.canvas.drawMask();
         this.canvas.drawGamePixels(this.snake.getPixels());
         this.canvas.drawGamePixels(this.apple.getPixels());
         const pointsText = this.textWriter.write(TextWriter.padStart(this.points.toString(), '0', 4), new Position(1, 0));
@@ -126,6 +113,7 @@ export class Game {
             this.canvas.drawPixels(this.bug.getPixelsRelative(new Position(xBugOffset, 1)));
             this.canvas.drawPixels(bugPointsLeftText.getPixels(new Position(xBugPointsOffset, 0)));
         }
+        this.canvas.drawMask();
     }
 
     private loop(): void {

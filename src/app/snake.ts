@@ -13,6 +13,7 @@ import {Eatable} from './interfaces/eatable';
 export class Snake {
     private canvas: Canvas;
     private body: BodyPart[];
+    private clonedBody: BodyPart[];
     private oldBody: BodyPart[];
     private direction: DirectionEnum = DirectionEnum.RIGHT;
     private lastDirection: DirectionEnum = DirectionEnum.RIGHT;
@@ -54,65 +55,33 @@ export class Snake {
 
     public move(): void {
         this.oldBody = this.getBodyData();
+        this.clonedBody = [];
         const head = this.body[0];
         head.type = BodyPartEnum.BODY;
-        const headPosition = new Position(
-            head.position.x,
-            head.position.y,
-        );
-
-        if (this.direction !== this.lastDirection) {
-            switch (this.lastDirection) {
-                case DirectionEnum.RIGHT:
-                    headPosition.x += (config.MOVE + 1);
-                    headPosition.y -= 1;
-                    break;
-                case DirectionEnum.UP:
-                    headPosition.x -= 1;
-                    headPosition.y -= (config.MOVE - 1);
-                    break;
-                case DirectionEnum.LEFT:
-                    headPosition.x -= (config.MOVE - 1);
-                    headPosition.y -= 1;
-                    break;
-                case DirectionEnum.DOWN:
-                    headPosition.x -= 1;
-                    headPosition.y += config.MOVE + 1;
-                    break;
-            }
-        } else {
-            switch (this.direction) {
-                case DirectionEnum.RIGHT:
-                    headPosition.x += config.MOVE;
-                    break;
-                case DirectionEnum.LEFT:
-                    headPosition.x -= config.MOVE;
-                    break;
-                case DirectionEnum.UP:
-                    headPosition.y -= config.MOVE;
-                    break;
-                case DirectionEnum.DOWN:
-                    headPosition.y += config.MOVE;
-                    break;
-            }
+        const newHeadPosition = this.getNewHeadPosition(head.position);
+        const recalculatedPosition =  this.handleBoundary(newHeadPosition);
+        if (newHeadPosition.x !== recalculatedPosition.x ||
+            newHeadPosition.y !== recalculatedPosition.y
+        ) {
+            this.body.unshift(new BodyPart(
+                BodyPartEnum.BODY,
+                newHeadPosition,
+                this.direction,
+            ));
         }
-
-        this.handleBounrady(headPosition, this.direction);
-
         this.body.unshift(new BodyPart(
             BodyPartEnum.HEAD,
-            headPosition,
+            recalculatedPosition,
             this.direction,
         ));
+        const oldTail = this.body[this.body.length - 1];
         this.body.pop();
+        const newTail = this.body[this.body.length - 1];
+        if (this.didPartJumped(oldTail, newTail)) {
+            this.body.pop();
+        }
         this.body[this.body.length - 1].type = BodyPartEnum.TAIL;
         this.lastDirection = this.direction;
-    }
-
-    public reset (): void {
-        this.body = this.getInitialState();
-        this.direction = DirectionEnum.RIGHT;
-        this.lastDirection = DirectionEnum.RIGHT;
     }
 
     public didEat(meal: Eatable): boolean {
@@ -129,10 +98,6 @@ export class Snake {
     public grow(): void {
         this.body[this.body.length - 1].type = BodyPartEnum.BODY;
         this.body.push(this.oldBody[this.oldBody.length - 1]);
-    }
-
-    public hasCollision(): boolean {
-        return this.checkSelfCollision();
     }
 
     public getBodyBoundaryPixels(): Pixel[] {
@@ -154,19 +119,80 @@ export class Snake {
         }, []);
     }
 
-    private handleBounrady(position: Position, direction: DirectionEnum): void {
-        if (direction === DirectionEnum.RIGHT && position.x + 5 > config.BOARD.end.x) {
-            position.x -= (config.BOARD_WIDTH + 2);
+    public checkSelfCollision(): boolean {
+        const nose = this.getNose();
+        return this.getBodyData().filter((part, index) => {
+            if (index === 0) {
+                return false;
+            }
+
+            const elem: Rectangle = this.getPartBoundary(index);
+            return nose.x >= elem.begin.x && nose.x <= elem.end.x &&
+                nose.y >= elem.begin.y && nose.y <= elem.end.y
+                ;
+        }).length > 0;
+    }
+
+    private didPartJumped(prevPart: BodyPart, nextPart: BodyPart) {
+        return Math.abs(prevPart.position.x - nextPart.position.x) > config.MOVE * 2 ||
+            Math.abs(prevPart.position.y - nextPart.position.y) > config.MOVE * 2;
+    }
+
+    private getNewHeadPosition(headPosition: Position): Position {
+        const newHeadPosition = new Position(
+            headPosition.x,
+            headPosition.y,
+        );
+        if (this.direction !== this.lastDirection) {
+            switch (this.lastDirection) {
+                case DirectionEnum.RIGHT:
+                    newHeadPosition.x += (config.MOVE + 1);
+                    newHeadPosition.y -= 1;
+                    break;
+                case DirectionEnum.UP:
+                    newHeadPosition.x -= 1;
+                    newHeadPosition.y -= (config.MOVE - 1);
+                    break;
+                case DirectionEnum.LEFT:
+                    newHeadPosition.x -= (config.MOVE - 1);
+                    newHeadPosition.y -= 1;
+                    break;
+                case DirectionEnum.DOWN:
+                    newHeadPosition.x -= 1;
+                    newHeadPosition.y += config.MOVE + 1;
+                    break;
+            }
+        } else {
+            switch (this.direction) {
+                case DirectionEnum.RIGHT:
+                    newHeadPosition.x += config.MOVE;
+                    break;
+                case DirectionEnum.LEFT:
+                    newHeadPosition.x -= config.MOVE;
+                    break;
+                case DirectionEnum.UP:
+                    newHeadPosition.y -= config.MOVE;
+                    break;
+                case DirectionEnum.DOWN:
+                    newHeadPosition.y += config.MOVE;
+                    break;
+            }
         }
-        if (direction === DirectionEnum.LEFT && position.x - 5 < 0) {
-            position.x += (config.BOARD_WIDTH + 2);
+        return newHeadPosition;
+    }
+
+    private handleBoundary(newHeadPosition: Position): Position {
+        const recalculatedPosition = new Position(newHeadPosition.x, newHeadPosition.y);
+        if (this.direction === DirectionEnum.RIGHT && recalculatedPosition.x + 5 > config.BOARD.end.x) {
+            recalculatedPosition.x -= (config.BOARD_WIDTH + 2);
+        } else if (this.direction === DirectionEnum.LEFT && recalculatedPosition.x - 5 < 0) {
+            recalculatedPosition.x += (config.BOARD_WIDTH + 2);
+        } else if (this.direction === DirectionEnum.DOWN && recalculatedPosition.y + 5 > config.BOARD.end.y) {
+            recalculatedPosition.y -= (config.BOARD_HEIGHT + 2);
+        } else if (this.direction === DirectionEnum.UP && recalculatedPosition.y - 5 < 0) {
+            recalculatedPosition.y += (config.BOARD_HEIGHT + 2);
         }
-        if (direction === DirectionEnum.DOWN && position.y + 5 > config.BOARD.end.y) {
-            position.y -= (config.BOARD_HEIGHT + 2);
-        }
-        if (direction === DirectionEnum.UP && position.y - 5 < 0) {
-            position.y += (config.BOARD_HEIGHT + 2);
-        }
+        return recalculatedPosition;
     }
 
     private buildInitialPart (type: BodyPartEnum, position: Position): BodyPart {
@@ -218,7 +244,6 @@ export class Snake {
                 partData = drawData.tail[part.direction][prevPart.direction][nextPart.direction];
                 break;
         }
-
         const partPixels: Pixel[] = [];
         partData.forEach((elem: Pixel) => {
             partPixels.push(new Pixel(part.position.x + elem.x, part.position.y + elem.y));
@@ -253,22 +278,7 @@ export class Snake {
                     x: headElem.position.x -1,
                     y: headElem.position.y +5,
                 };
-
         }
-    }
-
-    private checkSelfCollision(): boolean {
-        const nose = this.getNose();
-        return this.getBodyData().filter((part, index) => {
-            if (index === 0) {
-                return false;
-            }
-
-            const elem: Rectangle = this.getPartBoundary(index);
-            return nose.x >= elem.begin.x && nose.x <= elem.end.x &&
-                nose.y >= elem.begin.y && nose.y <= elem.end.y
-            ;
-        }).length > 0;
     }
 
 }

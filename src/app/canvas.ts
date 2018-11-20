@@ -54,46 +54,6 @@ export class Canvas {
         this.drawGameBorder();
     }
 
-    public drawPart(
-        part: BodyPart,
-        prevPart: BodyPart = null,
-        nextPart: BodyPart = null,
-        isCopy: boolean = false,
-    ): void {
-        let points: Pixel[] ;
-        let doesPartProtrude: boolean = false;
-        if (!nextPart) {
-            nextPart = part;
-        }
-        if (!prevPart) {
-            prevPart = part;
-        }
-
-        switch (part.type) {
-            case BodyPartEnum.HEAD:
-                points = drawData.head[part.direction][prevPart.direction][nextPart.direction];
-                break;
-            case BodyPartEnum.BODY:
-                points = drawData.body[part.direction][prevPart.direction][nextPart.direction];
-                break;
-            case BodyPartEnum.TAIL:
-                points = drawData.tail[part.direction][prevPart.direction][nextPart.direction];
-                break;
-        }
-
-        for (const pixel of points) {
-            const bodyPixel = new Pixel(part.position.x + pixel.x, part.position.y + pixel.y);
-            this.drawGamePixel(bodyPixel);
-            if (this.doesPixelProtrude(bodyPixel)) {
-                doesPartProtrude = true;
-            }
-        }
-
-        if (doesPartProtrude && !isCopy) {
-            this.clonePartTrail(part, prevPart, nextPart);
-        }
-    }
-
     public drawPixel(pixel: Pixel): void {
         this.ctx.fillStyle = 'black';
         this.ctx.fillRect(
@@ -125,9 +85,9 @@ export class Canvas {
         ));
     }
 
-    private doesPixelProtrude(position: Position): boolean {
-        return position.x < 0 || position.x > config.BOARD_WIDTH || position.y < 0 || position.y > config.BOARD_HEIGHT;
-    }
+    // private doesPixelProtrude(position: Position): boolean {
+    //     return position.x < 0 || position.x > config.BOARD_WIDTH || position.y < 0 || position.y > config.BOARD_HEIGHT;
+    // }
 
     private drawGameBorder(): void {
         for (let i = 0; i < config.GAME_CANVAS_HEIGHT; i+=1) {
@@ -170,30 +130,6 @@ export class Canvas {
             this.ctx.stroke();
         }
         this.ctx.restore();
-    }
-
-    private clonePartTrail(part: BodyPart, prevPart: BodyPart, nextPart: BodyPart): void {
-        const copy = new BodyPart(
-            part.type,
-            new Pixel(part.position.x, part.position.y),
-            part.direction,
-        );
-
-        switch (copy.direction) {
-            case DirectionEnum.RIGHT:
-                copy.position.x += (config.BOARD_WIDTH + 2);
-                break;
-            case DirectionEnum.LEFT:
-                copy.position.x -= (config.BOARD_WIDTH + 2);
-                break;
-            case DirectionEnum.UP:
-                copy.position.y -= (config.BOARD_HEIGHT + 2);
-                break;
-            case DirectionEnum.DOWN:
-                copy.position.y += (config.BOARD_HEIGHT + 2);
-                break;
-        }
-        this.drawPart(copy, prevPart, nextPart, true);
     }
 
 }
