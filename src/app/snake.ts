@@ -13,7 +13,6 @@ import {Eatable} from './interfaces/eatable';
 export class Snake {
     private canvas: Canvas;
     private body: BodyPart[];
-    private clonedBody: BodyPart[];
     private oldBody: BodyPart[];
     private direction: DirectionEnum = DirectionEnum.RIGHT;
     private lastDirection: DirectionEnum = DirectionEnum.RIGHT;
@@ -22,10 +21,6 @@ export class Snake {
         this.canvas = canvas;
         this.body = this.getInitialState();
         this.oldBody = this.getInitialState();
-    }
-
-    public endGame(): void {
-        this.body = this.getOldBodyData();
     }
 
     public turnLeft(): void {
@@ -55,7 +50,6 @@ export class Snake {
 
     public move(): void {
         this.oldBody = this.getBodyData();
-        this.clonedBody = [];
         const head = this.body[0];
         head.type = BodyPartEnum.BODY;
         const newHeadPosition = this.getNewHeadPosition(head.position);
@@ -284,7 +278,7 @@ export class Snake {
         partData.forEach((elem: Pixel) => {
             partPixels.push(new Pixel(
                 sourcePart.position.x + elem.x,
-                sourcePart.position.y + elem.y
+                sourcePart.position.y + elem.y,
             ));
         });
         return partPixels;
