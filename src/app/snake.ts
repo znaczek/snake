@@ -139,6 +139,20 @@ export class Snake implements DrawableInterface {
         return boundary;
     }
 
+    public checkSelfCollision(): boolean {
+        const nose = this.getNose();
+        return this.getBodyData().filter((part, index) => {
+            if (index === 0) {
+                return false;
+            }
+
+            const elem: Rectangle = this.getPartBoundary(index);
+            return nose.x >= elem.begin.x && nose.x <= elem.end.x &&
+                nose.y >= elem.begin.y && nose.y <= elem.end.y
+                ;
+        }).length > 0;
+    }
+
     public getPixels(options: {
         mealPixels: Pixel[][],
     }): Pixel[] {
@@ -233,20 +247,6 @@ export class Snake implements DrawableInterface {
             }
         }
         return eatenMealPixels;
-    }
-
-    public checkSelfCollision(): boolean {
-        const nose = this.getNose();
-        return this.getBodyData().filter((part, index) => {
-            if (index === 0) {
-                return false;
-            }
-
-            const elem: Rectangle = this.getPartBoundary(index);
-            return nose.x >= elem.begin.x && nose.x <= elem.end.x &&
-                nose.y >= elem.begin.y && nose.y <= elem.end.y
-                ;
-        }).length > 0;
     }
 
     private didPartJumped(prevPart: BodyPart, nextPart: BodyPart) {
