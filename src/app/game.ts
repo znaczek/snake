@@ -101,9 +101,9 @@ export class Game {
 
     private draw() {
         this.canvas.prepareBoard();
-        this.canvas.drawGamePixels(this.snake.getPixels(
-            this.bug ? [this.apple.getPixels(), this.bug.getPixels()] : [this.apple.getPixels()],
-        ));
+        this.canvas.drawGamePixels(this.snake.getPixels({
+            mealPixels: this.bug ? [this.apple.getPixels(), this.bug.getPixels()] : [this.apple.getPixels()],
+        }));
         this.canvas.drawGamePixels(this.apple.getPixels());
         const pointsText = this.textWriter.write(TextWriter.padStart(this.points.toString(), '0', 4), new Position(1, 0));
         this.canvas.drawPixels(pointsText.getPixels());
@@ -113,7 +113,9 @@ export class Game {
             const xBugPointsOffset = config.CANVAS_WIDTH - (2 * charData[0].width);
             const xBugOffset = xBugPointsOffset - 2 - Bug.width;
             this.canvas.drawPixels(this.bug.getPixelsRelative(new Position(xBugOffset, 1)));
-            this.canvas.drawPixels(bugPointsLeftText.getPixels(new Position(xBugPointsOffset, 0)));
+            this.canvas.drawPixels(bugPointsLeftText.getPixels({
+                start: new Position(xBugPointsOffset, 0),
+            }));
         }
         this.canvas.drawMask();
     }
@@ -129,7 +131,7 @@ export class Game {
             this.provideApple();
             this.refreshBug();
             this.handleEating();
-
+            this.snake.checkAtMoveEnd();
             this.draw();
         } else {
             this.endGame();
@@ -138,9 +140,9 @@ export class Game {
 
     private handleEating(): void {
         if (this.snake.didEat(this.apple)) {
+            this.snake.grow();
             this.apple = this.mealFactory.generateApple(this.getForbiddenPixelsForApple());
             this.handleBugGeneration();
-            this.snake.grow();
             this.points += 1;
         } else if (this.snake.didEat(this.bug)) {
             this.snake.grow();

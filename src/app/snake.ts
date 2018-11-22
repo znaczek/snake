@@ -9,11 +9,15 @@ import {Pixel} from './model/pixel.model';
 import {drawData} from './data/draw.data';
 import {Rectangle} from './model/rectangle.model';
 import {Eatable} from './interfaces/eatable';
+import {EatenMeal} from './model/eaten-meal.model';
+import {DrawableInterface} from './interfaces/drawable.interface';
 
-export class Snake {
+export class Snake implements DrawableInterface {
     private canvas: Canvas;
     private body: BodyPart[];
+    private length: number;
     private oldBody: BodyPart[];
+    private eatenMeals: EatenMeal[] = [];
     private direction: DirectionEnum = DirectionEnum.RIGHT;
     private lastDirection: DirectionEnum = DirectionEnum.RIGHT;
 
@@ -21,6 +25,7 @@ export class Snake {
         this.canvas = canvas;
         this.body = this.getInitialState();
         this.oldBody = this.getInitialState();
+        this.length = this.body.length;
     }
 
     public turnLeft(): void {
@@ -50,7 +55,7 @@ export class Snake {
 
     public move(): void {
         this.oldBody = this.getBodyData();
-        const head = this.body[0];
+        const head = this.getHead();
         head.type = BodyPartEnum.BODY;
         const newHeadPosition = this.getNewHeadPosition(head.position);
         const recalculatedPosition =  this.handleBoundary(newHeadPosition);
@@ -76,6 +81,17 @@ export class Snake {
         }
         this.body[this.body.length - 1].type = BodyPartEnum.TAIL;
         this.lastDirection = this.direction;
+        this.eatenMeals.forEach((meal: EatenMeal) => {
+            meal.duration -= 1;
+            if (meal.isNew) {
+                meal.nextDirection = this.getHead().direction;
+                meal.isNew = false;
+            }
+        });
+    }
+
+    public checkAtMoveEnd(): void {
+        this.eatenMeals = this.eatenMeals.filter((meal: EatenMeal) => meal.duration !== 0);
     }
 
     public didEat(meal: Eatable): boolean {
@@ -92,6 +108,22 @@ export class Snake {
     public grow(): void {
         this.body[this.body.length - 1].type = BodyPartEnum.BODY;
         this.body.push(this.oldBody[this.oldBody.length - 1]);
+        this.length += 1;
+
+        const head = this.getHead();
+        const xOffset = head.direction === DirectionEnum.RIGHT ? 2 :
+            head.direction === DirectionEnum.LEFT ? -1 : 0;
+        const yOffset = head.direction === DirectionEnum.DOWN ? 2 :
+            head.direction === DirectionEnum.UP ? -1 : 0;
+        this.eatenMeals.forEach((meal) => meal.duration += 1);
+        this.eatenMeals.push(new EatenMeal(
+            new Position(
+                this.getPartBoundary(0).begin.x + xOffset,
+                this.getPartBoundary(0).begin.y + yOffset,
+            ),
+            this.getHead().direction,
+            this.length,
+        ));
     }
 
     public getBodyBoundaryPixels(): Pixel[] {
@@ -107,19 +139,22 @@ export class Snake {
         return boundary;
     }
 
-    public getPixels(mealPixels: Pixel[][]): Pixel[] {
-        return this.body.reduce((acc: Pixel[], _, index: number) => {
+    public getPixels(options: {
+        mealPixels: Pixel[][],
+    }): Pixel[] {
+        const snakePixels: Pixel[] = this.body.reduce((acc: Pixel[], _, index: number) => {
             const pixels: Pixel[] = this.getPartPixels(index);
             if (index === 0) {
-                const futureHeadPosition = this.handleBoundary(this.getNewHeadPosition(this.body[0].position));
+                const head = this.getHead();
+                const futureHeadPosition = this.handleBoundary(this.getNewHeadPosition(head.position));
                 const futureHead = new BodyPart(
                     BodyPartEnum.HEAD,
                     futureHeadPosition,
-                    this.body[0].direction,
+                    head.direction,
                 );
-                mealPixels.forEach((pxs) => {
+                options.mealPixels.forEach((pxs) => {
                     if (isOverlapping(getRectangleFromPixels(pxs),getRectangleFromPixels(this.getPartPixels(0, futureHead)))) {
-                        switch (this.body[0].direction) {
+                        switch (head.direction) {
                             case DirectionEnum.RIGHT: {
                                 pixels[0].y -= 1;
                                 pixels[1].y += 1;
@@ -146,6 +181,58 @@ export class Snake {
             }
             return [...acc, ...pixels];
         }, []);
+
+        this.eatenMeals.forEach((meal: EatenMeal) => {
+            if (meal.isNew) {
+                return;
+            }
+            snakePixels.push(...this.getEatenMealPixels(meal));
+        });
+        return snakePixels;
+    }
+
+    private getEatenMealPixels(meal: EatenMeal): Pixel[] {
+        const eatenMealPixels: Pixel[] = [];
+        if (meal.previousDirection === meal.nextDirection) {
+            if (meal.previousDirection === DirectionEnum.RIGHT || meal.previousDirection === DirectionEnum.LEFT) {
+                eatenMealPixels.push(
+                    new Pixel(meal.position.x + 1, meal.position.y),
+                    new Pixel(meal.position.x + 2, meal.position.y),
+                    new Pixel(meal.position.x + 1, meal.position.y + 3),
+                    new Pixel(meal.position.x + 2, meal.position.y + 3),
+                );
+            } else {
+                eatenMealPixels.push(
+                    new Pixel(meal.position.x, meal.position.y + 1),
+                    new Pixel(meal.position.x, meal.position.y + 2),
+                    new Pixel(meal.position.x + 3, meal.position.y + 1),
+                    new Pixel(meal.position.x + 3, meal.position.y + 2),
+                );
+            }
+        } else {
+            if (
+                meal.previousDirection === DirectionEnum.RIGHT && meal.nextDirection === DirectionEnum.DOWN ||
+                meal.previousDirection === DirectionEnum.UP && meal.nextDirection === DirectionEnum.LEFT
+            ) {
+                eatenMealPixels.push(new Pixel(meal.position.x, meal.position.y + 3));
+            } else if (
+                meal.previousDirection === DirectionEnum.RIGHT && meal.nextDirection === DirectionEnum.UP ||
+                meal.previousDirection === DirectionEnum.DOWN && meal.nextDirection === DirectionEnum.LEFT
+            ) {
+                eatenMealPixels.push(new Pixel(meal.position.x, meal.position.y));
+            } else if (
+                meal.previousDirection === DirectionEnum.LEFT && meal.nextDirection === DirectionEnum.UP ||
+                meal.previousDirection === DirectionEnum.DOWN && meal.nextDirection === DirectionEnum.RIGHT
+            ) {
+                eatenMealPixels.push(new Pixel(meal.position.x + 3, meal.position.y));
+            } else if (
+                meal.previousDirection === DirectionEnum.LEFT && meal.nextDirection === DirectionEnum.DOWN ||
+                meal.previousDirection === DirectionEnum.UP && meal.nextDirection === DirectionEnum.RIGHT
+            ) {
+                eatenMealPixels.push(new Pixel(meal.position.x + 3, meal.position.y + 3));
+            }
+        }
+        return eatenMealPixels;
     }
 
     public checkSelfCollision(): boolean {
@@ -288,8 +375,12 @@ export class Snake {
         return getRectangleFromPixels(this.getPartPixels(index));
     }
 
+    private getHead(): BodyPart {
+        return this.body[0];
+    }
+
     private getNose(): Pixel {
-        const headElem = this.body[0];
+        const headElem = this.getHead();
         switch (headElem.direction) {
             case DirectionEnum.RIGHT:
                 return {

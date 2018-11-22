@@ -21,7 +21,7 @@ export const INIT_HEAD = {
     y: 18,
 };
 
-export const INIT_LENGTH = 3;
+export const INIT_LENGTH = 20;
 
 export const COLORS = {
     GREEN: '#a4c70b',

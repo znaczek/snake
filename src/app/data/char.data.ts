@@ -1,4 +1,4 @@
-import {Char} from '../model/char';
+import {Char} from '../model/char.model';
 import {Pixel} from '../model/pixel.model';
 import {CharDataInterface} from '../interfaces/char-data.interface';
 

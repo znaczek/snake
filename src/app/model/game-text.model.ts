@@ -6,13 +6,15 @@ export class GameText implements DrawableInterface {
     constructor(private pixels: Pixel[], private begin: Position, private end: Position) {
     }
 
-    public getPixels(start?: Position): Pixel[] {
-        if (!start) {
+    public getPixels(options?: {
+        start?: Position,
+    }): Pixel[] {
+        if (!options || !options.start) {
             return this.pixels;
         } else {
             return this.pixels.map((pixel: Pixel) => new Pixel(
-               start.x + pixel.x,
-               start.y + pixel.y,
+               options.start.x + pixel.x,
+               options.start.y + pixel.y,
             ));
         }
     }

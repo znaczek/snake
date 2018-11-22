@@ -1,7 +1,7 @@
 import {Position} from './model/position.model';
 import {charData} from './data/char.data';
 import {Pixel} from './model/pixel.model';
-import {Char} from './model/char';
+import {Char} from './model/char.model';
 import {GameText} from './model/game-text.model';
 
 export class TextWriter {
