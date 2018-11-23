@@ -73,12 +73,7 @@ export class Snake implements DrawableInterface {
             recalculatedPosition,
             this.direction,
         ));
-        const oldTail = this.body[this.body.length - 1];
         this.body.pop();
-        const newTail = this.body[this.body.length - 1];
-        if (this.didPartJumped(oldTail, newTail)) {
-            this.body.pop();
-        }
         this.body[this.body.length - 1].type = BodyPartEnum.TAIL;
         this.lastDirection = this.direction;
         this.eatenMeals.forEach((meal: EatenMeal) => {
@@ -90,7 +85,10 @@ export class Snake implements DrawableInterface {
         });
     }
 
-    public checkAtMoveEnd(): void {
+    public handleMoveEnd(): void {
+        if (this.didTailJumped()) {
+            this.body.pop();
+        }
         this.eatenMeals = this.eatenMeals.filter((meal: EatenMeal) => meal.duration !== 0);
     }
 
@@ -249,9 +247,11 @@ export class Snake implements DrawableInterface {
         return eatenMealPixels;
     }
 
-    private didPartJumped(prevPart: BodyPart, nextPart: BodyPart) {
-        return Math.abs(prevPart.position.x - nextPart.position.x) > config.MOVE * 2 ||
-            Math.abs(prevPart.position.y - nextPart.position.y) > config.MOVE * 2;
+    private didTailJumped() {
+        const oldTail = this.oldBody[this.oldBody.length - 1];
+        const newTail = this.body[this.body.length - 1];
+        return Math.abs(oldTail.position.x - newTail.position.x) > config.MOVE * 2 ||
+            Math.abs(oldTail.position.y - newTail.position.y) > config.MOVE * 2;
     }
 
     private getNewHeadPosition(headPosition: Position): Position {

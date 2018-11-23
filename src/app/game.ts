@@ -131,7 +131,7 @@ export class Game {
             this.provideApple();
             this.refreshBug();
             this.handleEating();
-            this.snake.checkAtMoveEnd();
+            this.snake.handleMoveEnd();
             this.draw();
         } else {
             this.endGame();
