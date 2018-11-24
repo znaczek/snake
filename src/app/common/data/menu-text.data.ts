@@ -68,5 +68,14 @@ export const menuCharData: CharDataInterface = {
         new Pixel(0, 0), new Pixel(0, 1), new Pixel(0, 2), new Pixel(0, 3), new Pixel(0, 4), new Pixel(0, 5), new Pixel(0, 6),
         new Pixel(1, 0), new Pixel(1, 1), new Pixel(1, 2), new Pixel(1, 3), new Pixel(1, 4), new Pixel(1, 5), new Pixel(1, 6),
     ]),
+    1: new Char(6, [
+        new Pixel(0, 0),
+    ]),
+    2: new Char(6, [
+        new Pixel(0, 0), new Pixel(1, 0),
+    ]),
+    3: new Char(6, [
+        new Pixel(0, 0), new Pixel(1, 0), new Pixel(2, 0),
+    ]),
 
 };

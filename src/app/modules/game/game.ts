@@ -13,6 +13,7 @@ import {Pixel} from '../../common/model/pixel.model';
 import {ColorsEnum} from '../../common/enums/color.enums';
 import {getGameBoarderPixels, getGameBoardOffset, getMaskPixels} from './utils/utils';
 import {AppEvent} from '../../common/model/game-event.model';
+import {ClicksEnum} from '../../common/enums/clicks.enum';
 
 export class Game {
     private snake: Snake;
@@ -24,7 +25,7 @@ export class Game {
 
     constructor(private stageHandler: Subject<AppEvent>,
                 private canvas: Canvas,
-                private onClick: Observable<Event>,
+                private onClick: Observable<ClicksEnum>,
                 private textWriter: TextWriter,
                 private mealFactory: MealFactory,
                 ) {
@@ -45,28 +46,28 @@ export class Game {
 
     private bindEvents(): void {
         this.onClick.pipe(takeWhile(() => this.gameOn))
-            .subscribe((e: KeyboardEvent) => {
+            .subscribe((event) => {
                 if (!this.gameOn) {
                     return;
                 }
-                switch (e.keyCode) {
-                    case 37: // left
+                switch (event) {
+                    case ClicksEnum.LEFT:
                         this.snake.turnLeft();
                         this.testMove();
                         break;
-                    case 39: // right
+                    case ClicksEnum.RIGHT:
                         this.snake.turnRight();
                         this.testMove();
                         break;
-                    case 38: // up
+                    case ClicksEnum.UP:
                         this.snake.turnUp();
                         this.testMove();
                         break;
-                    case 40: // up
+                    case ClicksEnum.DOWN:
                         this.snake.turnDown();
                         this.testMove();
                         break;
-                    case 32:  // space
+                    case ClicksEnum.ENTER:
                         if (this.interval) {
                             clearTimeout(this.interval);
                             this.interval = null;
