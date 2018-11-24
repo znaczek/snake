@@ -2,6 +2,7 @@ import * as config from '../../config';
 import {Pixel} from './model/pixel.model';
 import {COLORS} from './constants/color.constants';
 import {ColorsEnum} from './enums/color.enums';
+import {Position} from './model/position.model';
 
 export class Canvas {
     private ctx: CanvasRenderingContext2D = null;
@@ -30,31 +31,13 @@ export class Canvas {
         }
     }
 
-    public drawPixels(pixels: Pixel[], color: ColorsEnum = ColorsEnum.BLACK): void {
+    public drawPixels(pixels: Pixel[], offset: Position = new Position(0, 0), color: ColorsEnum = ColorsEnum.BLACK): void {
         this.ctx.save();
         this.ctx.fillStyle = COLORS[color];
         pixels.forEach((pixel: Pixel) => this.drawPixel(
-            new Pixel(pixel.x, pixel.y),
+            new Pixel(pixel.x + offset.x, pixel.y + offset.y),
         ));
         this.ctx.restore();
-    }
-
-    public drawGamePixels(pixels: Pixel[], color: ColorsEnum = ColorsEnum.BLACK): void {
-        this.ctx.save();
-        this.ctx.fillStyle = COLORS[color];
-        pixels.forEach((pixel: Pixel) => this.drawGamePixel(
-            new Pixel(pixel.x, pixel.y),
-        ));
-        this.ctx.restore();
-    }
-
-    private drawGamePixel(pixel: Pixel): void {
-        const gamePixel = new Pixel(
-            pixel.x + config.BOARD.start.x,
-            pixel.y + config.BOARD.start.y + config.TOP_BAR_HEIGHT,
-        );
-
-        this.drawPixel(gamePixel);
     }
 
     private drawPixel(pixel: Pixel): void {
