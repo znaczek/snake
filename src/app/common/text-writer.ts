@@ -1,8 +1,8 @@
 import {Position} from './model/position.model';
-import {charData} from './data/char.data';
 import {Pixel} from './model/pixel.model';
 import {Char} from './model/char.model';
-import {GameText} from './model/game-text.model';
+import {AppText} from './model/game-text.model';
+import {CharDataInterface} from '../modules/game/interface/char-data.interface';
 
 export class TextWriter {
     public static padStart(text: string, char: string, amount: number): string {
@@ -15,21 +15,32 @@ export class TextWriter {
     }
 
     private position: Position;
+    private charData: CharDataInterface;
 
-    public write(text: string, start?: Position): GameText {
+    public setCharData(charData: CharDataInterface): void {
+        this.charData = charData;
+    }
+
+    public write(text: string, start?: Position): AppText {
         this.position = start || new Position(0, 0);
         const pixels: Pixel[] = [];
         text.split('').forEach((char: string) => {
             pixels.push(...this.writeChar(char));
         });
-        return new GameText(pixels, start, this.position);
+        return new AppText(pixels, start, this.position);
     }
 
     private writeChar(charIndex: string): Pixel[] {
         if (charIndex.length !== 1) {
             throw new Error('Bad input character: ' + charIndex);
         }
-        const char: Char = charData[charIndex];
+
+        if (charIndex === ' ') {
+            this.position.x += 2;
+            console.log('aaaaaaaaaa');
+            return;
+        }
+        const char: Char = this.charData[charIndex];
         if (!char) {
             return;
         }

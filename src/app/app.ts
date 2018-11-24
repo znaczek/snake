@@ -44,7 +44,7 @@ export class App {
                 }
             }
         });
-        this.createIntro();
+        this.createMenu();
     }
 
     private createIntro() {
@@ -52,7 +52,7 @@ export class App {
     }
 
     private createMenu() {
-        this.menu = new Menu(this.stageHandler, this.canvas, this.onClick).start();
+        this.menu = new Menu(this.stageHandler, this.canvas, this.onClick, this.textWriter).start();
     }
 
     private createGame() {

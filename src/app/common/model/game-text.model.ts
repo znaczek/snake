@@ -2,7 +2,7 @@ import {DrawableInterface} from '../interfaces/drawable.interface';
 import {Pixel} from './pixel.model';
 import {Position} from './position.model';
 
-export class GameText implements DrawableInterface {
+export class AppText implements DrawableInterface {
     constructor(private pixels: Pixel[], private begin: Position, private end: Position) {
     }
 

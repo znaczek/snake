@@ -29,6 +29,7 @@ export class Game {
                 private mealFactory: MealFactory,
                 ) {
         this.snake = new Snake(this.canvas);
+        this.textWriter.setCharData(charData);
     }
 
     public start(): Game {
