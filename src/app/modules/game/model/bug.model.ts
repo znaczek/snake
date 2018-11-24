@@ -18,18 +18,19 @@ export class Bug extends Eatable implements DrawableInterface {
         this.value = Math.round(Math.random() * 20) + 10;
     }
 
-    public getPixels(): Pixel[] {
-        return this.getPixelsRelative(new Position(this.x, this.y));
-    }
-
-    public getPixelsRelative(position: Position): Pixel[] {
+    public getPixels(options?: {
+         offset: Position,
+     }): Pixel[] {
+        options = options || {
+            offset: new Position(0, 0),
+        };
         const bugPixels = bugData[this.type];
         if (!bugPixels) {
             return [];
         }
         return bugPixels.map((pixel: Pixel) => new Pixel(
-            position.x + pixel.x,
-            position.y + pixel.y,
+            this.x + options.offset.x + pixel.x,
+            this.y + options.offset.y + pixel.y,
         ));
     }
 

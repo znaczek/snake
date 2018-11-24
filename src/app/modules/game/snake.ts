@@ -152,7 +152,7 @@ export class Snake implements DrawableInterface {
     }
 
     public getPixels(options: {
-        mealPixels: Pixel[][],
+        additionalPixelsSets: Pixel[][],
     }): Pixel[] {
         const snakePixels: Pixel[] = this.body.reduce((acc: Pixel[], _, index: number) => {
             const pixels: Pixel[] = this.getPartPixels(index);
@@ -164,7 +164,7 @@ export class Snake implements DrawableInterface {
                     futureHeadPosition,
                     head.direction,
                 );
-                options.mealPixels.forEach((pxs) => {
+                options.additionalPixelsSets.forEach((pxs) => {
                     if (isOverlapping(getRectangleFromPixels(pxs),getRectangleFromPixels(this.getPartPixels(0, futureHead)))) {
                         switch (head.direction) {
                             case DirectionEnum.RIGHT: {

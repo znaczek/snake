@@ -7,14 +7,14 @@ export class GameText implements DrawableInterface {
     }
 
     public getPixels(options?: {
-        start?: Position,
+        offset?: Position,
     }): Pixel[] {
-        if (!options || !options.start) {
+        if (!options || !options.offset) {
             return this.pixels;
         } else {
             return this.pixels.map((pixel: Pixel) => new Pixel(
-               options.start.x + pixel.x,
-               options.start.y + pixel.y,
+               options.offset.x + pixel.x,
+               options.offset.y + pixel.y,
             ));
         }
     }

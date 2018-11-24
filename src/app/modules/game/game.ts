@@ -41,36 +41,36 @@ export class Game {
     private bindEvents(): void {
         this.onClick.pipe(takeWhile(() => this.gameOn))
             .subscribe((e: KeyboardEvent) => {
-            if (!this.gameOn) {
-                return;
-            }
-            switch (e.keyCode) {
-                case 37: // left
-                    this.snake.turnLeft();
-                    this.testMove();
-                    break;
-                case 39: // right
-                    this.snake.turnRight();
-                    this.testMove();
-                    break;
-                case 38: // up
-                    this.snake.turnUp();
-                    this.testMove();
-                    break;
-                case 40: // up
-                    this.snake.turnDown();
-                    this.testMove();
-                    break;
-                case 32:  // space
-                    if (this.interval) {
-                        clearTimeout(this.interval);
-                        this.interval = null;
-                    } else {
-                        this.loop();
-                    }
-                    break;
-            }
-        });
+                if (!this.gameOn) {
+                    return;
+                }
+                switch (e.keyCode) {
+                    case 37: // left
+                        this.snake.turnLeft();
+                        this.testMove();
+                        break;
+                    case 39: // right
+                        this.snake.turnRight();
+                        this.testMove();
+                        break;
+                    case 38: // up
+                        this.snake.turnUp();
+                        this.testMove();
+                        break;
+                    case 40: // up
+                        this.snake.turnDown();
+                        this.testMove();
+                        break;
+                    case 32:  // space
+                        if (this.interval) {
+                            clearTimeout(this.interval);
+                            this.interval = null;
+                        } else {
+                            this.loop();
+                        }
+                        break;
+                }
+            });
     }
 
     private provideApple(): void {
@@ -102,27 +102,35 @@ export class Game {
     }
 
     private draw() {
-        this.canvas.prepareBoard();
-        this.canvas.drawPixels(
-            this.snake.getPixels({
-                mealPixels: this.bug ? [this.apple.getPixels(), this.bug.getPixels()] : [this.apple.getPixels()],
-            }),
-            getGameBoardOffset(),
-        );
-        this.canvas.drawPixels(this.apple.getPixels(), getGameBoardOffset());
-        const pointsText = this.textWriter.write(TextWriter.padStart(this.points.toString(), '0', 4), new Position(1, 0));
-        this.canvas.drawPixels(pointsText.getPixels());
+        const gameBoardPixels: Pixel[] = [];
+        const absolutePixels: Pixel[] = [];
+
+        gameBoardPixels.push(...this.snake.getPixels({
+                additionalPixelsSets: this.bug ?
+                [this.apple.getPixels(), this.bug.getPixels()] :
+                [this.apple.getPixels()],
+            },
+        ));
+        gameBoardPixels.push(...this.apple.getPixels());
+        absolutePixels.push(...this.textWriter.write(
+            TextWriter.padStart(this.points.toString(), '0', 4), new Position(1, 0),
+        ).getPixels());
+
         if (this.bug) {
-            this.canvas.drawPixels(this.bug.getPixels(), getGameBoardOffset());
+            gameBoardPixels.push(...this.bug.getPixels());
             const bugPointsLeftText = this.textWriter.write(TextWriter.padStart(this.bug.value.toString(), '0', 2));
             const xBugPointsOffset = config.CANVAS_WIDTH - (2 * charData[0].width);
             const xBugOffset = xBugPointsOffset - 2 - Bug.width;
-            this.canvas.drawPixels(this.bug.getPixelsRelative(new Position(xBugOffset, 1)));
-            this.canvas.drawPixels(bugPointsLeftText.getPixels({
-                start: new Position(xBugPointsOffset, 0),
+            absolutePixels.push(...this.bug.getPixels({offset: new Position(xBugOffset, 1)}));
+            absolutePixels.push(...bugPointsLeftText.getPixels({
+                offset: new Position(xBugPointsOffset, 0),
             }));
         }
-        this.canvas.drawPixels(getGameBoarderPixels());
+        absolutePixels.push(...getGameBoarderPixels());
+
+        this.canvas.prepareBoard();
+        this.canvas.drawPixels(gameBoardPixels, getGameBoardOffset());
+        this.canvas.drawPixels(absolutePixels);
         this.canvas.drawPixels(getMaskPixels(), new Position(0, 0), config.DEBUG ? ColorsEnum.RED : ColorsEnum.GREEN);
     }
 

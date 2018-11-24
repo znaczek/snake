@@ -3,7 +3,7 @@ import {Position} from '../model/position.model';
 
 export interface DrawableInterface {
     getPixels: (options?: {
-        start?: Position,
-        mealPixels?: Pixel[][],
+        offset?: Position,
+        additionalPixelsSets?: Pixel[][],
     }) => Pixel[];
 }
