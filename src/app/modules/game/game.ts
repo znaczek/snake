@@ -10,8 +10,53 @@ import {Bug} from './model/bug.model';
 import {charData} from '../../common/data/char.data';
 import {Position} from '../../common/model/position.model';
 import {Pixel} from '../../common/model/pixel.model';
+import {ColorsEnum} from '../../common/enums/color.enums';
 
 export class Game {
+    private static getGameBoarderPixels(): Pixel[] {
+        const pixels: Pixel[] = [];
+        for (
+            let i = config.TOP_BAR_HEIGHT;
+            i < config.GAME_CANVAS_HEIGHT + config.TOP_BAR_HEIGHT;
+            i += 1
+        ) {
+            pixels.push(new Pixel(0, i));
+            pixels.push(new Pixel(config.GAME_CANVAS_WIDTH - 1, i));
+        }
+        for (
+            let i = 0;
+            i < config.GAME_CANVAS_WIDTH;
+            i += 1
+        ) {
+            pixels.push(new Pixel(i, config.TOP_BAR_HEIGHT));
+            pixels.push(new Pixel(i, config.GAME_CANVAS_HEIGHT + config.TOP_BAR_HEIGHT - 1));
+        }
+        return pixels;
+    }
+
+    private static getMaskPixels(): Pixel[] {
+        const pixels: Pixel[] = [];
+        for (
+            let i = config.BOARD.start.y + config.TOP_BAR_HEIGHT - 1;
+            i < config.GAME_CANVAS_HEIGHT + config.TOP_BAR_HEIGHT - 1;
+            i += 1
+        ) {
+            pixels.push(new Pixel(1, i));
+            pixels.push(new Pixel(config.GAME_CANVAS_WIDTH - 2, i));
+        }
+        for (
+            let i = 1;
+            i < config.GAME_CANVAS_WIDTH - 1;
+            i += 1
+        ) {
+            pixels.push(new Pixel(i, config.TOP_BAR_HEIGHT -1));
+            pixels.push(new Pixel(i, config.TOP_BAR_HEIGHT + 1));
+            pixels.push(new Pixel(i, config.TOP_BAR_HEIGHT + config.GAME_CANVAS_HEIGHT - 2));
+        }
+
+        return pixels;
+    }
+
     private snake: Snake;
     private gameOn: boolean;
     private interval: number;
@@ -117,7 +162,8 @@ export class Game {
                 start: new Position(xBugPointsOffset, 0),
             }));
         }
-        this.canvas.drawMask();
+        this.canvas.drawPixels(Game.getGameBoarderPixels());
+        this.canvas.drawPixels(Game.getMaskPixels(), config.DEBUG ? ColorsEnum.RED : ColorsEnum.GREEN);
     }
 
     private loop(): void {
