@@ -1,7 +1,7 @@
-import * as config from '../../config';
+import * as config from '../../../../config';
 import {Apple} from '../model/apple.model';
-import {Pixel} from '../model/pixel.model';
-import {Position} from '../model/position.model';
+import {Pixel} from '../../../common/model/pixel.model';
+import {Position} from '../../../common/model/position.model';
 import {Bug} from '../model/bug.model';
 import {BugTypesEnum} from '../enums/bug-types.enum';
 import {MealsEnum} from '../enums/meals.enum';

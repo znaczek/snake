@@ -1,5 +1,5 @@
-import {Pixel} from '../model/pixel.model';
-import {BugDataInterface} from '../interfaces/bug-data.interface';
+import {Pixel} from '../../../common/model/pixel.model';
+import {BugDataInterface} from '../interface/bug-data.interface';
 import {BugTypesEnum} from '../enums/bug-types.enum';
 
 export const bugData: BugDataInterface = {

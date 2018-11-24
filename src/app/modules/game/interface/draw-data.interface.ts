@@ -1,4 +1,4 @@
-import {Pixel} from '../model/pixel.model';
+import {Pixel} from '../../../common/model/pixel.model';
 
 export interface DrawDataInterface {
     head: {

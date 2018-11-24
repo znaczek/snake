@@ -1,14 +1,14 @@
-import * as config from '../config';
-import {drawData} from './data/draw.data';
-import {COLORS} from '../config';
+import * as config from '../../config';
+import {drawData} from '../modules/game/data/snake.data';
+import {COLORS} from '../../config';
 import {DirectionEnum} from './enums/direction.enum';
 import {Position} from './model/position.model';
-import {BodyPart} from './model/body-part.model';
-import {BodyPartEnum} from './enums/body-part.enum';
+import {BodyPart} from '../modules/game/model/body-part.model';
+import {BodyPartEnum} from '../modules/game/enums/body-part.enum';
 import {Pixel} from './model/pixel.model';
-import {Apple} from './model/apple.model';
-import {bugData} from './data/bug.data';
-import {Bug} from './model/bug.model';
+import {Apple} from '../modules/game/model/apple.model';
+import {bugData} from '../modules/game/data/bug.data';
+import {Bug} from '../modules/game/model/bug.model';
 
 export class Canvas {
     private ctx: CanvasRenderingContext2D = null;

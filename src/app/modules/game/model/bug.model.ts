@@ -1,10 +1,10 @@
 import {BugTypesEnum} from '../enums/bug-types.enum';
-import {Eatable} from '../interfaces/eatable';
+import {Eatable} from './eatable.model';
 import {bugData} from '../data/bug.data';
-import {Pixel} from './pixel.model';
-import {DrawableInterface} from '../interfaces/drawable.interface';
-import * as config from '../../config';
-import {Position} from './position.model';
+import {Pixel} from '../../../common/model/pixel.model';
+import {DrawableInterface} from '../../../common/interfaces/drawable.interface';
+import * as config from '../../../../config';
+import {Position} from '../../../common/model/position.model';
 
 export class Bug extends Eatable implements DrawableInterface {
     public static readonly width: number = config.MOVE * 2;

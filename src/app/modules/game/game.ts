@@ -1,15 +1,15 @@
-import {Canvas} from './canvas';
+import {Canvas} from '../../common/canvas';
 import {Snake} from './snake';
-import * as config from '../config';
+import * as config from '../../../config';
 import {MealFactory} from './factory/meal.factory';
 import {Apple} from './model/apple.model';
 import {Observable} from 'rxjs/index';
 import {takeWhile} from 'rxjs/operators';
-import {TextWriter} from './text-writer';
+import {TextWriter} from '../../common/text-writer';
 import {Bug} from './model/bug.model';
-import {charData} from './data/char.data';
-import {Position} from './model/position.model';
-import {Pixel} from './model/pixel.model';
+import {charData} from '../../common/data/char.data';
+import {Position} from '../../common/model/position.model';
+import {Pixel} from '../../common/model/pixel.model';
 
 export class Game {
     private snake: Snake;

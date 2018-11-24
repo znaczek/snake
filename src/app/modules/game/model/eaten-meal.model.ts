@@ -1,5 +1,5 @@
-import {DirectionEnum} from '../enums/direction.enum';
-import {Position} from './position.model';
+import {DirectionEnum} from '../../../common/enums/direction.enum';
+import {Position} from '../../../common/model/position.model';
 
 export class EatenMeal {
     public nextDirection: DirectionEnum;

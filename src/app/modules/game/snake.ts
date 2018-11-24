@@ -1,16 +1,16 @@
-import * as config from '../config';
-import {Canvas} from './canvas';
-import {DirectionEnum} from './enums/direction.enum';
+import * as config from '../../../config';
+import {Canvas} from '../../common/canvas';
+import {DirectionEnum} from '../../common/enums/direction.enum';
 import {BodyPartEnum} from './enums/body-part.enum';
-import {Position} from './model/position.model';
+import {Position} from '../../common/model/position.model';
 import {BodyPart} from './model/body-part.model';
-import {clone, getRectangleFromPixels, isOverlapping} from './utils/utils';
-import {Pixel} from './model/pixel.model';
-import {drawData} from './data/draw.data';
-import {Rectangle} from './model/rectangle.model';
-import {Eatable} from './interfaces/eatable';
+import {clone, getRectangleFromPixels, isOverlapping} from '../../common/utils/utils';
+import {Pixel} from '../../common/model/pixel.model';
+import {drawData} from './data/snake.data';
+import {Rectangle} from '../../common/model/rectangle.model';
+import {Eatable} from './model/eatable.model';
 import {EatenMeal} from './model/eaten-meal.model';
-import {DrawableInterface} from './interfaces/drawable.interface';
+import {DrawableInterface} from '../../common/interfaces/drawable.interface';
 
 export class Snake implements DrawableInterface {
     private canvas: Canvas;

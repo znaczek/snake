@@ -1,6 +1,6 @@
-import {DirectionEnum} from '../enums/direction.enum';
-import {Pixel} from '../model/pixel.model';
-import {DrawDataInterface} from '../interfaces/draw-data.interface';
+import {DirectionEnum} from '../../../common/enums/direction.enum';
+import {Pixel} from '../../../common/model/pixel.model';
+import {DrawDataInterface} from '../interface/draw-data.interface';
 
 const common = {
     head: {

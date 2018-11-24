@@ -1,8 +1,8 @@
-import {Game} from './game';
-import {Canvas} from './canvas';
-import {MealFactory} from './factory/meal.factory';
+import {Game} from './modules/game/game';
+import {Canvas} from './common/canvas';
+import {MealFactory} from './modules/game/factory/meal.factory';
 import {fromEvent, Observable} from 'rxjs';
-import {TextWriter} from './text-writer';
+import {TextWriter} from './common/text-writer';
 
 export class App {
     private canvas: Canvas;
