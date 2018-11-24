@@ -340,10 +340,6 @@ export class Snake implements DrawableInterface {
         return clone(this.body);
     }
 
-    private getOldBodyData(): BodyPart[] {
-        return clone(this.oldBody);
-    }
-
     private getPartPixels(index: number, relativePart: BodyPart = null): Pixel[] {
         const part: BodyPart = this.body[index];
         const prevPart: BodyPart = index > 0 ? this.body[index - 1] : this.body[index];
