@@ -3,7 +3,7 @@ import {Snake} from './snake';
 import * as config from '../../../config';
 import {MealFactory} from './factory/meal.factory';
 import {Apple} from './model/apple.model';
-import {Observable} from 'rxjs/index';
+import {Observable, Subject} from 'rxjs/index';
 import {takeWhile} from 'rxjs/operators';
 import {TextWriter} from '../../common/text-writer';
 import {Bug} from './model/bug.model';
@@ -12,6 +12,7 @@ import {Position} from '../../common/model/position.model';
 import {Pixel} from '../../common/model/pixel.model';
 import {ColorsEnum} from '../../common/enums/color.enums';
 import {getGameBoarderPixels, getGameBoardOffset, getMaskPixels} from './utils/utils';
+import {AppEvent} from '../../common/model/game-event.model';
 
 export class Game {
     private snake: Snake;
@@ -21,21 +22,24 @@ export class Game {
     private bug: Bug = null;
     private points: number = 0;
 
-    constructor(private canvas: Canvas,
-                private mealFactory: MealFactory,
+    constructor(private stageHandler: Subject<AppEvent>,
+                private canvas: Canvas,
                 private onClick: Observable<Event>,
-                private textWriter: TextWriter) {
+                private textWriter: TextWriter,
+                private mealFactory: MealFactory,
+                ) {
+        this.snake = new Snake(this.canvas);
     }
 
-    public init(): void {
+    public start(): Game {
         this.canvas.clear();
-        this.snake = new Snake(this.canvas);
         this.provideApple();
         this.bindEvents();
         this.loop();
         this.testMove();
 
         this.gameOn = true;
+        return this;
     }
 
     private bindEvents(): void {
@@ -94,7 +98,11 @@ export class Game {
 
     private endGame(): void {
         this.gameOn = false;
-        // Todo
+        setTimeout(() => {
+            this.stageHandler.next(AppEvent.endGame(this.points));
+        }, 1000);
+
+        // TODO
     }
 
     private testMove(): void {

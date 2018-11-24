@@ -7,9 +7,7 @@ import {Position} from './model/position.model';
 export class Canvas {
     private ctx: CanvasRenderingContext2D = null;
 
-    constructor(private canvas: HTMLCanvasElement) {}
-
-    public init(): void {
+    constructor(private canvas: HTMLCanvasElement) {
         if (this.ctx !== null) {
             throw new Error('Canvas element is already set');
         }
