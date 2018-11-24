@@ -74,7 +74,6 @@ export class Snake implements DrawableInterface {
             this.direction,
         ));
         this.body.pop();
-        this.body[this.body.length - 1].type = BodyPartEnum.TAIL;
         this.lastDirection = this.direction;
         this.eatenMeals.forEach((meal: EatenMeal) => {
             meal.duration -= 1;
@@ -89,6 +88,7 @@ export class Snake implements DrawableInterface {
         if (this.didTailJumped()) {
             this.body.pop();
         }
+        this.body[this.body.length - 1].type = BodyPartEnum.TAIL;
         this.eatenMeals = this.eatenMeals.filter((meal: EatenMeal) => meal.duration !== 0);
     }
 
