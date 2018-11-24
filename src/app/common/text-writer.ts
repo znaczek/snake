@@ -37,7 +37,6 @@ export class TextWriter {
 
         if (charIndex === ' ') {
             this.position.x += 2;
-            console.log('aaaaaaaaaa');
             return;
         }
         const char: Char = this.charData[charIndex];

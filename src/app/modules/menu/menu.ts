@@ -34,6 +34,7 @@ export class Menu {
     private createMenuItems(): void {
         this.menuItems.push(
             new MenuItem(this.textWriter.write('New game'), 1),
+            new MenuItem(this.textWriter.write('Level'), 2),
         );
     }
 
