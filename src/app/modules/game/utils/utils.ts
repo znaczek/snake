@@ -25,6 +25,7 @@ export const getGameBoarderPixels = (): Pixel[] => {
         i += 1
     ) {
         pixels.push(new Pixel(i, config.TOP_BAR_HEIGHT));
+        pixels.push(new Pixel(i, config.TOP_BAR_HEIGHT - 2));
         pixels.push(new Pixel(i, config.GAME_CANVAS_HEIGHT + config.TOP_BAR_HEIGHT - 1));
     }
     return pixels;

@@ -21,16 +21,14 @@ export class Bug extends Eatable implements DrawableInterface {
     public getPixels(options?: {
          offset: Position,
      }): Pixel[] {
-        options = options || {
-            offset: new Position(0, 0),
-        };
+        const start = options && options.offset ? options.offset : new Position(this.x, this.y);
         const bugPixels = bugData[this.type];
         if (!bugPixels) {
             return [];
         }
         return bugPixels.map((pixel: Pixel) => new Pixel(
-            this.x + options.offset.x + pixel.x,
-            this.y + options.offset.y + pixel.y,
+            start.x + pixel.x,
+            start.y + pixel.y,
         ));
     }
 

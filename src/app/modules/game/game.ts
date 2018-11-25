@@ -123,7 +123,7 @@ export class Game {
         ));
         gameBoardPixels.push(...this.apple.getPixels());
         absolutePixels.push(...this.textWriter.write(
-            TextWriter.padStart(this.points.toString(), '0', 4), new Position(1, 0),
+            TextWriter.padStart(this.points.toString(), '0', 4), new Position(1, 1),
         ).getPixels());
 
         if (this.bug) {
@@ -131,9 +131,11 @@ export class Game {
             const bugPointsLeftText = this.textWriter.write(TextWriter.padStart(this.bug.value.toString(), '0', 2));
             const xBugPointsOffset = config.CANVAS_WIDTH - (2 * charData[0].width);
             const xBugOffset = xBugPointsOffset - 2 - Bug.width;
-            absolutePixels.push(...this.bug.getPixels({offset: new Position(xBugOffset, 1)}));
+            absolutePixels.push(...this.bug.getPixels({
+                offset: new Position(xBugOffset, 2),
+            }));
             absolutePixels.push(...bugPointsLeftText.getPixels({
-                offset: new Position(xBugPointsOffset, 0),
+                offset: new Position(xBugPointsOffset, 1),
             }));
         }
         absolutePixels.push(...getGameBoarderPixels());

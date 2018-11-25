@@ -10,7 +10,7 @@
 
 export const DEBUG = false;
 export const PIXEL_SIZE = 6;
-export const TOP_BAR_HEIGHT = 8;
+export const TOP_BAR_HEIGHT = 9;
 export const GAME_CANVAS_WIDTH = 96;
 export const GAME_CANVAS_HEIGHT = 40;
 export const MOVE = 4;
