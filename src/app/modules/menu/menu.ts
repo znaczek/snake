@@ -73,6 +73,7 @@ export class Menu {
         this.menuData = this.menuItemFactory.create(menuData);
         this.cursor = 1;
         this.currentMenuItem = this.menuData;
+        // this.currentMenuItem = this.menuData.children[1];
         this.draw();
         return this;
     }
