@@ -42,8 +42,8 @@ export class Canvas {
         this.ctx.fillRect(
             pixel.x * config.PIXEL_SIZE,
             pixel.y * config.PIXEL_SIZE,
-            config.PIXEL_SIZE -1 ,
-            config.PIXEL_SIZE -1,
+            config.PIXEL_SIZE - 1,
+            config.PIXEL_SIZE - 1,
         );
     }
 
@@ -51,7 +51,7 @@ export class Canvas {
         this.ctx.save();
         this.ctx.lineWidth = 0.5;
         this.ctx.strokeStyle = COLORS[ColorsEnum.BLACK];
-        for (let i = 0; i < config.GAME_CANVAS_HEIGHT; i+=1) {
+        for (let i = 0; i < config.GAME_CANVAS_HEIGHT; i += 1) {
             this.ctx.beginPath();
             this.ctx.moveTo(
                 0,
@@ -63,7 +63,7 @@ export class Canvas {
             );
             this.ctx.stroke();
         }
-        for (let i = 0; i < config.GAME_CANVAS_WIDTH; i+=1) {
+        for (let i = 0; i < config.GAME_CANVAS_WIDTH; i += 1) {
             this.ctx.beginPath();
             this.ctx.moveTo(
                 i * config.PIXEL_SIZE,

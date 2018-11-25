@@ -38,7 +38,7 @@ export class Game {
         this.provideApple();
         this.bindEvents();
         this.loop();
-        this.testMove();
+        this.draw();
 
         this.gameOn = true;
         return this;

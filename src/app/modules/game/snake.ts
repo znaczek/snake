@@ -55,24 +55,25 @@ export class Snake implements DrawableInterface {
 
     public move(): void {
         this.oldBody = this.getBodyData();
-        const head = this.getHead();
-        head.type = BodyPartEnum.BODY;
-        const newHeadPosition = this.getNewHeadPosition(head.position);
-        const recalculatedPosition =  this.handleBoundary(newHeadPosition);
-        if (newHeadPosition.x !== recalculatedPosition.x ||
-            newHeadPosition.y !== recalculatedPosition.y
+        const oldHead = this.getHead();
+        oldHead.type = BodyPartEnum.BODY;
+        const newHead = this.getNewHead(this.getHead());
+        const proposedNewHeadPosition = new Position(
+            newHead.position.x,
+            newHead.position.y,
+        );
+        const recalculatedPosition =  this.getRecalculatedHeadPosition(newHead);
+        newHead.position = recalculatedPosition;
+        if (proposedNewHeadPosition.x !== recalculatedPosition.x ||
+            proposedNewHeadPosition.y !== recalculatedPosition.y
         ) {
             this.body.unshift(new BodyPart(
                 BodyPartEnum.BODY,
-                newHeadPosition,
+                proposedNewHeadPosition,
                 this.direction,
             ));
         }
-        this.body.unshift(new BodyPart(
-            BodyPartEnum.HEAD,
-            recalculatedPosition,
-            this.direction,
-        ));
+        this.body.unshift(newHead);
         this.body.pop();
         this.lastDirection = this.direction;
         this.eatenMeals.forEach((meal: EatenMeal) => {
@@ -138,7 +139,7 @@ export class Snake implements DrawableInterface {
     }
 
     public checkSelfCollision(): boolean {
-        const nose = this.getNose();
+        const nose = this.getNose(this.getHead());
         return this.getBodyData().filter((part, index) => {
             if (index === 0) {
                 return false;
@@ -156,41 +157,41 @@ export class Snake implements DrawableInterface {
     }): Pixel[] {
         const snakePixels: Pixel[] = this.body.reduce((acc: Pixel[], _, index: number) => {
             const pixels: Pixel[] = this.getPartPixels(index);
-            if (index === 0) {
-                const head = this.getHead();
-                const futureHeadPosition = this.handleBoundary(this.getNewHeadPosition(head.position));
-                const futureHead = new BodyPart(
-                    BodyPartEnum.HEAD,
-                    futureHeadPosition,
-                    head.direction,
-                );
-                options.additionalPixelsSets.forEach((pxs) => {
-                    if (isOverlapping(getRectangleFromPixels(pxs),getRectangleFromPixels(this.getPartPixels(0, futureHead)))) {
-                        switch (head.direction) {
-                            case DirectionEnum.RIGHT: {
-                                pixels[0].y -= 1;
-                                pixels[1].y += 1;
-                                break;
-                            }
-                            case DirectionEnum.UP: {
-                                pixels[0].x += 1;
-                                pixels[1].x -= 1;
-                                break;
-                            }
-                            case DirectionEnum.LEFT: {
-                                pixels[0].y += 1;
-                                pixels[1].y -= 1;
-                                break;
-                            }
-                            case DirectionEnum.DOWN: {
-                                pixels[0].x += 1;
-                                pixels[1].x -= 1;
-                                break;
-                            }
-                        }
-                    }
-                });
-            }
+            // if (index === 0 && 0) {
+            //     const head = this.getHead();
+            //     const futureHeadPosition = this.getRecalculatedHeadPosition(this.getNewHead(head.position));
+            //     const futureHead = new BodyPart(
+            //         BodyPartEnum.HEAD,
+            //         futureHeadPosition,
+            //         head.direction,
+            //     );
+            //     options.additionalPixelsSets.forEach((pxs) => {
+            //         if (isOverlapping(getRectangleFromPixels(pxs),getRectangleFromPixels(this.getPartPixels(0, futureHead)))) {
+            //             switch (head.direction) {
+            //                 case DirectionEnum.RIGHT: {
+            //                     pixels[0].y -= 1;
+            //                     pixels[1].y += 1;
+            //                     break;
+            //                 }
+            //                 case DirectionEnum.UP: {
+            //                     pixels[0].x += 1;
+            //                     pixels[1].x -= 1;
+            //                     break;
+            //                 }
+            //                 case DirectionEnum.LEFT: {
+            //                     pixels[0].y += 1;
+            //                     pixels[1].y -= 1;
+            //                     break;
+            //                 }
+            //                 case DirectionEnum.DOWN: {
+            //                     pixels[0].x += 1;
+            //                     pixels[1].x -= 1;
+            //                     break;
+            //                 }
+            //             }
+            //         }
+            //     });
+            // }
             return [...acc, ...pixels];
         }, []);
 
@@ -254,10 +255,10 @@ export class Snake implements DrawableInterface {
             Math.abs(oldTail.position.y - newTail.position.y) > config.MOVE * 2;
     }
 
-    private getNewHeadPosition(headPosition: Position): Position {
+    private getNewHead(head: BodyPart): BodyPart {
         const newHeadPosition = new Position(
-            headPosition.x,
-            headPosition.y,
+            head.position.x,
+            head.position.y,
         );
         if (this.direction !== this.lastDirection) {
             switch (this.lastDirection) {
@@ -294,19 +295,24 @@ export class Snake implements DrawableInterface {
                     break;
             }
         }
-        return newHeadPosition;
+        return new BodyPart(
+            BodyPartEnum.HEAD,
+            newHeadPosition,
+            this.direction,
+        );
     }
 
-    private handleBoundary(newHeadPosition: Position): Position {
-        const recalculatedPosition = new Position(newHeadPosition.x, newHeadPosition.y);
-        if (this.direction === DirectionEnum.RIGHT && recalculatedPosition.x + 5 > config.BOARD.end.x) {
-            recalculatedPosition.x -= (config.BOARD_WIDTH + 2);
-        } else if (this.direction === DirectionEnum.LEFT && recalculatedPosition.x - 5 < 0) {
-            recalculatedPosition.x += (config.BOARD_WIDTH + 2);
-        } else if (this.direction === DirectionEnum.DOWN && recalculatedPosition.y + 5 > config.BOARD.end.y) {
-            recalculatedPosition.y -= (config.BOARD_HEIGHT + 2);
-        } else if (this.direction === DirectionEnum.UP && recalculatedPosition.y - 5 < 0) {
-            recalculatedPosition.y += (config.BOARD_HEIGHT + 2);
+    private getRecalculatedHeadPosition(newHead: BodyPart): Position {
+        const recalculatedPosition = new Position(newHead.position.x, newHead.position.y);
+        const nose = this.getNose(newHead);
+        if (this.direction === DirectionEnum.RIGHT && nose.x >= config.BOARD.end.x) {
+            recalculatedPosition.x -= (config.BOARD_WIDTH);
+        } else if (this.direction === DirectionEnum.LEFT && nose.x <= 0) {
+            recalculatedPosition.x += (config.BOARD_WIDTH);
+        } else if (this.direction === DirectionEnum.DOWN && nose.y >= config.BOARD.end.y) {
+            recalculatedPosition.y -= (config.BOARD_HEIGHT);
+        } else if (this.direction === DirectionEnum.UP && nose.y <= 0) {
+            recalculatedPosition.y += (config.BOARD_HEIGHT);
         }
         return recalculatedPosition;
     }
@@ -375,8 +381,7 @@ export class Snake implements DrawableInterface {
         return this.body[0];
     }
 
-    private getNose(): Pixel {
-        const headElem = this.getHead();
+    private getNose(headElem: BodyPart): Pixel {
         switch (headElem.direction) {
             case DirectionEnum.RIGHT:
                 return {
