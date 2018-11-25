@@ -11,7 +11,6 @@ import {MENU_ITEM_HEIGHT, MENU_ITEM_WIDTH} from './constants/menu-item.constants
 import {ClicksEnum} from '../../common/enums/clicks.enum';
 import {MenuItemFactory} from './factory/menu-item.factory';
 import {menuData} from './data/menu.data';
-import {MenuActions} from './menu-actions';
 
 export class Menu {
     private static getMenuItemBackground(yOffset: number = 0): Pixel[] {
@@ -26,6 +25,7 @@ export class Menu {
 
     private onClickSubscription: Subscription;
     private cursor: number;
+    private parentCursor: number;
     private currentMenuItem: MenuItem;
     private offset: number;
     private menuData: MenuItem;
@@ -34,21 +34,32 @@ export class Menu {
                 private canvas: Canvas,
                 private onClick: Observable<ClicksEnum>,
                 private textWriter: TextWriter,
-                private menuItemFactory: MenuItemFactory,
-                private menuActions: MenuActions) {
+                private menuItemFactory: MenuItemFactory) {
         this.textWriter.setCharData(menuCharData);
+    }
+
+    public close() {
+        this.onClickSubscription.unsubscribe();
     }
 
     public start(): Menu {
         this.onClickSubscription = this.onClick.subscribe((event) => {
-            // this.stageHandler.next(AppEvent.startGame());
 
             if (event === ClicksEnum.ENTER) {
                 const selectedMenuItem = this.getSelectedMenuItem();
+
                 if (selectedMenuItem.callback) {
-                    this.menuActions.call(selectedMenuItem.callback, selectedMenuItem.callbackArgs);
+                    if (typeof selectedMenuItem.callback === 'function') {
+                        selectedMenuItem.callback.call(this);
+                    }
+                } else if (selectedMenuItem.back) {
+                    this.cursor = this.parentCursor;
+                    this.currentMenuItem = selectedMenuItem.parent.parent;
+                    this.draw();
                 } else if (selectedMenuItem.children.length > 0) {
                     this.currentMenuItem = selectedMenuItem;
+                    this.parentCursor = this.cursor;
+                    this.cursor = 1;
                     this.draw();
                 }
             } else {
@@ -60,7 +71,6 @@ export class Menu {
             }
         });
         this.menuData = this.menuItemFactory.create(menuData);
-
         this.cursor = 1;
         this.currentMenuItem = this.menuData;
         this.draw();

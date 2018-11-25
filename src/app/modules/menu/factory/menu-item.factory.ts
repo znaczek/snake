@@ -6,13 +6,16 @@ export class MenuItemFactory {
     constructor(private textWriter: TextWriter) {
     }
 
-    public create(options: MenuDataInterface): MenuItem {
-        return new MenuItem({
+    public create(options: MenuDataInterface, parent?: MenuItem): MenuItem {
+        const newMenuItem: MenuItem = new MenuItem({
             text: this.textWriter.write(options.text),
             ordinal: options.ordinal,
             callback: options.callback,
+            back: options.back,
+            parent,
             callbackArgs: options.callbackArgs,
-            children: (options.children || []).map((item) => this.create(item)),
         });
+        newMenuItem.children = (options.children || []).map((item) => this.create(item, newMenuItem));
+        return newMenuItem;
     }
 }

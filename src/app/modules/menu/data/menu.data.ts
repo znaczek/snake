@@ -1,4 +1,5 @@
 import {MenuDataInterface} from '../interfaces/menu-data.interface';
+import {AppEvent} from '../../../common/model/game-event.model';
 
 export const menuData: MenuDataInterface = {
     text: 'ROOT',
@@ -7,7 +8,10 @@ export const menuData: MenuDataInterface = {
         {
             text: 'New game',
             ordinal: 1,
-            callback: 'startGame',
+            callback() {
+                this.stageHandler.next(AppEvent.startGame());
+                this.close();
+            },
         },
         {
             text: 'Level',
@@ -16,24 +20,24 @@ export const menuData: MenuDataInterface = {
                 {
                     text: 'Back',
                     ordinal: 1,
-                    callback: 'goBack',
+                    back: true,
                 },
                 {
                     text: '1',
                     ordinal: 2,
-                    callback: 'setLevel',
+                    callback() {},
                     callbackArgs: {level: 1},
                 },
                 {
                     text: '2',
                     ordinal: 3,
-                    callback: 'setLevel',
+                    callback() {},
                     callbackArgs: {level: 2},
                 },
                 {
                     text: '3',
                     ordinal: 4,
-                    callback: 'setLevel',
+                    callback() {},
                     callbackArgs: {level: 3},
                 },
             ],
@@ -45,24 +49,24 @@ export const menuData: MenuDataInterface = {
                 {
                     text: 'Back',
                     ordinal: 1,
-                    callback: 'goBack',
+                    back: true,
                 },
                 {
                     text: '1',
                     ordinal: 2,
-                    callback: 'setMaze',
+                    callback() {},
                     callbackArgs: {maze: 1},
                 },
                 {
                     text: '2',
                     ordinal: 3,
-                    callback: 'setMaze',
+                    callback() {},
                     callbackArgs: {maze: 2},
                 },
                 {
                     text: '3',
                     ordinal: 4,
-                    callback: 'setMaze',
+                    callback() {},
                     callbackArgs: {maze: 3},
                 },
             ],
@@ -70,12 +74,12 @@ export const menuData: MenuDataInterface = {
         {
             text: 'High scores',
             ordinal: 4,
-            callback: 'showHighScores',
+            callback() {},
         },
         {
             text: 'Exit',
             ordinal: 5,
-            callback: 'exit',
+            callback() {},
         },
     ],
 };

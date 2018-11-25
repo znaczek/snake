@@ -9,7 +9,6 @@ import {Menu} from './modules/menu/menu';
 import {map} from 'rxjs/internal/operators';
 import {ClicksEnum} from './common/enums/clicks.enum';
 import {MenuItemFactory} from './modules/menu/factory/menu-item.factory';
-import {MenuActions} from './modules/menu/menu-actions';
 
 export class App {
     private canvas: Canvas;
@@ -21,7 +20,6 @@ export class App {
     private onClick: Observable<ClicksEnum>;
     private stageHandler: Subject<AppEvent>;
     private menuItemFactory: MenuItemFactory;
-    private menuActions: MenuActions;
 
     constructor(canvas: HTMLCanvasElement) {
         this.onClick = fromEvent(document, 'keydown').pipe(
@@ -45,7 +43,6 @@ export class App {
         this.canvas = new Canvas(canvas);
         this.textWriter = new TextWriter();
         this.menuItemFactory = new MenuItemFactory(this.textWriter);
-        this.menuActions = new MenuActions(this.stageHandler);
     }
 
     public run() {
@@ -75,7 +72,7 @@ export class App {
     }
 
     private createMenu() {
-        this.menu = new Menu(this.stageHandler, this.canvas, this.onClick, this.textWriter, this.menuItemFactory, this.menuActions).start();
+        this.menu = new Menu(this.stageHandler, this.canvas, this.onClick, this.textWriter, this.menuItemFactory).start();
     }
 
     private createGame() {

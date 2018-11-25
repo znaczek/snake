@@ -1,7 +1,8 @@
 export interface MenuDataInterface {
     text: string;
     ordinal: number;
-    callback?: string;
+    callback?: () => void;
+    back?: boolean;
     callbackArgs?: {[index: string]: any};
     children?: MenuDataInterface[];
 }
