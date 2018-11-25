@@ -14,24 +14,68 @@ export const menuData: MenuDataInterface = {
             ordinal: 2,
             children: [
                 {
-                    text: '1',
+                    text: 'Back',
                     ordinal: 1,
-                    callback: 'setLebel',
-                    callbackArgs: {lebel: 1},
+                    callback: 'goBack',
+                },
+                {
+                    text: '1',
+                    ordinal: 2,
+                    callback: 'setLevel',
+                    callbackArgs: {level: 1},
                 },
                 {
                     text: '2',
-                    ordinal: 2,
-                    callback: 'setLebel',
-                    callbackArgs: {lebel: 2},
+                    ordinal: 3,
+                    callback: 'setLevel',
+                    callbackArgs: {level: 2},
                 },
                 {
                     text: '3',
-                    ordinal: 3,
-                    callback: 'setLebel',
-                    callbackArgs: {lebel: 3},
+                    ordinal: 4,
+                    callback: 'setLevel',
+                    callbackArgs: {level: 3},
                 },
             ],
+        },
+        {
+            text: 'Mazes',
+            ordinal: 3,
+            children: [
+                {
+                    text: 'Back',
+                    ordinal: 1,
+                    callback: 'goBack',
+                },
+                {
+                    text: '1',
+                    ordinal: 2,
+                    callback: 'setMaze',
+                    callbackArgs: {maze: 1},
+                },
+                {
+                    text: '2',
+                    ordinal: 3,
+                    callback: 'setMaze',
+                    callbackArgs: {maze: 2},
+                },
+                {
+                    text: '3',
+                    ordinal: 4,
+                    callback: 'setMaze',
+                    callbackArgs: {maze: 3},
+                },
+            ],
+        },
+        {
+            text: 'High scores',
+            ordinal: 4,
+            callback: 'showHighScores',
+        },
+        {
+            text: 'Exit',
+            ordinal: 5,
+            callback: 'exit',
         },
     ],
 };

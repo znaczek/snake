@@ -2,7 +2,7 @@
     box-sizing: border-box;
 }
 body {
-    background-color: #a4c70b;
+    background-color: #0e52ab;
 }
 
 #app-root {
@@ -14,4 +14,5 @@ body {
 
 canvas {
     display: none;
+    background-color: #a4c70b;
 }
