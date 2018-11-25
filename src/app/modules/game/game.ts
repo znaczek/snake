@@ -3,8 +3,7 @@ import {Snake} from './snake';
 import * as config from '../../../config';
 import {MealFactory} from './factory/meal.factory';
 import {Apple} from './model/apple.model';
-import {Observable, Subject} from 'rxjs/index';
-import {takeWhile} from 'rxjs/operators';
+import {Observable, Subject, Subscription} from 'rxjs/index';
 import {TextWriter} from '../../common/text-writer';
 import {Bug} from './model/bug.model';
 import {charData} from '../../common/data/char.data';
@@ -18,11 +17,12 @@ import {Settings} from '../menu/settings';
 
 export class Game {
     private snake: Snake;
-    private gameOn: boolean;
+    private gameOn: boolean = false;
     private interval: number;
     private apple: Apple;
     private bug: Bug = null;
     private points: number = 0;
+    private onClickSubscribe: Subscription;
 
     constructor(private stageHandler: Subject<AppEvent>,
                 private canvas: Canvas,
@@ -39,46 +39,33 @@ export class Game {
         this.canvas.clear();
         this.provideApple();
         this.bindEvents();
+        this.gameOn = true;
         this.loop();
         this.draw();
 
-        this.gameOn = true;
         return this;
     }
 
     private bindEvents(): void {
-        this.onClick.pipe(takeWhile(() => this.gameOn))
-            .subscribe((event) => {
-                if (!this.gameOn) {
-                    return;
-                }
-                switch (event) {
-                    case ClicksEnum.LEFT:
-                        this.snake.turnLeft();
-                        // this.testMove();
-                        break;
-                    case ClicksEnum.RIGHT:
-                        this.snake.turnRight();
-                        // this.testMove();
-                        break;
-                    case ClicksEnum.UP:
-                        this.snake.turnUp();
-                        // this.testMove();
-                        break;
-                    case ClicksEnum.DOWN:
-                        this.snake.turnDown();
-                        // this.testMove();
-                        break;
-                    case ClicksEnum.ENTER:
-                        if (this.interval) {
-                            clearTimeout(this.interval);
-                            this.interval = null;
-                        } else {
-                            this.loop();
-                        }
-                        break;
-                }
-            });
+        this.onClickSubscribe = this.onClick.subscribe((event) => {
+            switch (event) {
+                case ClicksEnum.LEFT:
+                    this.snake.turnLeft();
+                    break;
+                case ClicksEnum.RIGHT:
+                    this.snake.turnRight();
+                    break;
+                case ClicksEnum.UP:
+                    this.snake.turnUp();
+                    break;
+                case ClicksEnum.DOWN:
+                    this.snake.turnDown();
+                    break;
+            }
+            if (config.DEBUG_MOVING) {
+                this.testMove();
+            }
+        });
     }
 
     private provideApple(): void {
@@ -101,7 +88,9 @@ export class Game {
     }
 
     private endGame(): void {
+        clearInterval(this.interval);
         this.gameOn = false;
+        this.onClickSubscribe.unsubscribe();
         setTimeout(() => {
             this.stageHandler.next(AppEvent.endGame(this.points));
         }, 1000);
@@ -145,12 +134,16 @@ export class Game {
         this.canvas.prepareBoard();
         this.canvas.drawPixels(gameBoardPixels, getGameBoardOffset());
         this.canvas.drawPixels(absolutePixels);
-        this.canvas.drawPixels(getMaskPixels(), new Position(0, 0), config.DEBUG ? ColorsEnum.RED : ColorsEnum.GREEN);
+        this.canvas.drawPixels(getMaskPixels(), new Position(0, 0), config.DEBUG_CANVAS ? ColorsEnum.RED : ColorsEnum.GREEN);
     }
 
     private loop(): void {
-        this.handleMove();
-        this.interval = setTimeout(this.loop.bind(this), config.SPEED / this.settings.level);
+        if (!config.DEBUG_MOVING) {
+            if (this.gameOn) {
+                this.handleMove();
+                this.interval = setTimeout(this.loop.bind(this), config.SPEED / this.settings.level);
+            }
+        }
     }
 
     private handleMove(): void {

@@ -8,13 +8,15 @@
  * INIT_HEAD = {x: 34, y: 18};
  */
 
-export const DEBUG = false;
+export const DEBUG_CANVAS = false;
+export const DEBUG_MOVING = false;
+
 export const PIXEL_SIZE = 10;
 export const TOP_BAR_HEIGHT = 9;
 export const GAME_CANVAS_WIDTH = 96;
 export const GAME_CANVAS_HEIGHT = 40;
 export const MOVE = 4;
-export const SPEED = 1000;
+export const SPEED = 200;
 
 export const INIT_HEAD = {
     x: 34,

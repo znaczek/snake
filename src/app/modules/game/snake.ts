@@ -29,26 +29,22 @@ export class Snake implements DrawableInterface {
     }
 
     public turnLeft(): void {
-        this.lastDirection = this.direction;
-        if (this.direction !== DirectionEnum.RIGHT) {
+        if (this.lastDirection !== DirectionEnum.RIGHT) {
             this.direction = DirectionEnum.LEFT;
         }
     }
     public turnRight(): void {
-        this.lastDirection = this.direction;
-        if (this.direction !== DirectionEnum.LEFT) {
+        if (this.lastDirection !== DirectionEnum.LEFT) {
             this.direction = DirectionEnum.RIGHT;
         }
     }
     public turnUp(): void {
-        this.lastDirection = this.direction;
-        if (this.direction !== DirectionEnum.DOWN) {
+        if (this.lastDirection !== DirectionEnum.DOWN) {
             this.direction = DirectionEnum.UP;
         }
     }
     public turnDown(): void {
-        this.lastDirection = this.direction;
-        if (this.direction !== DirectionEnum.UP) {
+        if (this.lastDirection !== DirectionEnum.UP) {
             this.direction = DirectionEnum.DOWN;
         }
     }
@@ -157,41 +153,41 @@ export class Snake implements DrawableInterface {
     }): Pixel[] {
         const snakePixels: Pixel[] = this.body.reduce((acc: Pixel[], _, index: number) => {
             const pixels: Pixel[] = this.getPartPixels(index);
-            // if (index === 0 && 0) {
-            //     const head = this.getHead();
-            //     const futureHeadPosition = this.getRecalculatedHeadPosition(this.getNewHead(head.position));
-            //     const futureHead = new BodyPart(
-            //         BodyPartEnum.HEAD,
-            //         futureHeadPosition,
-            //         head.direction,
-            //     );
-            //     options.additionalPixelsSets.forEach((pxs) => {
-            //         if (isOverlapping(getRectangleFromPixels(pxs),getRectangleFromPixels(this.getPartPixels(0, futureHead)))) {
-            //             switch (head.direction) {
-            //                 case DirectionEnum.RIGHT: {
-            //                     pixels[0].y -= 1;
-            //                     pixels[1].y += 1;
-            //                     break;
-            //                 }
-            //                 case DirectionEnum.UP: {
-            //                     pixels[0].x += 1;
-            //                     pixels[1].x -= 1;
-            //                     break;
-            //                 }
-            //                 case DirectionEnum.LEFT: {
-            //                     pixels[0].y += 1;
-            //                     pixels[1].y -= 1;
-            //                     break;
-            //                 }
-            //                 case DirectionEnum.DOWN: {
-            //                     pixels[0].x += 1;
-            //                     pixels[1].x -= 1;
-            //                     break;
-            //                 }
-            //             }
-            //         }
-            //     });
-            // }
+            if (index === 0) {
+                const head = this.getHead();
+                const futureHeadPosition = this.getRecalculatedHeadPosition(this.getNewHead(head));
+                const futureHead = new BodyPart(
+                    BodyPartEnum.HEAD,
+                    futureHeadPosition,
+                    head.direction,
+                );
+                options.additionalPixelsSets.forEach((pxs) => {
+                    if (isOverlapping(getRectangleFromPixels(pxs),getRectangleFromPixels(this.getPartPixels(0, futureHead)))) {
+                        switch (head.direction) {
+                            case DirectionEnum.RIGHT: {
+                                pixels[0].y -= 1;
+                                pixels[1].y += 1;
+                                break;
+                            }
+                            case DirectionEnum.UP: {
+                                pixels[0].x += 1;
+                                pixels[1].x -= 1;
+                                break;
+                            }
+                            case DirectionEnum.LEFT: {
+                                pixels[0].y += 1;
+                                pixels[1].y -= 1;
+                                break;
+                            }
+                            case DirectionEnum.DOWN: {
+                                pixels[0].x += 1;
+                                pixels[1].x -= 1;
+                                break;
+                            }
+                        }
+                    }
+                });
+            }
             return [...acc, ...pixels];
         }, []);
 

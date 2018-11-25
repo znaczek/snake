@@ -24,7 +24,7 @@ export class Canvas {
 
     public prepareBoard(): void {
         this.clear();
-        if (config.DEBUG) {
+        if (config.DEBUG_CANVAS) {
             this.drawGrid();
         }
     }
