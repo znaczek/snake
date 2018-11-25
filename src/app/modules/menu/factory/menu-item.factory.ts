@@ -11,6 +11,7 @@ export class MenuItemFactory {
             text: this.textWriter.write(options.text),
             ordinal: options.ordinal,
             callback: options.callback,
+            setCursorCondition: options.setCursorCondition,
             back: options.back,
             parent,
             callbackArgs: options.callbackArgs,

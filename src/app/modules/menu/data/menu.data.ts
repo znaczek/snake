@@ -25,16 +25,19 @@ export const menuData: MenuDataInterface = {
                 {
                     text: '1',
                     ordinal: 2,
+                    setCursorCondition() {return this.checkLevelCursor(1);},
                     callback() {this.setLevel(1);},
                 },
                 {
                     text: '2',
                     ordinal: 3,
+                    setCursorCondition() {return this.checkLevelCursor(2);},
                     callback() {this.setLevel(2);},
                 },
                 {
                     text: '3',
                     ordinal: 4,
+                    setCursorCondition() {return this.checkLevelCursor(3);},
                     callback() {this.setLevel(3);},
                 },
             ],
@@ -51,16 +54,19 @@ export const menuData: MenuDataInterface = {
                 {
                     text: '1',
                     ordinal: 2,
+                    setCursorCondition() {return this.checkMazeCursor(1);},
                     callback() {this.setMaze(1);},
                 },
                 {
                     text: '2',
                     ordinal: 3,
+                    setCursorCondition() {return this.checkMazeCursor(2);},
                     callback() {this.setMaze(2);},
                 },
                 {
                     text: '3',
                     ordinal: 4,
+                    setCursorCondition() {return this.checkMazeCursor(3);},
                     callback() {this.setMaze(3);},
                 },
             ],

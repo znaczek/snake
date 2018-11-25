@@ -62,6 +62,11 @@ export class Menu {
                     this.currentMenuItem = selectedMenuItem;
                     this.parentCursor = this.cursor;
                     this.cursor = 1;
+                    this.currentMenuItem.children.forEach((item: MenuItem) => {
+                        if (item.setCursorCondition && item.setCursorCondition.call(this)) {
+                            this.cursor = item.ordinal;
+                        }
+                    });
                     this.draw();
                 }
             } else {
@@ -75,7 +80,6 @@ export class Menu {
         this.menuData = this.menuItemFactory.create(menuData);
         this.cursor = 1;
         this.currentMenuItem = this.menuData;
-        // this.currentMenuItem = this.menuData.children[1];
         this.draw();
         return this;
     }
@@ -115,16 +119,29 @@ export class Menu {
         this.draw();
     }
 
-    private setLevel(level: number) {
-        this.settings.level = level;
+    private beforeSettingsSet(): void {
+        this.cursor = this.parentCursor;
         this.currentMenuItem = this.currentMenuItem.parent;
+    }
+
+    private setLevel(level: number) {
+        this.beforeSettingsSet();
+        this.settings.level = level;
         this.draw();
     }
 
     private setMaze(maze: number) {
+        this.beforeSettingsSet();
         this.settings.maze = maze;
-        this.currentMenuItem = this.currentMenuItem.parent;
         this.draw();
+    }
+
+    private checkLevelCursor (level: number): boolean {
+        return this.settings.level === level;
+    }
+
+    private checkMazeCursor (maze: number): boolean {
+        return this.settings.maze === maze;
     }
 
 }

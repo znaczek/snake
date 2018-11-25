@@ -66,7 +66,7 @@ export class App {
                 }
             }
         });
-        this.createGame();
+        this.createMenu();
     }
 
     private createIntro() {
