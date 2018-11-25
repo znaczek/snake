@@ -14,6 +14,7 @@ import {ColorsEnum} from '../../common/enums/color.enums';
 import {getGameBoarderPixels, getGameBoardOffset, getMaskPixels} from './utils/utils';
 import {AppEvent} from '../../common/model/game-event.model';
 import {ClicksEnum} from '../../common/enums/clicks.enum';
+import {Settings} from '../menu/settings';
 
 export class Game {
     private snake: Snake;
@@ -25,6 +26,7 @@ export class Game {
 
     constructor(private stageHandler: Subject<AppEvent>,
                 private canvas: Canvas,
+                private settings: Settings,
                 private onClick: Observable<ClicksEnum>,
                 private textWriter: TextWriter,
                 private mealFactory: MealFactory,
@@ -53,19 +55,19 @@ export class Game {
                 switch (event) {
                     case ClicksEnum.LEFT:
                         this.snake.turnLeft();
-                        this.testMove();
+                        // this.testMove();
                         break;
                     case ClicksEnum.RIGHT:
                         this.snake.turnRight();
-                        this.testMove();
+                        // this.testMove();
                         break;
                     case ClicksEnum.UP:
                         this.snake.turnUp();
-                        this.testMove();
+                        // this.testMove();
                         break;
                     case ClicksEnum.DOWN:
                         this.snake.turnDown();
-                        this.testMove();
+                        // this.testMove();
                         break;
                     case ClicksEnum.ENTER:
                         if (this.interval) {
@@ -147,8 +149,8 @@ export class Game {
     }
 
     private loop(): void {
-        // this.handleMove();
-        this.interval = setTimeout(this.loop.bind(this), config.SPEED);
+        this.handleMove();
+        this.interval = setTimeout(this.loop.bind(this), config.SPEED / this.settings.level);
     }
 
     private handleMove(): void {

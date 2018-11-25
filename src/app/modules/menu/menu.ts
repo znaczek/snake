@@ -11,6 +11,7 @@ import {MENU_ITEM_HEIGHT, MENU_ITEM_WIDTH} from './constants/menu-item.constants
 import {ClicksEnum} from '../../common/enums/clicks.enum';
 import {MenuItemFactory} from './factory/menu-item.factory';
 import {menuData} from './data/menu.data';
+import {Settings} from './settings';
 
 export class Menu {
     private static getMenuItemBackground(yOffset: number = 0): Pixel[] {
@@ -32,6 +33,7 @@ export class Menu {
 
     constructor(private stageHandler: Subject<AppEvent>,
                 private canvas: Canvas,
+                private settings: Settings,
                 private onClick: Observable<ClicksEnum>,
                 private textWriter: TextWriter,
                 private menuItemFactory: MenuItemFactory) {
@@ -110,6 +112,18 @@ export class Menu {
         if (this.cursor > this.currentMenuItem.children.length) {
             this.cursor = 1;
         }
+        this.draw();
+    }
+
+    private setLevel(level: number) {
+        this.settings.level = level;
+        this.currentMenuItem = this.currentMenuItem.parent;
+        this.draw();
+    }
+
+    private setMaze(maze: number) {
+        this.settings.maze = maze;
+        this.currentMenuItem = this.currentMenuItem.parent;
         this.draw();
     }
 
