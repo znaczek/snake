@@ -1,5 +1,6 @@
 import {MenuDataInterface} from '../interfaces/menu-data.interface';
 import {AppEvent} from '../../../common/model/game-event.model';
+import {HighScoresView} from '../views/high-scores.view';
 
 export const menuData: MenuDataInterface = {
     text: 'ROOT',
@@ -74,7 +75,14 @@ export const menuData: MenuDataInterface = {
         {
             text: 'High scores',
             ordinal: 4,
-            callback() {this.showHighScores();},
+            customView: HighScoresView,
+            children: [
+                {
+                    text: 'Back',
+                    ordinal: 1,
+                    back: true,
+                },
+            ],
         },
         {
             text: 'Exit',

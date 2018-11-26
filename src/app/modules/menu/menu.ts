@@ -30,6 +30,7 @@ export class Menu {
     private currentMenuItem: MenuItem;
     private offset: number;
     private menuData: MenuItem;
+    private customViewOn: boolean = false;
 
     constructor(private stageHandler: Subject<AppEvent>,
                 private canvas: Canvas,
@@ -45,7 +46,9 @@ export class Menu {
 
     public start(): Menu {
         this.onClickSubscription = this.onClick.subscribe((event) => {
-
+            if (this.customViewOn) {
+                return;
+            }
             if (event === ClicksEnum.ENTER) {
                 const selectedMenuItem = this.getSelectedMenuItem();
 
@@ -57,6 +60,16 @@ export class Menu {
                     this.cursor = this.parentCursor;
                     this.currentMenuItem = selectedMenuItem.parent.parent;
                     this.drawMenu();
+                } else if (selectedMenuItem.customView) {
+                    let customView = new selectedMenuItem.customView(this.canvas, this.textWriter, this.onClick);
+                    this.customViewOn = true;
+                    const exitSubscription = customView.exit.subscribe(() => {
+                        exitSubscription.unsubscribe();
+                        customView = null;
+                        this.customViewOn = false;
+                        this.drawMenu();
+                    });
+                    customView.draw();
                 } else if (selectedMenuItem.children.length > 0) {
                     this.currentMenuItem = selectedMenuItem;
                     this.parentCursor = this.cursor;
@@ -144,14 +157,7 @@ export class Menu {
     }
 
     private showHighScores(): void {
-        this.canvas.prepareBoard();
-        (AppState.getHighScores() || []).forEach((highScore: number, index: number) => {
-            const scoreText = this.textWriter.write(`${index + 1}. ${highScore}`);
-            const pixels = scoreText.getPixels({
-                offset: new Position(0, index * MENU_ITEM_HEIGHT),
-            });
-            this.canvas.drawPixels(pixels, new Position(2, 1));
-        });
+
     }
 
 }

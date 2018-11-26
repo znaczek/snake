@@ -14,7 +14,7 @@ export class MenuItemFactory {
             setCursorCondition: options.setCursorCondition,
             back: options.back,
             parent,
-            callbackArgs: options.callbackArgs,
+            customView: options.customView,
         });
         newMenuItem.children = (options.children || []).map((item) => this.create(item, newMenuItem));
         return newMenuItem;

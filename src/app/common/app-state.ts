@@ -35,7 +35,6 @@ export class AppState {
             }
         }
 
-        console.log('set high score');
         highScores.splice(MAX_HIGHT_SCORES_COUNT, highScores.length);
         window.localStorage.setItem('highScores', JSON.stringify(highScores));
     }
