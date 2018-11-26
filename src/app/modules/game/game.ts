@@ -13,10 +13,11 @@ import {ColorsEnum} from '../../common/enums/color.enums';
 import {getGameBoarderPixels, getGameBoardOffset, getMaskPixels} from './utils/utils';
 import {AppEvent} from '../../common/model/game-event.model';
 import {ClicksEnum} from '../../common/enums/clicks.enum';
-import {Settings} from '../menu/settings';
+import {AppState} from '../../common/app-state';
 
 export class Game {
     private snake: Snake;
+    private speed: number;
     private gameOn: boolean = false;
     private interval: number;
     private apple: Apple;
@@ -26,7 +27,6 @@ export class Game {
 
     constructor(private stageHandler: Subject<AppEvent>,
                 private canvas: Canvas,
-                private settings: Settings,
                 private onClick: Observable<ClicksEnum>,
                 private textWriter: TextWriter,
                 private mealFactory: MealFactory,
@@ -36,6 +36,7 @@ export class Game {
     }
 
     public start(): Game {
+        this.speed = config.SPEED / AppState.getLevel();
         this.canvas.clear();
         this.provideApple();
         this.bindEvents();
@@ -91,8 +92,9 @@ export class Game {
         clearInterval(this.interval);
         this.gameOn = false;
         this.onClickSubscribe.unsubscribe();
+        AppState.addHighScore(this.points);
         setTimeout(() => {
-            this.stageHandler.next(AppEvent.endGame(this.points));
+            this.stageHandler.next(AppEvent.endGame());
         }, 1000);
 
         // TODO
@@ -141,7 +143,7 @@ export class Game {
         if (!config.DEBUG_MOVING) {
             if (this.gameOn) {
                 this.handleMove();
-                this.interval = setTimeout(this.loop.bind(this), config.SPEED / this.settings.level);
+                this.interval = setTimeout(this.loop.bind(this), this.speed);
             }
         }
     }

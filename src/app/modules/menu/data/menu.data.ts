@@ -74,7 +74,7 @@ export const menuData: MenuDataInterface = {
         {
             text: 'High scores',
             ordinal: 4,
-            callback() {},
+            callback() {this.showHighScores();},
         },
         {
             text: 'Exit',

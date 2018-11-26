@@ -11,7 +11,7 @@ import {MENU_ITEM_HEIGHT, MENU_ITEM_WIDTH} from './constants/menu-item.constants
 import {ClicksEnum} from '../../common/enums/clicks.enum';
 import {MenuItemFactory} from './factory/menu-item.factory';
 import {menuData} from './data/menu.data';
-import {Settings} from './settings';
+import {AppState} from '../../common/app-state';
 
 export class Menu {
     private static getMenuItemBackground(yOffset: number = 0): Pixel[] {
@@ -33,7 +33,6 @@ export class Menu {
 
     constructor(private stageHandler: Subject<AppEvent>,
                 private canvas: Canvas,
-                private settings: Settings,
                 private onClick: Observable<ClicksEnum>,
                 private textWriter: TextWriter,
                 private menuItemFactory: MenuItemFactory) {
@@ -57,7 +56,7 @@ export class Menu {
                 } else if (selectedMenuItem.back) {
                     this.cursor = this.parentCursor;
                     this.currentMenuItem = selectedMenuItem.parent.parent;
-                    this.draw();
+                    this.drawMenu();
                 } else if (selectedMenuItem.children.length > 0) {
                     this.currentMenuItem = selectedMenuItem;
                     this.parentCursor = this.cursor;
@@ -67,7 +66,7 @@ export class Menu {
                             this.cursor = item.ordinal;
                         }
                     });
-                    this.draw();
+                    this.drawMenu();
                 }
             } else {
                 if (event === ClicksEnum.UP) {
@@ -80,11 +79,11 @@ export class Menu {
         this.menuData = this.menuItemFactory.create(menuData);
         this.cursor = 1;
         this.currentMenuItem = this.menuData;
-        this.draw();
+        this.drawMenu();
         return this;
     }
 
-    private draw() {
+    private drawMenu() {
         this.canvas.prepareBoard();
         this.currentMenuItem.children.forEach((item: MenuItem, index: number) => {
             const pixels  = item.text.getPixels({
@@ -108,7 +107,7 @@ export class Menu {
         if (this.cursor === 0) {
             this.cursor = this.currentMenuItem.children.length;
         }
-        this.draw();
+        this.drawMenu();
     }
 
     private goToNextMenuItem() {
@@ -116,7 +115,7 @@ export class Menu {
         if (this.cursor > this.currentMenuItem.children.length) {
             this.cursor = 1;
         }
-        this.draw();
+        this.drawMenu();
     }
 
     private beforeSettingsSet(): void {
@@ -126,22 +125,33 @@ export class Menu {
 
     private setLevel(level: number) {
         this.beforeSettingsSet();
-        this.settings.level = level;
-        this.draw();
+        AppState.setLevel(level);
+        this.drawMenu();
     }
 
     private setMaze(maze: number) {
         this.beforeSettingsSet();
-        this.settings.maze = maze;
-        this.draw();
+        AppState.setMaze(maze);
+        this.drawMenu();
     }
 
     private checkLevelCursor (level: number): boolean {
-        return this.settings.level === level;
+        return AppState.getLevel() === level;
     }
 
     private checkMazeCursor (maze: number): boolean {
-        return this.settings.maze === maze;
+        return AppState.getMaze() === maze;
+    }
+
+    private showHighScores(): void {
+        this.canvas.prepareBoard();
+        (AppState.getHighScores() || []).forEach((highScore: number, index: number) => {
+            const scoreText = this.textWriter.write(`${index + 1}. ${highScore}`);
+            const pixels = scoreText.getPixels({
+                offset: new Position(0, index * MENU_ITEM_HEIGHT),
+            });
+            this.canvas.drawPixels(pixels, new Position(2, 1));
+        });
     }
 
 }

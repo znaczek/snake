@@ -1,6 +1,6 @@
 import * as config from '../../config';
 import {Pixel} from './model/pixel.model';
-import {COLORS} from './constants/color.constants';
+import {COLORS} from './common.constants';
 import {ColorsEnum} from './enums/color.enums';
 import {Position} from './model/position.model';
 

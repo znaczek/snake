@@ -1,3 +1,5 @@
+import {AppEventPayloadInterface} from '../interfaces/app-event-payload.interface';
+
 export class AppEvent {
     public static readonly START_MENU = 'START_MENU';
     public static readonly START_GAME = 'START_GAME';
@@ -11,16 +13,14 @@ export class AppEvent {
         return new AppEvent(AppEvent.START_GAME);
     }
 
-    public static endGame(score: number): AppEvent {
-        return new AppEvent(AppEvent.END_GAME, {
-            score,
-        });
+    public static endGame(): AppEvent {
+        return new AppEvent(AppEvent.END_GAME);
     }
 
     public type: string;
-    public payload: {score: number};
+    public payload: AppEventPayloadInterface;
 
-    constructor(type: string, payload?: {score: number}) {
+    constructor(type: string, payload?: AppEventPayloadInterface) {
         this.type = type;
         this.payload = payload;
     }
