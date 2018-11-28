@@ -27,7 +27,7 @@ export class TextWriter {
         text.split('').forEach((char: string) => {
             pixels.push(...this.writeChar(char));
         });
-        return new AppText(pixels, start, this.position);
+        return new AppText(pixels, this.position.x, text);
     }
 
     private writeChar(charIndex: string): Pixel[] {

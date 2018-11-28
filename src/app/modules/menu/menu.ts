@@ -4,25 +4,17 @@ import {Canvas} from '../../common/canvas';
 import {MenuItem} from './model/menu-item.model';
 import {TextWriter} from '../../common/text-writer';
 import {menuCharData} from '../../common/data/menu-text.data';
-import {Pixel} from '../../common/model/pixel.model';
 import {Position} from '../../common/model/position.model';
 import {ColorsEnum} from '../../common/enums/color.enums';
-import {MENU_ITEM_HEIGHT, MENU_ITEM_WIDTH} from './constants/menu-item.constants';
+import {MENU_ITEM_HEIGHT} from './constants/menu-item.constants';
 import {ClicksEnum} from '../../common/enums/clicks.enum';
 import {MenuItemFactory} from './factory/menu-item.factory';
 import {menuData} from './data/menu.data';
 import {AppState} from '../../common/app-state';
+import {DrawingUtils} from './utils/drawing.utils';
+import * as config from '../../../config';
 
 export class Menu {
-    private static getMenuItemBackground(yOffset: number = 0): Pixel[] {
-        const pixels: Pixel[] = [];
-        for(let x = 0; x < MENU_ITEM_WIDTH; x += 1) {
-            for(let y = yOffset; y < yOffset + MENU_ITEM_HEIGHT; y += 1) {
-                pixels.push(new Pixel(x, y));
-            }
-        }
-        return pixels;
-    }
 
     private onClickSubscription: Subscription;
     private cursor: number;
@@ -36,7 +28,8 @@ export class Menu {
                 private canvas: Canvas,
                 private onClick: Observable<ClicksEnum>,
                 private textWriter: TextWriter,
-                private menuItemFactory: MenuItemFactory) {
+                private menuItemFactory: MenuItemFactory,
+                private drawingUtils: DrawingUtils) {
         this.textWriter.setCharData(menuCharData);
     }
 
@@ -61,7 +54,9 @@ export class Menu {
                     this.currentMenuItem = selectedMenuItem.parent.parent;
                     this.drawMenu();
                 } else if (selectedMenuItem.customView) {
-                    let customView = new selectedMenuItem.customView(this.canvas, this.textWriter, this.onClick);
+                    let customView = new selectedMenuItem.customView(
+                        this.canvas, this.textWriter, this.onClick, this.drawingUtils,
+                    );
                     this.customViewOn = true;
                     const exitSubscription = customView.exit.subscribe(() => {
                         exitSubscription.unsubscribe();
@@ -98,12 +93,13 @@ export class Menu {
 
     private drawMenu() {
         this.canvas.prepareBoard();
+        this.canvas.drawPixels(this.drawingUtils.drawMenuHeader(this.getSelectedMenuItem().parent.text.text));
         this.currentMenuItem.children.forEach((item: MenuItem, index: number) => {
             const pixels  = item.text.getPixels({
-                offset: new Position(0, index * MENU_ITEM_HEIGHT),
+                offset: new Position(0, index * MENU_ITEM_HEIGHT + config.TOP_BAR_HEIGHT),
             });
             if (this.cursor === item.ordinal) {
-                this.canvas.drawPixels(Menu.getMenuItemBackground(index * MENU_ITEM_HEIGHT), undefined, ColorsEnum.BLACK);
+                this.canvas.drawPixels(DrawingUtils.getMenuItemBackground(index * MENU_ITEM_HEIGHT + config.TOP_BAR_HEIGHT), undefined, ColorsEnum.BLACK);
                 this.canvas.drawPixels(pixels, new Position(2, 1), ColorsEnum.GREEN);
             } else {
                 this.canvas.drawPixels(pixels, new Position(2, 1));

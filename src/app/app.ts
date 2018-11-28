@@ -10,6 +10,7 @@ import {map} from 'rxjs/internal/operators';
 import {ClicksEnum} from './common/enums/clicks.enum';
 import {MenuItemFactory} from './modules/menu/factory/menu-item.factory';
 import {AppState} from './common/app-state';
+import {DrawingUtils} from './modules/menu/utils/drawing.utils';
 
 export class App {
     private canvas: Canvas;
@@ -21,6 +22,7 @@ export class App {
     private onClick: Observable<ClicksEnum>;
     private stageHandler: Subject<AppEvent>;
     private menuItemFactory: MenuItemFactory;
+    private drawingUtils: DrawingUtils;
 
     constructor(canvas: HTMLCanvasElement) {
         this.onClick = fromEvent(document, 'keydown').pipe(
@@ -44,6 +46,7 @@ export class App {
         this.canvas = new Canvas(canvas);
         this.textWriter = new TextWriter();
         this.menuItemFactory = new MenuItemFactory(this.textWriter);
+        this.drawingUtils = new DrawingUtils(this.textWriter);
     }
 
     public run() {
@@ -72,7 +75,7 @@ export class App {
     }
 
     private createMenu() {
-        this.menu = new Menu(this.stageHandler, this.canvas, this.onClick, this.textWriter, this.menuItemFactory).start();
+        this.menu = new Menu(this.stageHandler, this.canvas, this.onClick, this.textWriter, this.menuItemFactory, this.drawingUtils).start();
     }
 
     private createGame() {
