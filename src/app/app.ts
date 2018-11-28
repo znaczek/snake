@@ -11,6 +11,7 @@ import {ClicksEnum} from './common/enums/clicks.enum';
 import {MenuItemFactory} from './modules/menu/factory/menu-item.factory';
 import {AppState} from './common/app-state';
 import {DrawingUtils} from './modules/menu/utils/drawing.utils';
+import {Blackboard} from './common/blackboard';
 
 export class App {
     private canvas: Canvas;
@@ -67,7 +68,8 @@ export class App {
                 }
             }
         });
-        this.createMenu();
+        // this.createMenu();
+        this.createBlackBoard();
     }
 
     private createIntro() {
@@ -80,6 +82,9 @@ export class App {
 
     private createGame() {
         this.game = new Game(this.stageHandler, this.canvas, this.onClick, this.textWriter, this.mealFactory).start();
+    }
+    private createBlackBoard() {
+        new Blackboard(this.canvas);
     }
 
 }
