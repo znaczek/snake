@@ -6,7 +6,7 @@ import {Apple} from './model/apple.model';
 import {Observable, Subject, Subscription} from 'rxjs/index';
 import {TextWriter} from '../../common/text-writer';
 import {Bug} from './model/bug.model';
-import {charData} from '../../common/data/char.data';
+import {textSmallData} from '../../common/data/text-small.data';
 import {Position} from '../../common/model/position.model';
 import {Pixel} from '../../common/model/pixel.model';
 import {ColorsEnum} from '../../common/enums/color.enums';
@@ -14,6 +14,8 @@ import {getGameBoarderPixels, getGameBoardOffset, getMaskPixels} from './utils/u
 import {AppEvent} from '../../common/model/game-event.model';
 import {ClicksEnum} from '../../common/enums/clicks.enum';
 import {AppState} from '../../common/app-state';
+import {ScoreView} from './views/score.view';
+import {take} from 'rxjs/internal/operators';
 
 export class Game {
     private snake: Snake;
@@ -32,10 +34,12 @@ export class Game {
                 private mealFactory: MealFactory,
                 ) {
         this.snake = new Snake(this.canvas);
-        this.textWriter.setCharData(charData);
+        this.textWriter.setCharData(textSmallData);
     }
 
     public start(): Game {
+        this.drawHighScore();
+        return;
         this.speed = config.SPEED / AppState.getLevel();
         this.canvas.clear();
         this.provideApple();
@@ -90,30 +94,50 @@ export class Game {
 
     private endGame(): void {
         clearInterval(this.interval);
+        this.snake.restore();
         this.gameOn = false;
         this.onClickSubscribe.unsubscribe();
         AppState.addHighScore(this.points);
-        setTimeout(() => {
-            this.stageHandler.next(AppEvent.endGame());
-        }, 1000);
+        this.drawEndStage();
+    }
 
-        // TODO
+    private drawEndStage(counter: number = 7) {
+        this.draw(counter % 2 === 0);
+        if (counter) {
+            setTimeout(() => {
+                this.drawEndStage(counter - 1);
+            }, 250);
+        } else {
+            this.drawHighScore();
+        }
     }
 
     private testMove(): void {
         this.handleMove();
     }
 
-    private draw() {
+    private drawHighScore() {
+        const scoreView = new ScoreView(this.canvas, this.textWriter);
+        const subscription = scoreView.exit.subscribe(() => {
+            subscription.unsubscribe();
+            this.stageHandler.next(AppEvent.endGame());
+        });
+        scoreView.draw();
+    }
+
+    private draw(withSnake: boolean = true) {
         const gameBoardPixels: Pixel[] = [];
         const absolutePixels: Pixel[] = [];
 
-        gameBoardPixels.push(...this.snake.getPixels({
-                additionalPixelsSets: this.bug ?
-                [this.apple.getPixels(), this.bug.getPixels()] :
-                [this.apple.getPixels()],
-            },
-        ));
+        if (withSnake) {
+            gameBoardPixels.push(...this.snake.getPixels({
+                    additionalPixelsSets: this.bug ?
+                        [this.apple.getPixels(), this.bug.getPixels()] :
+                        [this.apple.getPixels()],
+                },
+            ));
+        }
+
         gameBoardPixels.push(...this.apple.getPixels());
         absolutePixels.push(...this.textWriter.write(
             TextWriter.padStart(this.points.toString(), '0', 4), new Position(1, 1),
@@ -122,7 +146,7 @@ export class Game {
         if (this.bug) {
             gameBoardPixels.push(...this.bug.getPixels());
             const bugPointsLeftText = this.textWriter.write(TextWriter.padStart(this.bug.value.toString(), '0', 2));
-            const xBugPointsOffset = config.CANVAS_WIDTH - (2 * charData[0].width);
+            const xBugPointsOffset = config.CANVAS_WIDTH - (2 * textSmallData[0].width);
             const xBugOffset = xBugPointsOffset - 2 - Bug.width;
             absolutePixels.push(...this.bug.getPixels({
                 offset: new Position(xBugOffset, 2),

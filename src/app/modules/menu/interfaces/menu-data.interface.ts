@@ -1,4 +1,4 @@
-import {CustomViewConstructorInterface} from './custom-view-constructor.interface';
+import {CustomViewConstructorInterface} from '../../../common/interfaces/custom-view-constructor.interface';
 
 export interface MenuDataInterface {
     text: string;

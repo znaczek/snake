@@ -9,7 +9,6 @@ import {Menu} from './modules/menu/menu';
 import {map} from 'rxjs/internal/operators';
 import {ClicksEnum} from './common/enums/clicks.enum';
 import {MenuItemFactory} from './modules/menu/factory/menu-item.factory';
-import {AppState} from './common/app-state';
 import {DrawingUtils} from './modules/menu/utils/drawing.utils';
 import {Blackboard} from './common/blackboard';
 
@@ -68,10 +67,10 @@ export class App {
                 }
             }
         });
-        this.createIntro();
+        // this.createIntro();
+        this.createGame();
         // this.createMenu();
         // this.createBlackBoard();
-        // this.createGame();
     }
 
     private createIntro() {

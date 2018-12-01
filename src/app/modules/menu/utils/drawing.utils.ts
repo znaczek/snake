@@ -1,6 +1,6 @@
 import {Pixel} from '../../../common/model/pixel.model';
 import {TextWriter} from '../../../common/text-writer';
-import {charData} from '../../../common/data/char.data';
+import {textSmallData} from '../../../common/data/text-small.data';
 import * as config from '../../../../config';
 import {MENU_ITEM_HEIGHT, MENU_ITEM_WIDTH} from '../constants/menu-item.constants';
 import {Position} from '../../../common/model/position.model';
@@ -20,7 +20,7 @@ export class DrawingUtils {
     }
 
     public drawMenuHeader(text: string): Pixel[] {
-        this.textWriter.setCharData(charData);
+        this.textWriter.setCharData(textSmallData);
         const pixels: Pixel[] = this.textWriter.write('SNAKE II - ' + text.toUpperCase(), new Position(2, 1)).getPixels();
         for (let i = 0; i < config.CANVAS_WIDTH; i += 1) {
             pixels.push(new Pixel(i, config.TOP_BAR_HEIGHT - 2));

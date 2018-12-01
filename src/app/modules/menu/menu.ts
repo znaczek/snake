@@ -3,7 +3,7 @@ import {AppEvent} from '../../common/model/game-event.model';
 import {Canvas} from '../../common/canvas';
 import {MenuItem} from './model/menu-item.model';
 import {TextWriter} from '../../common/text-writer';
-import {menuCharData} from '../../common/data/menu-text.data';
+import {textMediumData} from '../../common/data/text-medium.data';
 import {Position} from '../../common/model/position.model';
 import {ColorsEnum} from '../../common/enums/color.enums';
 import {MENU_ITEM_HEIGHT} from './constants/menu-item.constants';
@@ -30,7 +30,7 @@ export class Menu {
                 private textWriter: TextWriter,
                 private menuItemFactory: MenuItemFactory,
                 private drawingUtils: DrawingUtils) {
-        this.textWriter.setCharData(menuCharData);
+        this.textWriter.setCharData(textMediumData);
     }
 
     public close() {

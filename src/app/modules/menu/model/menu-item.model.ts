@@ -1,5 +1,5 @@
 import {AppText} from '../../../common/model/game-text.model';
-import {CustomViewConstructorInterface} from '../interfaces/custom-view-constructor.interface';
+import {CustomViewConstructorInterface} from '../../../common/interfaces/custom-view-constructor.interface';
 
 export class MenuItem {
     public text: AppText;

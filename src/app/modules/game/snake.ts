@@ -148,6 +148,10 @@ export class Snake implements DrawableInterface {
         }).length > 0;
     }
 
+    public restore() {
+        this.body = this.oldBody;
+    }
+
     public getPixels(options: {
         additionalPixelsSets: Pixel[][],
     }): Pixel[] {

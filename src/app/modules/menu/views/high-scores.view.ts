@@ -1,4 +1,4 @@
-import {CustomViewInterface} from '../interfaces/custom-view.interface';
+import {CustomViewInterface} from '../../../common/interfaces/custom-view.interface';
 import {Canvas} from '../../../common/canvas';
 import {TextWriter} from '../../../common/text-writer';
 import {Observable, Subject} from 'rxjs/index';
@@ -6,7 +6,7 @@ import {AppState} from '../../../common/app-state';
 import {MENU_ITEM_HEIGHT} from '../constants/menu-item.constants';
 import {Position} from '../../../common/model/position.model';
 import {ClicksEnum} from '../../../common/enums/clicks.enum';
-import {menuCharData} from '../../../common/data/menu-text.data';
+import {textMediumData} from '../../../common/data/text-medium.data';
 import {DrawingUtils} from '../utils/drawing.utils';
 import * as config from '../../../../config';
 import {ColorsEnum} from '../../../common/enums/color.enums';
@@ -33,7 +33,7 @@ export class HighScoresView implements CustomViewInterface {
     public draw(): void {
         this.canvas.prepareBoard();
         this.canvas.drawPixels(this.drawingUtils.drawMenuHeader(HighScoresView.TITLE));
-        this.textWriter.setCharData(menuCharData);
+        this.textWriter.setCharData(textMediumData);
         const highScores = AppState.getHighScores();
         (highScores || []).forEach((highScore: number, index: number) => {
             const scoreText = this.textWriter.write(`${index + 1}. ${highScore}`);

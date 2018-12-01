@@ -2,7 +2,7 @@ import {Char} from '../model/char.model';
 import {Pixel} from '../model/pixel.model';
 import {CharDataInterface} from '../../modules/game/interface/char-data.interface';
 
-export const menuCharData: CharDataInterface = {
+export const textMediumData: CharDataInterface = {
     '.' :new Char(2, [
         new Pixel(0, 6),
     ]),
