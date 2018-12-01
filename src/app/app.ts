@@ -23,6 +23,7 @@ export class App {
     private stageHandler: Subject<AppEvent>;
     private menuItemFactory: MenuItemFactory;
     private drawingUtils: DrawingUtils;
+    private board: Blackboard;
 
     constructor(canvas: HTMLCanvasElement) {
         this.onClick = fromEvent(document, 'keydown').pipe(
@@ -68,8 +69,8 @@ export class App {
             }
         });
         // this.createIntro();
-        this.createGame();
-        // this.createMenu();
+        // this.createGame();
+        this.createMenu();
         // this.createBlackBoard();
     }
 
@@ -85,7 +86,7 @@ export class App {
         this.game = new Game(this.stageHandler, this.canvas, this.onClick, this.textWriter, this.mealFactory).start();
     }
     private createBlackBoard() {
-        new Blackboard(this.canvas);
+        this.board = new Blackboard(this.canvas);
     }
 
 }

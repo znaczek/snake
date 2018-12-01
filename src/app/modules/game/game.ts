@@ -16,16 +16,17 @@ import {ClicksEnum} from '../../common/enums/clicks.enum';
 import {AppState} from '../../common/app-state';
 import {ScoreView} from './views/score.view';
 import {take} from 'rxjs/internal/operators';
+import {GameStateEnum} from './enums/game-state.enum';
 
 export class Game {
     private snake: Snake;
     private speed: number;
-    private gameOn: boolean = false;
     private interval: number;
     private apple: Apple;
     private bug: Bug = null;
     private points: number = 0;
     private onClickSubscribe: Subscription;
+    private gameState: GameStateEnum;
 
     constructor(private stageHandler: Subject<AppEvent>,
                 private canvas: Canvas,
@@ -38,13 +39,11 @@ export class Game {
     }
 
     public start(): Game {
-        this.drawHighScore();
-        return;
+        this.gameState = GameStateEnum.GAME;
         this.speed = config.SPEED / AppState.getLevel();
         this.canvas.clear();
         this.provideApple();
         this.bindEvents();
-        this.gameOn = true;
         this.loop();
         this.draw();
 
@@ -53,22 +52,28 @@ export class Game {
 
     private bindEvents(): void {
         this.onClickSubscribe = this.onClick.subscribe((event) => {
-            switch (event) {
-                case ClicksEnum.LEFT:
-                    this.snake.turnLeft();
-                    break;
-                case ClicksEnum.RIGHT:
-                    this.snake.turnRight();
-                    break;
-                case ClicksEnum.UP:
-                    this.snake.turnUp();
-                    break;
-                case ClicksEnum.DOWN:
-                    this.snake.turnDown();
-                    break;
-            }
-            if (config.DEBUG_MOVING) {
-                this.testMove();
+            if (this.gameState === GameStateEnum.GAME) {
+                switch (event) {
+                    case ClicksEnum.LEFT:
+                        this.snake.turnLeft();
+                        break;
+                    case ClicksEnum.RIGHT:
+                        this.snake.turnRight();
+                        break;
+                    case ClicksEnum.UP:
+                        this.snake.turnUp();
+                        break;
+                    case ClicksEnum.DOWN:
+                        this.snake.turnDown();
+                        break;
+                }
+                if (config.DEBUG_MOVING) {
+                    this.testMove();
+                }
+            } else if (this.gameState === GameStateEnum.GAME_END) {
+                this.drawHighScore();
+            } else {
+
             }
         });
     }
@@ -95,34 +100,38 @@ export class Game {
     private endGame(): void {
         clearInterval(this.interval);
         this.snake.restore();
-        this.gameOn = false;
-        this.onClickSubscribe.unsubscribe();
-        AppState.addHighScore(this.points);
-        this.drawEndStage();
+        AppState.refreshTopScore(this.points);
+        this.gameState = GameStateEnum.GAME_END;
+        this.drawEndState();
     }
 
-    private drawEndStage(counter: number = 7) {
+    private drawEndState(counter: number = 7): void {
+        if (this.gameState !== GameStateEnum.GAME_END) {
+            return;
+        }
         this.draw(counter % 2 === 0);
         if (counter) {
             setTimeout(() => {
-                this.drawEndStage(counter - 1);
+                this.drawEndState(counter - 1);
             }, 250);
         } else {
             this.drawHighScore();
         }
     }
 
-    private testMove(): void {
-        this.handleMove();
-    }
-
     private drawHighScore() {
-        const scoreView = new ScoreView(this.canvas, this.textWriter);
+        this.gameState = GameStateEnum.HIGH_SCORE;
+        const scoreView = new ScoreView(this.canvas, this.textWriter, this.onClick);
         const subscription = scoreView.exit.subscribe(() => {
             subscription.unsubscribe();
+            this.onClickSubscribe.unsubscribe();
             this.stageHandler.next(AppEvent.endGame());
         });
-        scoreView.draw();
+        scoreView.draw(this.points);
+    }
+
+    private testMove(): void {
+        this.handleMove();
     }
 
     private draw(withSnake: boolean = true) {
@@ -165,7 +174,7 @@ export class Game {
 
     private loop(): void {
         if (!config.DEBUG_MOVING) {
-            if (this.gameOn) {
+            if (this.gameState === GameStateEnum.GAME) {
                 this.handleMove();
                 this.interval = setTimeout(this.loop.bind(this), this.speed);
             }
@@ -200,7 +209,7 @@ export class Game {
     }
 
     private handleBugGeneration(): void {
-        if (!this.bug && (Math.random() * 100 > 0)) {
+        if (!this.bug && (Math.random() * 100 > 85)) {
             this.bug = this.mealFactory.generateBug(this.getForbiddenPixelsForBug());
         }
     }

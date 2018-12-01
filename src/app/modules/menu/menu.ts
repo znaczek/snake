@@ -13,6 +13,7 @@ import {menuData} from './data/menu.data';
 import {AppState} from '../../common/app-state';
 import {DrawingUtils} from './utils/drawing.utils';
 import * as config from '../../../config';
+import {CustomViewInterface} from '../../common/interfaces/custom-view.interface';
 
 export class Menu {
 
@@ -20,9 +21,8 @@ export class Menu {
     private cursor: number;
     private parentCursor: number;
     private currentMenuItem: MenuItem;
-    private offset: number;
     private menuData: MenuItem;
-    private customViewOn: boolean = false;
+    private customView: CustomViewInterface = null;
 
     constructor(private stageHandler: Subject<AppEvent>,
                 private canvas: Canvas,
@@ -33,49 +33,13 @@ export class Menu {
         this.textWriter.setCharData(textMediumData);
     }
 
-    public close() {
-        this.onClickSubscription.unsubscribe();
-    }
-
     public start(): Menu {
         this.onClickSubscription = this.onClick.subscribe((event) => {
-            if (this.customViewOn) {
+            if (this.customView) {
                 return;
             }
             if (event === ClicksEnum.ENTER) {
-                const selectedMenuItem = this.getSelectedMenuItem();
-
-                if (selectedMenuItem.callback) {
-                    if (typeof selectedMenuItem.callback === 'function') {
-                        selectedMenuItem.callback.call(this);
-                    }
-                } else if (selectedMenuItem.back) {
-                    this.cursor = this.parentCursor;
-                    this.currentMenuItem = selectedMenuItem.parent.parent;
-                    this.drawMenu();
-                } else if (selectedMenuItem.customView) {
-                    let customView = new selectedMenuItem.customView(
-                        this.canvas, this.textWriter, this.onClick, this.drawingUtils,
-                    );
-                    this.customViewOn = true;
-                    const exitSubscription = customView.exit.subscribe(() => {
-                        exitSubscription.unsubscribe();
-                        customView = null;
-                        this.customViewOn = false;
-                        this.drawMenu();
-                    });
-                    customView.draw();
-                } else if (selectedMenuItem.children.length > 0) {
-                    this.currentMenuItem = selectedMenuItem;
-                    this.parentCursor = this.cursor;
-                    this.cursor = 1;
-                    this.currentMenuItem.children.forEach((item: MenuItem) => {
-                        if (item.setCursorCondition && item.setCursorCondition.call(this)) {
-                            this.cursor = item.ordinal;
-                        }
-                    });
-                    this.drawMenu();
-                }
+                this.handleMenuEnter();
             } else {
                 if (event === ClicksEnum.UP) {
                     this.goToPreviousMenuItem();
@@ -83,6 +47,8 @@ export class Menu {
                     this.goToNextMenuItem();
                 }
             }
+
+            this.drawMenu();
         });
         this.menuData = this.menuItemFactory.create(menuData);
         this.cursor = 1;
@@ -91,9 +57,49 @@ export class Menu {
         return this;
     }
 
+    public close() {
+        this.onClickSubscription.unsubscribe();
+    }
+
+    private handleMenuEnter() {
+        const selectedMenuItem = this.getSelectedMenuItem();
+
+        if (selectedMenuItem.callback) {
+            if (typeof selectedMenuItem.callback === 'function') {
+                selectedMenuItem.callback.call(this);
+            }
+        } else if (selectedMenuItem.back) {
+            this.cursor = this.parentCursor;
+            this.currentMenuItem = selectedMenuItem.parent.parent;
+        } else {
+            this.currentMenuItem = selectedMenuItem;
+            this.parentCursor = this.cursor;
+            this.cursor = 1;
+            this.currentMenuItem.children.forEach((item: MenuItem) => {
+                if (item.setCursorCondition && item.setCursorCondition.call(this)) {
+                    this.cursor = item.ordinal;
+                }
+            });
+        }
+    }
     private drawMenu() {
+        const selectedMenuItem = this.getSelectedMenuItem();
+        if (this.currentMenuItem.customView) {
+            this.customView = new this.currentMenuItem.customView(
+                this.canvas, this.textWriter, this.onClick, this.drawingUtils,
+            );
+            const exitSubscription = this.customView.exit.subscribe(() => {
+                exitSubscription.unsubscribe();
+                this.currentMenuItem = this.currentMenuItem.parent;
+                this.customView = null;
+                this.drawMenu();
+            });
+            this.customView.draw();
+            return;
+        }
+
         this.canvas.prepareBoard();
-        this.canvas.drawPixels(this.drawingUtils.drawMenuHeader(this.getSelectedMenuItem().parent.text.text));
+        this.canvas.drawPixels(this.drawingUtils.drawMenuHeader(selectedMenuItem.parent.text.text));
         this.currentMenuItem.children.forEach((item: MenuItem, index: number) => {
             const pixels  = item.text.getPixels({
                 offset: new Position(0, index * MENU_ITEM_HEIGHT + config.TOP_BAR_HEIGHT),
@@ -116,7 +122,6 @@ export class Menu {
         if (this.cursor === 0) {
             this.cursor = this.currentMenuItem.children.length;
         }
-        this.drawMenu();
     }
 
     private goToNextMenuItem() {
@@ -124,7 +129,6 @@ export class Menu {
         if (this.cursor > this.currentMenuItem.children.length) {
             this.cursor = 1;
         }
-        this.drawMenu();
     }
 
     private beforeSettingsSet(): void {

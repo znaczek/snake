@@ -1,6 +1,6 @@
 import {MenuDataInterface} from '../interfaces/menu-data.interface';
 import {AppEvent} from '../../../common/model/game-event.model';
-import {HighScoresView} from '../views/high-scores.view';
+import {TopScoreView} from '../views/topScore/top-score.view';
 
 export const menuData: MenuDataInterface = {
     text: 'Menu',
@@ -10,8 +10,8 @@ export const menuData: MenuDataInterface = {
             text: 'New game',
             ordinal: 1,
             callback() {
-                this.stageHandler.next(AppEvent.startGame());
                 this.close();
+                this.stageHandler.next(AppEvent.startGame());
             },
         },
         {
@@ -73,9 +73,9 @@ export const menuData: MenuDataInterface = {
             ],
         },
         {
-            text: 'High scores',
+            text: 'Top score',
             ordinal: 4,
-            customView: HighScoresView,
+            customView: TopScoreView,
             children: [
                 {
                     text: 'Back',

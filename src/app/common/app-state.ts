@@ -1,42 +1,33 @@
-import {MAX_HIGHT_SCORES_COUNT} from './common.constants';
-
 export class AppState {
+    public static readonly LEVEL = 'level';
+    public static readonly MAZE = 'maze';
+    public static readonly TOP_SCORE = 'topScore';
 
     public static getLevel(): number {
-        return parseInt(window.localStorage.getItem('level'), 10) || 1;
+        return parseInt(window.localStorage.getItem(AppState.LEVEL), 10) || 1;
     }
 
     public static setLevel(level: number) {
-        window.localStorage.setItem('level', level.toString());
+        window.localStorage.setItem(AppState.LEVEL, level.toString());
     }
 
     public static  getMaze(): number {
-        return parseInt(window.localStorage.getItem('maze'), 10) || 1;
+        return parseInt(window.localStorage.getItem(AppState.MAZE), 10) || 1;
     }
 
     public static setMaze(maze: number) {
-        window.localStorage.setItem('maze', maze.toString());
+        window.localStorage.setItem(AppState.MAZE, maze.toString());
     }
 
-    public static getHighScores(): number[] {
-        return JSON.parse(window.localStorage.getItem('highScores'));
+    public static getTopScore(): number {
+        return parseInt(JSON.parse(window.localStorage.getItem(AppState.TOP_SCORE)), 10) || 0;
     }
 
-    public static addHighScore(score: number): void {
-        const highScores = AppState.getHighScores() || [];
-        if (highScores.length === 0) {
-            highScores.push(score);
-        } else {
-            for (let i = 0; i < highScores.length; i += 1) {
-                if (score > highScores[i]) {
-                    highScores.splice(i, 0, score);
-                    break;
-                }
-            }
+    public static refreshTopScore(score: number): void {
+        const topScore = AppState.getTopScore();
+        if (score > topScore) {
+            window.localStorage.setItem(AppState.TOP_SCORE, score.toString());
         }
-
-        highScores.splice(MAX_HIGHT_SCORES_COUNT, highScores.length);
-        window.localStorage.setItem('highScores', JSON.stringify(highScores));
     }
 
 }

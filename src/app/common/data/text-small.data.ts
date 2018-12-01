@@ -135,6 +135,11 @@ export const textSmallData: CharDataInterface = {
         new Pixel(2, 2),
         new Pixel(3, 0), new Pixel(3, 1), new Pixel(3, 2), new Pixel(3, 3), new Pixel(3, 4),
     ]),
+    'T': new Char(4, [
+        new Pixel(0, 0),
+        new Pixel(1, 0), new Pixel(1, 1), new Pixel(1, 2), new Pixel(1, 3), new Pixel(1, 4),
+        new Pixel(2, 0),
+    ]),
     'C': new Char(4, [
         new Pixel(0, 0), new Pixel(0, 1), new Pixel(0, 2), new Pixel(0, 3), new Pixel(0, 4),
         new Pixel(1, 0), new Pixel(1, 4),
@@ -149,6 +154,11 @@ export const textSmallData: CharDataInterface = {
         new Pixel(0, 0), new Pixel(0, 1), new Pixel(0, 2), new Pixel(0, 3), new Pixel(0, 4),
         new Pixel(1, 0), new Pixel(1, 2), new Pixel(1, 3),
         new Pixel(2, 0), new Pixel(2, 1), new Pixel(2, 2), new Pixel(2, 4),
+    ]),
+    'P': new Char(4, [
+        new Pixel(0, 0), new Pixel(0, 1), new Pixel(0, 2), new Pixel(0, 3), new Pixel(0, 4),
+        new Pixel(1, 0), new Pixel(1, 2),
+        new Pixel(2, 0), new Pixel(2, 1), new Pixel(2, 2),
     ]),
     'U': new Char(4, [
         new Pixel(0, 0), new Pixel(0, 1), new Pixel(0, 2), new Pixel(0, 3), new Pixel(0, 4),

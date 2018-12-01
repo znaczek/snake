@@ -6,4 +6,3 @@ export const COLORS = {
     [ColorsEnum.RED]: '#f00',
 };
 
-export const MAX_HIGHT_SCORES_COUNT = 3;

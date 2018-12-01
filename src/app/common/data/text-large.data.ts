@@ -189,5 +189,21 @@ export const textLargeData: CharDataInterface = {
         new Pixel(3, 3), new Pixel(3, 10),
         new Pixel(4, 4), new Pixel(4, 9),
     ]),
+    'T': new Char(6, [
+        new Pixel(0, 0), new Pixel(0, 1),
+        new Pixel(1, 0), new Pixel(1, 1),
+        new Pixel(2, 0), new Pixel(2, 1), new Pixel(2, 2), new Pixel(2, 3), new Pixel(2, 4), new Pixel(2, 5), new Pixel(2, 6), new Pixel(2, 7), new Pixel(2, 8), new Pixel(2, 9), new Pixel(2, 10),
+        new Pixel(3, 0), new Pixel(3, 1), new Pixel(3, 2), new Pixel(3, 3), new Pixel(3, 4), new Pixel(3, 5), new Pixel(3, 6), new Pixel(3, 7), new Pixel(3, 8), new Pixel(3, 9), new Pixel(3, 10),
+        new Pixel(4, 0), new Pixel(4, 1),
+        new Pixel(5, 0), new Pixel(5, 1),
+    ]),
+    'p': new Char(7, [
+        new Pixel(0, 3), new Pixel(0, 4), new Pixel(0, 5), new Pixel(0, 6), new Pixel(0, 7), new Pixel(0, 8), new Pixel(0, 9), new Pixel(0, 10), new Pixel(0, 10), new Pixel(0, 11), new Pixel(0, 12), new Pixel(0, 13),
+        new Pixel(1, 3), new Pixel(1, 4), new Pixel(1, 5), new Pixel(1, 6), new Pixel(1, 7), new Pixel(1, 8), new Pixel(1, 9), new Pixel(1, 10), new Pixel(1, 11), new Pixel(1, 12), new Pixel(1, 13),
+        new Pixel(2, 3), new Pixel(2, 10),
+        new Pixel(3, 3), new Pixel(3, 10),
+        new Pixel(4, 3), new Pixel(4, 4), new Pixel(4, 5), new Pixel(4, 6), new Pixel(4, 7), new Pixel(4, 8), new Pixel(4, 9), new Pixel(4, 10),
+        new Pixel(5, 4), new Pixel(5, 5), new Pixel(5, 6), new Pixel(5, 7), new Pixel(5, 8), new Pixel(5, 9),
+    ]),
     /* tslint:enable:max-line-length */
 };
