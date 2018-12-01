@@ -9,10 +9,16 @@ body {
     height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
 }
 
 canvas {
     display: none;
     background-color: #a4c70b;
+}
+
+canvas.debug {
+    background: url('/snake_intro.png');
+    background-position: -375px -97px;
+    background-size: 1709px;
 }

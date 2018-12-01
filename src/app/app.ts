@@ -68,8 +68,10 @@ export class App {
                 }
             }
         });
+        this.createIntro();
         // this.createMenu();
-        this.createBlackBoard();
+        // this.createBlackBoard();
+        // this.createGame();
     }
 
     private createIntro() {

@@ -51,28 +51,16 @@ export class Canvas {
         this.ctx.save();
         this.ctx.lineWidth = 0.5;
         this.ctx.strokeStyle = COLORS[ColorsEnum.BLACK];
-        for (let i = 0; i < config.GAME_CANVAS_HEIGHT; i += 1) {
+        for (let i = 0; i < config.CANVAS_HEIGHT; i += 1) {
             this.ctx.beginPath();
-            this.ctx.moveTo(
-                0,
-                (i + config.TOP_BAR_HEIGHT) * config.PIXEL_SIZE,
-            );
-            this.ctx.lineTo(
-                config.GAME_CANVAS_WIDTH * config.PIXEL_SIZE,
-                (i + config.TOP_BAR_HEIGHT) * config.PIXEL_SIZE,
-            );
+            this.ctx.moveTo(0, i * config.PIXEL_SIZE);
+            this.ctx.lineTo(config.CANVAS_WIDTH * config.PIXEL_SIZE, i * config.PIXEL_SIZE);
             this.ctx.stroke();
         }
-        for (let i = 0; i < config.GAME_CANVAS_WIDTH; i += 1) {
+        for (let i = 0; i < config.CANVAS_WIDTH; i += 1) {
             this.ctx.beginPath();
-            this.ctx.moveTo(
-                i * config.PIXEL_SIZE,
-                (config.TOP_BAR_HEIGHT) * config.PIXEL_SIZE,
-            );
-            this.ctx.lineTo(
-                i * config.PIXEL_SIZE,
-                (config.GAME_CANVAS_HEIGHT + config.TOP_BAR_HEIGHT) * config.PIXEL_SIZE,
-            );
+            this.ctx.moveTo(i * config.PIXEL_SIZE, 0);
+            this.ctx.lineTo(i * config.PIXEL_SIZE, config.CANVAS_HEIGHT * config.PIXEL_SIZE);
             this.ctx.stroke();
         }
         this.ctx.restore();

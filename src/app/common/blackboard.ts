@@ -3,17 +3,20 @@ import {Pixel} from './model/pixel.model';
 import {Canvas} from './canvas';
 import * as config from '../../config';
 import {mergeMap, takeUntil, tap} from 'rxjs/internal/operators';
+import {stageData} from '../modules/intro/data/stage.data';
+import {ColorsEnum} from './enums/color.enums';
 
 declare global {
-    interface Window { printPixels: any; }
+    interface Window { printPixels: any; clearBoard: any, toggle: any }
 }
 
 export class Blackboard {
     private pixels: Pixel[] = [];
     private lastPixel: Pixel = new Pixel(0 ,0);
+    private toggle = true;
 
     constructor(private canvas: Canvas) {
-
+        this.pixels = [...stageData];
         const move$ = fromEvent(document, 'mousemove');
         const down$ = fromEvent(document, 'mousedown');
         const up$ = fromEvent(document, 'mouseup');
@@ -33,8 +36,24 @@ export class Blackboard {
         });
 
         window.printPixels = () => {
-            console.log(JSON.stringify(this.pixels));
+            const pixels = this.pixels
+                .filter((pixel) => pixel.x >= 0 && pixel.y >= 0)
+                .sort((a, b) => {
+                    if( a.x == b.x) return a.y-b.y;
+                    return a.x-b.x;
+                });
+            console.log(JSON.stringify(pixels));
         };
+        window.toggle = () => {
+            if (this.toggle) {
+                this.canvas.clear();
+            } else {
+                this.draw();
+            }
+            this.toggle = !this.toggle;
+        }
+
+        this.draw();
     }
 
     private drawPixel(e: MouseEvent, type: number): void {
@@ -83,7 +102,7 @@ export class Blackboard {
 
     private draw() {
         this.canvas.prepareBoard();
-        this.canvas.drawPixels(this.pixels);
+        this.canvas.drawPixels(this.pixels, undefined, ColorsEnum.RED);
     }
 
 }
