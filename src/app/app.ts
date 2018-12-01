@@ -39,6 +39,8 @@ export class App {
                         return ClicksEnum.DOWN;
                     case 13:
                         return ClicksEnum.ENTER;
+                    case 27:
+                        return ClicksEnum.ESCAPE;
                  }
             }),
         );

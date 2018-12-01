@@ -40,6 +40,8 @@ export class Menu {
             }
             if (event === ClicksEnum.ENTER) {
                 this.handleMenuEnter();
+            } else if (event === ClicksEnum.ESCAPE) {
+                this.goBack();
             } else {
                 if (event === ClicksEnum.UP) {
                     this.goToPreviousMenuItem();
@@ -69,8 +71,7 @@ export class Menu {
                 selectedMenuItem.callback.call(this);
             }
         } else if (selectedMenuItem.back) {
-            this.cursor = this.parentCursor;
-            this.currentMenuItem = selectedMenuItem.parent.parent;
+            this.goBack();
         } else {
             this.currentMenuItem = selectedMenuItem;
             this.parentCursor = this.cursor;
@@ -82,6 +83,14 @@ export class Menu {
             });
         }
     }
+
+    private goBack() {;
+        if (this.currentMenuItem && this.currentMenuItem.parent) {
+            this.cursor = this.parentCursor;
+            this.currentMenuItem = this.currentMenuItem.parent;
+        }
+    }
+
     private drawMenu() {
         const selectedMenuItem = this.getSelectedMenuItem();
         if (this.currentMenuItem.customView) {
@@ -114,7 +123,10 @@ export class Menu {
     }
 
     private getSelectedMenuItem(): MenuItem {
-        return this.currentMenuItem.children.find((item) => item.ordinal === this.cursor);
+        if (this.currentMenuItem && this.currentMenuItem.children) {
+            return this.currentMenuItem.children.find((item) => item.ordinal === this.cursor);
+        }
+        return null;
     }
 
     private goToPreviousMenuItem() {

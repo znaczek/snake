@@ -4,4 +4,5 @@ export enum ClicksEnum {
     LEFT,
     DOWN,
     ENTER,
+    ESCAPE,
 }

@@ -23,7 +23,7 @@ export class TopScoreView implements CustomViewInterface {
                 private textWriter: TextWriter,
                 private onClick: Observable<ClicksEnum>) {
         const onClickSubscription = this.onClick.subscribe((event) => {
-            if (event === ClicksEnum.ENTER) {
+            if (event === ClicksEnum.ENTER || event === ClicksEnum.ESCAPE) {
                 onClickSubscription.unsubscribe();
                 clearTimeout(this.timer);
                 this.exit.next();
