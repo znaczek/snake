@@ -10,7 +10,7 @@
 
 export const DEBUG_INTRO = false;
 export const DEBUG_CANVAS = false;
-export const DEBUG_MOVING = false;
+export const DEBUG_MOVING = true;
 
 export const PIXEL_SIZE = 10;
 export const TOP_BAR_HEIGHT = 9;

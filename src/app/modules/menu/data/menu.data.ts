@@ -76,8 +76,26 @@ export const menuData: MenuDataInterface = {
                     callback() {return this.setMaze(3);},
                 },
                 {
-                    text: 'Back',
+                    text: '4',
                     id: 144,
+                    setCursorCondition() {return this.checkMazeCursor(4);},
+                    callback() {return this.setMaze(4);},
+                },
+                {
+                    text: '5',
+                    id: 145,
+                    setCursorCondition() {return this.checkMazeCursor(5);},
+                    callback() {return this.setMaze(5);},
+                },
+                {
+                    text: '6',
+                    id: 146,
+                    setCursorCondition() {return this.checkMazeCursor(6);},
+                    callback() {return this.setMaze(6);},
+                },
+                {
+                    text: 'Back',
+                    id: 147,
                     back: true,
                 },
             ],

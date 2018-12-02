@@ -15,13 +15,13 @@ import {AppEvent} from '../../common/model/game-event.model';
 import {ClicksEnum} from '../../common/enums/clicks.enum';
 import {AppState} from '../../common/app-state';
 import {ScoreView} from './views/score.view';
-import {take} from 'rxjs/internal/operators';
 import {GameStateEnum} from './enums/game-state.enum';
-import {SavedSnake} from './model/saved-snake.model';
+import {Mazez} from './data/mazes.data';
 
 export class Game {
     private snake: Snake;
     private speed: number;
+    private maze: number;
     private interval: number;
     private apple: Apple;
     private bug: Bug = null;
@@ -42,6 +42,7 @@ export class Game {
 
     public start(resumed: boolean): Game {
         this.speed = config.SPEED / AppState.getLevel();
+        this.maze = AppState.getMaze();
         this.bindEvents();
         this.canvas.clear();
         this.gameState = GameStateEnum.GAME;
@@ -50,15 +51,15 @@ export class Game {
             const gameData = AppState.getGameData();
             this.snake.set(gameData.snake);
             this.apple = new Apple(gameData.apple.x, gameData.apple.y);
-            this.bug = gameData.bug ? new Bug(gameData.bug.x, gameData.bug.y, gameData.bug.type) : null;
+            this.bug = gameData.bug ? new Bug(gameData.bug.x, gameData.bug.y, gameData.bug.type, gameData.bug.value) : null;
             this.points = gameData.points;
             this.paused = true;
         } else {
             this.provideApple();
             this.loop();
         }
-        AppState.clearGameData();
 
+        AppState.clearGameData();
         this.draw();
 
         return this;
@@ -110,15 +111,28 @@ export class Game {
     }
 
     private getForbiddenPixelsForApple(): Pixel[] {
-        return this.snake.getBodyBoundaryPixels().concat(this.bug ? this.bug.getBoundary().getPixels() : []);
+        return [
+            ...this.getCommonForbiddenPixels(),
+            ...(this.bug ? this.bug.getBoundary().getPixels() : []),
+        ];
     }
 
     private getForbiddenPixelsForBug(): Pixel[] {
-        return this.snake.getBodyBoundaryPixels().concat(this.apple.getBoundary().getPixels());
+        return [
+            ...this.getCommonForbiddenPixels(),
+            ...this.apple.getBoundary().getPixels(),
+        ];
+    }
+
+    private getCommonForbiddenPixels(): Pixel[] {
+        return [
+            ...this.snake.getBodyBoundaryPixels(),
+            ...Mazez.getForbiddenPixels(this.maze),
+        ];
     }
 
     private hasCollision(): boolean {
-        return this.snake.checkSelfCollision();
+        return this.snake.checkSelfCollision() || this.snake.chekMazeColission(this.getMazePixels());
     }
 
     private endGame(): void {
@@ -174,6 +188,10 @@ export class Game {
         this.handleMove();
     }
 
+    private getMazePixels(): Pixel[] {
+        return Mazez.getPixels(this.maze);
+    }
+
     private draw(withSnake: boolean = true) {
         this.canvas.clear();
         const gameBoardPixels: Pixel[] = [];
@@ -189,6 +207,8 @@ export class Game {
         }
 
         gameBoardPixels.push(...this.apple.getPixels());
+        gameBoardPixels.push(...this.getMazePixels());
+
         absolutePixels.push(...this.textWriter.write(
             TextWriter.padStart(this.points.toString(), '0', 4), new Position(1, 1),
         ).getPixels());

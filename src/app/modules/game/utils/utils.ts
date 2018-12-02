@@ -53,3 +53,9 @@ export const getMaskPixels = (): Pixel[] => {
 
     return pixels;
 };
+
+export const checkCollision = (a: Pixel[], b: Pixel[]) => {
+    return a.some((pixelA) => b.some((pixelB) => {
+        return pixelA.x === pixelB.x && pixelA.y === pixelB.y;
+    }));
+};

@@ -12,10 +12,10 @@ export class Bug extends Eatable implements DrawableInterface {
 
     public value: number;
 
-    constructor(public x: number, public y: number, public type: BugTypesEnum) {
+    constructor(public x: number, public y: number, public type: BugTypesEnum, value: number = null) {
         super(x, y);
         this.type = type;
-        this.value = Math.round(Math.random() * 20) + 10;
+        this.value = value !== null ? value : Math.round(Math.random() * 20) + 10;
     }
 
     public getPixels(options?: {

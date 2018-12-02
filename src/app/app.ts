@@ -6,7 +6,7 @@ import {TextWriter} from './common/text-writer';
 import {AppEvent} from './common/model/game-event.model';
 import {Intro} from './modules/intro/intro';
 import {Menu} from './modules/menu/menu';
-import {map} from 'rxjs/internal/operators';
+import {map, filter} from 'rxjs/operators';
 import {ClicksEnum} from './common/enums/clicks.enum';
 import {MenuItemFactory} from './modules/menu/factory/menu-item.factory';
 import {DrawingUtils} from './modules/menu/utils/drawing.utils';
@@ -28,21 +28,9 @@ export class App {
     constructor(canvas: HTMLCanvasElement) {
         this.onClick = fromEvent(document, 'keydown').pipe(
             map((event: KeyboardEvent) => {
-                switch (event.keyCode) {
-                    case 37:
-                        return ClicksEnum.LEFT;
-                    case 39:
-                        return ClicksEnum.RIGHT;
-                    case 38:
-                        return ClicksEnum.UP;
-                    case 40:
-                        return ClicksEnum.DOWN;
-                    case 13:
-                        return ClicksEnum.ENTER;
-                    case 27:
-                        return ClicksEnum.ESCAPE;
-                 }
+                return <ClicksEnum>event.keyCode;
             }),
+            filter((event) =>  event in ClicksEnum),
         );
         this.stageHandler = new Subject<AppEvent>();
         this.mealFactory = new MealFactory();
@@ -71,8 +59,8 @@ export class App {
             }
         });
         // this.createIntro();
-        // this.createGame();
-        this.createMenu();
+        this.createGame({resumed: false});
+        // this.createMenu();
         // this.createBlackBoard();
     }
 

@@ -11,6 +11,7 @@ import {Eatable} from './model/eatable.model';
 import {EatenMeal} from './model/eaten-meal.model';
 import {DrawableInterface} from '../../common/interfaces/drawable.interface';
 import {SavedSnake} from './model/saved-snake.model';
+import {checkCollision} from './utils/utils';
 
 export class Snake implements DrawableInterface {
     private body: BodyPart[];
@@ -164,6 +165,10 @@ export class Snake implements DrawableInterface {
                 nose.y >= elem.begin.y && nose.y <= elem.end.y
                 ;
         }).length > 0;
+    }
+
+    public chekMazeColission(mazePixels: Pixel[]): boolean {
+        return checkCollision(mazePixels, this.getPartPixels(0));
     }
 
     public restore() {
