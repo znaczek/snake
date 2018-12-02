@@ -3,9 +3,10 @@ import {CustomViewConstructorInterface} from '../../../common/interfaces/custom-
 
 export class MenuItem {
     public text: AppText;
-    public ordinal: number;
+    public id: number;
     public callback: () => void;
     public customView: CustomViewConstructorInterface;
+    public visible: () => boolean;
     public setCursorCondition: () => boolean;
     public back: boolean;
     public parent: MenuItem;
@@ -13,17 +14,19 @@ export class MenuItem {
 
     constructor(options: {
         text: AppText
-        ordinal: number,
+        id: number,
         callback?: () => void,
         customView?: CustomViewConstructorInterface,
+        visible?: () => boolean,
         setCursorCondition?: () => boolean,
         back?: boolean,
         parent?: MenuItem,
     }) {
         this.text = options.text;
-        this.ordinal = options.ordinal;
+        this.id = options.id;
         this.back = options.back;
         this.parent = options.parent;
+        this.visible = options.visible;
         this.setCursorCondition = options.setCursorCondition;
         this.callback = options.callback;
         this.customView = options.customView;

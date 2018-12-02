@@ -61,7 +61,7 @@ export class App {
                     break;
                 }
                 case AppEvent.START_GAME: {
-                    this.createGame();
+                    this.createGame(event.payload);
                     break;
                 }
                 case AppEvent.END_GAME: {
@@ -84,8 +84,8 @@ export class App {
         this.menu = new Menu(this.stageHandler, this.canvas, this.onClick, this.textWriter, this.menuItemFactory, this.drawingUtils).start();
     }
 
-    private createGame() {
-        this.game = new Game(this.stageHandler, this.canvas, this.onClick, this.textWriter, this.mealFactory).start();
+    private createGame(payload: {resumed: boolean}) {
+        this.game = new Game(this.stageHandler, this.canvas, this.onClick, this.textWriter, this.mealFactory).start(payload.resumed);
     }
     private createBlackBoard() {
         this.board = new Blackboard(this.canvas);

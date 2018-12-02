@@ -1,7 +1,10 @@
+import {GameDataInterface} from './interfaces/game-data.interface';
+
 export class AppState {
-    public static readonly LEVEL = 'level';
-    public static readonly MAZE = 'maze';
-    public static readonly TOP_SCORE = 'topScore';
+    public static readonly LEVEL = '7ehow8d7uh9';
+    public static readonly MAZE = '23rhewf79dpsyh';
+    public static readonly TOP_SCORE = 'e7wf9hdjsoi14';
+    public static readonly GAME_DATA = 'e9wh8odir23ed';
 
     public static getLevel(): number {
         return parseInt(window.localStorage.getItem(AppState.LEVEL), 10) || 1;
@@ -28,6 +31,18 @@ export class AppState {
         if (score > topScore) {
             window.localStorage.setItem(AppState.TOP_SCORE, score.toString());
         }
+    }
+
+    public static saveGame(data: GameDataInterface): void {
+        window.localStorage.setItem(AppState.GAME_DATA, JSON.stringify(data));
+    }
+
+    public static getGameData(): GameDataInterface {
+        return <GameDataInterface>JSON.parse(window.localStorage.getItem(AppState.GAME_DATA));
+    }
+
+    public static clearGameData(): void {
+        window.localStorage.removeItem(AppState.GAME_DATA);
     }
 
 }

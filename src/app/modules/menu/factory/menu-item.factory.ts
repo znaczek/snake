@@ -9,9 +9,10 @@ export class MenuItemFactory {
     public create(options: MenuDataInterface, parent?: MenuItem): MenuItem {
         const newMenuItem: MenuItem = new MenuItem({
             text: this.textWriter.write(options.text),
-            ordinal: options.ordinal,
+            id: options.id,
             callback: options.callback,
             setCursorCondition: options.setCursorCondition,
+            visible: options.visible,
             back: options.back,
             parent,
             customView: options.customView,

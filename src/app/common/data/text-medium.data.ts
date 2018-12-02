@@ -242,5 +242,12 @@ export const textMediumData: CharDataInterface = {
         new Pixel(3, 2), new Pixel(3, 3), new Pixel(3, 5), new Pixel(3, 6),
         new Pixel(4, 2), new Pixel(4, 6),
     ]),
+    'R': new Char(6, [
+        new Pixel(0, 0), new Pixel(0, 1), new Pixel(0, 2), new Pixel(0, 3), new Pixel(0, 4), new Pixel(0, 5), new Pixel(0, 6),
+        new Pixel(1, 0), new Pixel(1, 1), new Pixel(1, 2), new Pixel(1, 3), new Pixel(1, 4), new Pixel(1, 5), new Pixel(1, 6),
+        new Pixel(2, 0), new Pixel(2, 3), new Pixel(2, 4),
+        new Pixel(3, 0), new Pixel(3, 1), new Pixel(3, 2), new Pixel(3, 3), new Pixel(3, 5), new Pixel(3, 6),
+        new Pixel(4, 1), new Pixel(4, 2), new Pixel(4, 6),
+    ]),
 
 };

@@ -1,5 +1,4 @@
 import * as config from '../../../config';
-import {Canvas} from '../../common/canvas';
 import {DirectionEnum} from '../../common/enums/direction.enum';
 import {BodyPartEnum} from './enums/body-part.enum';
 import {Position} from '../../common/model/position.model';
@@ -11,9 +10,9 @@ import {Rectangle} from '../../common/model/rectangle.model';
 import {Eatable} from './model/eatable.model';
 import {EatenMeal} from './model/eaten-meal.model';
 import {DrawableInterface} from '../../common/interfaces/drawable.interface';
+import {SavedSnake} from './model/saved-snake.model';
 
 export class Snake implements DrawableInterface {
-    private canvas: Canvas;
     private body: BodyPart[];
     private length: number;
     private oldBody: BodyPart[];
@@ -21,11 +20,30 @@ export class Snake implements DrawableInterface {
     private direction: DirectionEnum = DirectionEnum.RIGHT;
     private lastDirection: DirectionEnum = DirectionEnum.RIGHT;
 
-    constructor(canvas: Canvas) {
-        this.canvas = canvas;
+    constructor() {
         this.body = this.getInitialState();
         this.oldBody = this.getInitialState();
         this.length = this.body.length;
+    }
+
+    public serialize() {
+        return new SavedSnake({
+            body: this.body,
+            length: this.length,
+            oldBody: this.oldBody,
+            eatenMeals: this.eatenMeals,
+            direction: this.direction,
+            lastDirection: this.lastDirection,
+        });
+    }
+
+    public set(data: SavedSnake) {
+        this.body = data.body;
+        this.length = data.length;
+        this.oldBody = data.oldBody;
+        this.eatenMeals = data.eatenMeals;
+        this.direction = data.direction;
+        this.lastDirection = data.lastDirection;
     }
 
     public turnLeft(): void {

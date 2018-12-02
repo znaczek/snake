@@ -1,6 +1,4 @@
-import {AppEventPayloadInterface} from '../interfaces/app-event-payload.interface';
-
-export class AppEvent {
+export class AppEvent<T = undefined> {
     public static readonly START_MENU = 'START_MENU';
     public static readonly START_GAME = 'START_GAME';
     public static readonly END_GAME = 'END_GAME';
@@ -9,8 +7,10 @@ export class AppEvent {
         return new AppEvent(AppEvent.START_MENU);
     }
 
-    public static startGame(): AppEvent {
-        return new AppEvent(AppEvent.START_GAME);
+    public static startGame(resumed: boolean = false): AppEvent<{resumed: boolean}> {
+        return new AppEvent(AppEvent.START_GAME, {
+            resumed,
+        });
     }
 
     public static endGame(): AppEvent {
@@ -18,9 +18,9 @@ export class AppEvent {
     }
 
     public type: string;
-    public payload: AppEventPayloadInterface;
+    public payload: T;
 
-    constructor(type: string, payload?: AppEventPayloadInterface) {
+    constructor(type: string, payload?: T) {
         this.type = type;
         this.payload = payload;
     }

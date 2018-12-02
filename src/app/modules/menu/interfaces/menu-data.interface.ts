@@ -2,9 +2,10 @@ import {CustomViewConstructorInterface} from '../../../common/interfaces/custom-
 
 export interface MenuDataInterface {
     text: string;
-    ordinal: number;
+    id: number;
     callback?: () => void;
     customView?: CustomViewConstructorInterface;
+    visible?: ()=> boolean;
     setCursorCondition?: () => boolean;
     back?: boolean;
     children?: MenuDataInterface[];
