@@ -59,8 +59,8 @@ export class App {
             }
         });
         // this.createIntro();
-        this.createGame({resumed: false});
-        // this.createMenu();
+        // this.createGame({resumed: false});
+        this.createMenu();
         // this.createBlackBoard();
     }
 

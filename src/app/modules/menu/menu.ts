@@ -19,6 +19,8 @@ export class Menu {
 
     private onClickSubscription: Subscription;
     private cursor: number = null;
+    private offset: number = 0;
+    private parentOffset: number = 0;
     private parentCursor: number;
     private currentMenuItem: MenuItem;
     private customView: CustomViewInterface = null;
@@ -43,7 +45,7 @@ export class Menu {
                     this.drawMenu();
                 }
             } else if (event === ClicksEnum.ESCAPE) {
-                this.goBack();
+                this.goBackToParent();
                 this.drawMenu();
             } else {
                 if (event === ClicksEnum.UP) {
@@ -78,26 +80,24 @@ export class Menu {
                 return selectedMenuItem.callback.call(this);
             }
         } else if (selectedMenuItem.back) {
-            this.goBack();
+            this.goBackToParent();
             return true;
         } else {
-            this.currentMenuItem = selectedMenuItem;
-            this.parentCursor = this.cursor;
-            this.cursor = this.getDefaultCursor();
-            this.getVisibleChildren().forEach((item: MenuItem) => {
-                if (item.setCursorCondition && item.setCursorCondition.call(this)) {
-                    this.cursor = item.id;
-                }
-            });
+            this.goIntoMenu(selectedMenuItem);
             return true;
         }
     }
 
-    private goBack() {
-        if (this.currentMenuItem && this.currentMenuItem.parent) {
-            this.cursor = this.parentCursor;
-            this.currentMenuItem = this.currentMenuItem.parent;
-        }
+    private goIntoMenu(selectedMenuItem: MenuItem) {
+        this.currentMenuItem = selectedMenuItem;
+        this.parentCursor = this.cursor;
+        this.cursor = this.getDefaultCursor();
+        this.offset = 0;
+        this.getVisibleChildren().forEach((item: MenuItem) => {
+            if (item.setCursorCondition && item.setCursorCondition.call(this)) {
+                this.cursor = item.id;
+            }
+        });
     }
 
     private drawMenu() {
@@ -117,9 +117,26 @@ export class Menu {
 
         this.canvas.prepareBoard();
         this.canvas.drawPixels(this.drawingUtils.drawMenuHeader(this.getSelectedMenuItem().parent.text.text));
-        this.getVisibleChildren()
+        const availableMenuSlots = this.getVisibleChildren().reduce((acc: number, curr: MenuItem, index: number) => {
+            if ((index + 1) * MENU_ITEM_HEIGHT < config.CANVAS_HEIGHT - config.TOP_BAR_HEIGHT) {
+                return acc + 1;
+            }
+            return acc;
+        }, 0);
+
+        const currentIndex = this.getCurrentIndex();
+        if (currentIndex >= availableMenuSlots + this.offset) {
+            this.offset = Math.max(this.offset, Math.abs(availableMenuSlots - currentIndex - 1));
+        } else if (currentIndex < this.offset) {
+            this.offset = Math.min(this.offset, currentIndex);
+        }
+
+        const drawableChildren = this.getVisibleChildren().filter((item: MenuItem, index: number) => {
+            return index >= this.offset && (index - this.offset + 1) * MENU_ITEM_HEIGHT < config.CANVAS_HEIGHT - config.TOP_BAR_HEIGHT;
+        });
+        drawableChildren
             .forEach((item: MenuItem, index: number) => {
-                const pixels  = item.text.getPixels({
+                const pixels = item.text.getPixels({
                     offset: new Position(0, index * MENU_ITEM_HEIGHT + config.TOP_BAR_HEIGHT),
                 });
                 if (this.cursor === item.id) {
@@ -148,7 +165,7 @@ export class Menu {
 
     private goToPreviousMenuItem() {
         const children = this.getVisibleChildren();
-        const currentIndex = children.findIndex((item) => item.id === this.cursor);
+        const currentIndex = this.getCurrentIndex();
         if (currentIndex - 1 < 0) {
             this.cursor = children[children.length - 1].id;
         } else {
@@ -158,7 +175,7 @@ export class Menu {
 
     private goToNextMenuItem() {
         const children = this.getVisibleChildren();
-        const currentIndex = children.findIndex((item) => item.id === this.cursor);
+        const currentIndex = this.getCurrentIndex();
         if (currentIndex + 1 >= children.length) {
             this.cursor = children[0].id;
         } else {
@@ -166,28 +183,35 @@ export class Menu {
         }
     }
 
-    private beforeSettingsSet(): void {
-        this.cursor = this.parentCursor;
-        this.currentMenuItem = this.currentMenuItem.parent;
+    private getCurrentIndex(): number {
+        return this.getVisibleChildren().findIndex((item) => item.id === this.cursor);
+    }
+
+    private goBackToParent(): void {
+        if (this.currentMenuItem && this.currentMenuItem.parent) {
+            this.cursor = this.parentCursor;
+            this.offset = this.parentOffset;
+            this.currentMenuItem = this.currentMenuItem.parent;
+        }
     }
 
     private setLevel(level: number): boolean {
-        this.beforeSettingsSet();
         AppState.setLevel(level);
+        this.goBackToParent();
         return true;
     }
 
     private setMaze(maze: number): boolean {
-        this.beforeSettingsSet();
         AppState.setMaze(maze);
+        this.goBackToParent();
         return true;
     }
 
-    private checkLevelCursor (level: number): boolean {
+    private checkLevelCursor(level: number): boolean {
         return AppState.getLevel() === level;
     }
 
-    private checkMazeCursor (maze: number): boolean {
+    private checkMazeCursor(maze: number): boolean {
         return AppState.getMaze() === maze;
     }
 
