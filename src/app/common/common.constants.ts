@@ -5,4 +5,3 @@ export const COLORS = {
     [ColorsEnum.BLACK]: '#000',
     [ColorsEnum.RED]: '#f00',
 };
-

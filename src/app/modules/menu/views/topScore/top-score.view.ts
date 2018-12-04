@@ -56,7 +56,7 @@ export class TopScoreView implements CustomViewInterface {
                 counter = 8;
             }
             this.drawFrame(counter + 1);
-        }, 350);
+        }, 150);
     }
 
     private getAnimationPixels(counter: number, offset: Position): Pixel[] {

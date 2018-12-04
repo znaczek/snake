@@ -49,7 +49,7 @@ export class MealFactory {
             xSpace: number,
             ySpace: number,
         ): Position {
-        const availablePositions: Pixel[] = [];
+        const availablePositions: Position[] = [];
         this.allAvailableMealPositions[type].forEach((availableMealPosition) => {
             const pixelsForFutureChecking: Pixel[] = [];
             const forbiddenPixelsNotOnGivenAvailablePosition = forbiddenPixels.filter((forbidden) => {

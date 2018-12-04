@@ -14,6 +14,7 @@ import {AppState} from '../../common/app-state';
 import {DrawingUtils} from './utils/drawing.utils';
 import * as config from '../../../config';
 import {CustomViewInterface} from '../../common/interfaces/custom-view.interface';
+import {Pixel} from '../../common/model/pixel.model';
 
 export class Menu {
 
@@ -115,16 +116,14 @@ export class Menu {
             return;
         }
 
-        this.canvas.prepareBoard();
-        this.canvas.drawPixels(this.drawingUtils.drawMenuHeader(this.getSelectedMenuItem().parent.text.text));
-        const availableMenuSlots = this.getVisibleChildren().reduce((acc: number, curr: MenuItem, index: number) => {
+        const currentIndex = this.getCurrentIndex();
+        const availableChildren = this.getVisibleChildren();
+        const availableMenuSlots = availableChildren.reduce((acc: number, curr: MenuItem, index: number) => {
             if ((index + 1) * MENU_ITEM_HEIGHT < config.CANVAS_HEIGHT - config.TOP_BAR_HEIGHT) {
                 return acc + 1;
             }
             return acc;
         }, 0);
-
-        const currentIndex = this.getCurrentIndex();
         if (currentIndex >= availableMenuSlots + this.offset) {
             this.offset = Math.max(this.offset, Math.abs(availableMenuSlots - currentIndex - 1));
         } else if (currentIndex < this.offset) {
@@ -134,6 +133,9 @@ export class Menu {
         const drawableChildren = this.getVisibleChildren().filter((item: MenuItem, index: number) => {
             return index >= this.offset && (index - this.offset + 1) * MENU_ITEM_HEIGHT < config.CANVAS_HEIGHT - config.TOP_BAR_HEIGHT;
         });
+
+        this.canvas.prepareBoard();
+        this.canvas.drawPixels(this.drawingUtils.drawMenuHeader(this.getSelectedMenuItem().parent.text.text));
         drawableChildren
             .forEach((item: MenuItem, index: number) => {
                 const pixels = item.text.getPixels({
@@ -141,11 +143,13 @@ export class Menu {
                 });
                 if (this.cursor === item.id) {
                     this.canvas.drawPixels(DrawingUtils.getMenuItemBackground(index * MENU_ITEM_HEIGHT + config.TOP_BAR_HEIGHT), undefined, ColorsEnum.BLACK);
-                    this.canvas.drawPixels(pixels, new Position(2, 1), ColorsEnum.GREEN);
+                    this.canvas.drawPixels(pixels, new Position(2, 2), ColorsEnum.GREEN);
                 } else {
-                    this.canvas.drawPixels(pixels, new Position(2, 1));
+                    this.canvas.drawPixels(pixels, new Position(2, 2));
                 }
             });
+
+        this.canvas.drawPixels(DrawingUtils.drawScrollBar(currentIndex, availableChildren.length));
     }
 
     private getVisibleChildren(): MenuItem[] {

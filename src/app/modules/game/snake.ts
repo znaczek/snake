@@ -404,7 +404,7 @@ export class Snake implements DrawableInterface {
         return this.body[0];
     }
 
-    private getNose(headElem: BodyPart): Pixel {
+    private getNose(headElem: BodyPart): Position {
         switch (headElem.direction) {
             case DirectionEnum.RIGHT:
                 return {
