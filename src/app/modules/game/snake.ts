@@ -140,13 +140,13 @@ export class Snake implements DrawableInterface {
         ));
     }
 
-    public getBodyBoundaryPixels(): Pixel[] {
-        const boundary: Pixel[] = [];
+    public getBodyBoundaryPositions(): Position[] {
+        const boundary: Position[] = [];
         for (let i = 0; i < this.body.length; i += 1) {
             const partBoundary: Rectangle = this.getPartBoundary(i);
             for (let j = partBoundary.begin.x; j <= partBoundary.end.x; j += 1) {
                 for (let k = partBoundary.begin.y; k <= partBoundary.end.y; k += 1) {
-                    boundary.push(new Pixel(j, k));
+                    boundary.push(new Position(j, k));
                 }
             }
         }

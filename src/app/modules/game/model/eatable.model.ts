@@ -9,13 +9,13 @@ export abstract class Eatable extends Position {
     }
 
     public getBoundary(): Rectangle {
-        const pixels: Pixel[] = [];
+        const positions: Position[] = [];
         for (let x = 0; x < this.getWidth(); x += 1) {
             for (let y = 0; y < this.getHeight(); y += 1) {
-                pixels.push(new Pixel(this.x + x, this.y + y));
+                positions.push(new Position(this.x + x, this.y + y));
             }
         }
-        return getRectangleFromPixels(pixels);
+        return getRectangleFromPixels(positions);
     }
 
     protected abstract getWidth(): number;

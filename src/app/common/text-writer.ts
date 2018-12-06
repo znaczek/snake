@@ -1,5 +1,4 @@
 import {Position} from './model/position.model';
-import {Pixel} from './model/pixel.model';
 import {Char} from './model/char.model';
 import {AppText} from './model/game-text.model';
 import {CharDataInterface} from '../modules/game/interface/char-data.interface';
@@ -23,14 +22,14 @@ export class TextWriter {
 
     public write(text: string, start?: Position): AppText {
         this.position = start || new Position(0, 0);
-        const pixels: Pixel[] = [];
+        const positions: Position[] = [];
         text.split('').forEach((char: string) => {
-            pixels.push(...this.writeChar(char));
+            positions.push(...this.writeChar(char));
         });
-        return new AppText(pixels, this.position.x, text);
+        return new AppText(positions, this.position.x, text);
     }
 
-    private writeChar(charIndex: string): Pixel[] {
+    private writeChar(charIndex: string): Position[] {
         if (charIndex.length !== 1) {
             throw new Error('Bad input character: ' + charIndex);
         }
@@ -44,15 +43,15 @@ export class TextWriter {
             return;
         }
 
-        const pixels: Pixel[] = [];
-        char.pixels.forEach((pixel: Pixel) => {
-            const p = new Pixel(
+        const position: Position[] = [];
+        char.positions.forEach((pixel: Position) => {
+            const p = new Position(
                 this.position.x + pixel.x,
                 this.position.y + pixel.y,
             );
-            pixels.push(p);
+            position.push(p);
         });
         this.position.x += char.width;
-        return pixels;
+        return position;
     }
 }

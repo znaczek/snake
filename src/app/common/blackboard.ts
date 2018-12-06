@@ -4,6 +4,7 @@ import {Canvas} from './canvas';
 import * as config from '../../config';
 import {mergeMap, takeUntil, tap} from 'rxjs/internal/operators';
 import {ColorsEnum} from './enums/color.enums';
+import {Position} from './model/position.model';
 
 declare global {
     interface Window {
@@ -15,7 +16,7 @@ declare global {
 
 export class Blackboard {
     private pixels: Pixel[] = [];
-    private lastPixel: Pixel = new Pixel(0 ,0);
+    private lastPosition: Position = new Position(0 ,0);
     private toggle = true;
 
     constructor(private canvas: Canvas, pixels: Pixel[] = []) {
@@ -67,13 +68,14 @@ export class Blackboard {
         const newPixel = new Pixel(
             Math.round(this.getX(e) / config.PIXEL_SIZE),
             Math.round(this.getY(e) / config.PIXEL_SIZE),
+            ColorsEnum.RED,
         );
 
-        if (this.lastPixel.x === newPixel.x && this.lastPixel.y === newPixel.y) {
+        if (this.lastPosition.x === newPixel.x && this.lastPosition.y === newPixel.y) {
             return;
         }
 
-        this.lastPixel = new Pixel(newPixel.x, newPixel.y);
+        this.lastPosition = new Position(newPixel.x, newPixel.y);
         const existingPixelIndex = this.pixels.findIndex((pixel: Pixel) => {
             return pixel.x === newPixel.x && pixel.y === newPixel.y;
         });
@@ -109,7 +111,7 @@ export class Blackboard {
 
     private draw() {
         this.canvas.prepareBoard();
-        this.canvas.drawPixels(this.pixels, undefined, ColorsEnum.RED);
+        this.canvas.drawPixels(this.pixels);
     }
 
 }

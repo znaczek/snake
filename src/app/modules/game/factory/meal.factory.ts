@@ -1,6 +1,5 @@
 import * as config from '../../../../config';
 import {Apple} from '../model/apple.model';
-import {Pixel} from '../../../common/model/pixel.model';
 import {Position} from '../../../common/model/position.model';
 import {Bug} from '../model/bug.model';
 import {BugTypesEnum} from '../enums/bug-types.enum';
@@ -18,24 +17,24 @@ export class MealFactory {
                 if (x <= config.GAME_CANVAS_WIDTH - Apple.width - config.MOVE &&
                     y <= config.GAME_CANVAS_HEIGHT - Apple.height - config.MOVE
                 ) {
-                    this.allAvailableMealPositions[MealsEnum.APPLE].push(new Pixel(x, y));
+                    this.allAvailableMealPositions[MealsEnum.APPLE].push(new Position(x, y));
                 }
                 if (x <= config.GAME_CANVAS_WIDTH - Bug.width - config.MOVE &&
                     y <= config.GAME_CANVAS_HEIGHT - Bug.height - config.MOVE
                 ) {
-                    this.allAvailableMealPositions[MealsEnum.BUG].push(new Pixel(x, y));
+                    this.allAvailableMealPositions[MealsEnum.BUG].push(new Position(x, y));
                 }
             }
         }
     }
 
-    public generateApple(forbiddenPixels: Pixel[]): Apple {
-        const chosenPosition: Position = this.getAvailableStartPosition(MealsEnum.APPLE, forbiddenPixels, Apple.width, Apple.height);
+    public generateApple(forbiddenPositions: Position[]): Apple {
+        const chosenPosition: Position = this.getAvailableStartPosition(MealsEnum.APPLE, forbiddenPositions, Apple.width, Apple.height);
         return new Apple(chosenPosition.x, chosenPosition.y);
     }
 
-    public generateBug(forbiddenPixels: Pixel[]): Bug {
-        const chosenPosition: Position = this.getAvailableStartPosition(MealsEnum.BUG, forbiddenPixels, Bug.width, Bug.height);
+    public generateBug(forbiddenPositions: Position[]): Bug {
+        const chosenPosition: Position = this.getAvailableStartPosition(MealsEnum.BUG, forbiddenPositions, Bug.width, Bug.height);
         const bugTypesValues = Object.keys(BugTypesEnum)
             .map((n) => Number.parseInt(n, 10))
             .filter((n) => n === parseInt(n.toString(), 10));
@@ -45,28 +44,28 @@ export class MealFactory {
 
     private getAvailableStartPosition(
             type: MealsEnum,
-            forbiddenPixels: Pixel[],
+            forbiddenPosition: Position[],
             xSpace: number,
             ySpace: number,
         ): Position {
         const availablePositions: Position[] = [];
         this.allAvailableMealPositions[type].forEach((availableMealPosition) => {
-            const pixelsForFutureChecking: Pixel[] = [];
-            const forbiddenPixelsNotOnGivenAvailablePosition = forbiddenPixels.filter((forbidden) => {
+            const positionsForFutureChecking: Position[] = [];
+            const forbiddenPositionsNotOnGivenAvailablePosition = forbiddenPosition.filter((forbidden) => {
                 const isAboveOrOnLeft = forbidden.x < availableMealPosition.x || forbidden.y < availableMealPosition.y;
                 const isBelowOrOnRight = forbidden.x >= availableMealPosition.x + xSpace ||
                     forbidden.y >= availableMealPosition.y + ySpace;
                 const shouldBeCheckedInFuture = forbidden.x >= availableMealPosition.x + config.MOVE ||
                     forbidden.y >= availableMealPosition.y + config.MOVE;
                 if (shouldBeCheckedInFuture) {
-                    pixelsForFutureChecking.push(forbidden);
+                    positionsForFutureChecking.push(forbidden);
                 }
                 return isAboveOrOnLeft || isBelowOrOnRight;
             });
-            if (forbiddenPixelsNotOnGivenAvailablePosition.length === forbiddenPixels.length) {
+            if (forbiddenPositionsNotOnGivenAvailablePosition.length === forbiddenPosition.length) {
                 availablePositions.push(new Position(availableMealPosition.x, availableMealPosition.y));
             } else {
-                forbiddenPixels = pixelsForFutureChecking;
+                forbiddenPosition = positionsForFutureChecking;
             }
         });
         return availablePositions[Math.floor(Math.random() * (availablePositions.length))];

@@ -9,7 +9,6 @@ import {Bug} from './model/bug.model';
 import {textSmallData} from '../../common/data/text-small.data';
 import {Position} from '../../common/model/position.model';
 import {Pixel} from '../../common/model/pixel.model';
-import {ColorsEnum} from '../../common/enums/color.enums';
 import {getGameBoarderPixels, getGameBoardOffset, getMaskPixels} from './utils/utils';
 import {AppEvent} from '../../common/model/game-event.model';
 import {ClicksEnum} from '../../common/enums/clicks.enum';
@@ -97,36 +96,34 @@ export class Game {
                 if (config.DEBUG_MOVING) {
                     this.testMove();
                 }
-            } else if (this.gameState === GameStateEnum.GAME_END) {
-                this.drawHighScore();
             }
         });
     }
 
     private provideApple(): void {
         if (!this.apple) {
-            this.apple = this.mealFactory.generateApple(this.getForbiddenPixelsForApple());
+            this.apple = this.mealFactory.generateApple(this.getForbiddenPositionsForApple());
             return;
         }
     }
 
-    private getForbiddenPixelsForApple(): Pixel[] {
+    private getForbiddenPositionsForApple(): Position[] {
         return [
-            ...this.getCommonForbiddenPixels(),
+            ...this.getCommonForbiddenPositions(),
             ...(this.bug ? this.bug.getBoundary().getPixels() : []),
         ];
     }
 
-    private getForbiddenPixelsForBug(): Pixel[] {
+    private getForbiddenPixelsForBug(): Position[] {
         return [
-            ...this.getCommonForbiddenPixels(),
+            ...this.getCommonForbiddenPositions(),
             ...this.apple.getBoundary().getPixels(),
         ];
     }
 
-    private getCommonForbiddenPixels(): Pixel[] {
+    private getCommonForbiddenPositions(): Position[] {
         return [
-            ...this.snake.getBodyBoundaryPixels(),
+            ...this.snake.getBodyBoundaryPositions(),
             ...Mazez.getForbiddenPixels(this.maze),
         ];
     }
@@ -230,7 +227,7 @@ export class Game {
         this.canvas.prepareBoard();
         this.canvas.drawPixels(gameBoardPixels, getGameBoardOffset());
         this.canvas.drawPixels(absolutePixels);
-        this.canvas.drawPixels(getMaskPixels(), new Position(0, 0), config.DEBUG_CANVAS ? ColorsEnum.RED : ColorsEnum.GREEN);
+        this.canvas.drawPixels(getMaskPixels());
     }
 
     private loop(): void {
@@ -258,7 +255,7 @@ export class Game {
     private handleEating(): void {
         if (this.snake.didEat(this.apple)) {
             this.snake.grow();
-            this.apple = this.mealFactory.generateApple(this.getForbiddenPixelsForApple());
+            this.apple = this.mealFactory.generateApple(this.getForbiddenPositionsForApple());
             this.handleBugGeneration();
             this.points += 1;
         } else if (this.snake.didEat(this.bug)) {

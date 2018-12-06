@@ -15,12 +15,12 @@ export const isOverlapping = (figure1: Rectangle, figure2: Rectangle) => {
     );
 };
 
-export const getRectangleFromPixels = (pixels: Pixel[]) => {
+export const getRectangleFromPixels = (positions: Position[]) => {
     let minX = 1000;
     let maxX = 0;
     let minY = 1000;
     let maxY = 0;
-    pixels.forEach((elem: Pixel) => {
+    positions.forEach((elem: Pixel) => {
         const x = elem.x;
         const y = elem.y;
         if (x < minX) {

@@ -138,15 +138,16 @@ export class Menu {
         this.canvas.drawPixels(this.drawingUtils.drawMenuHeader(this.getSelectedMenuItem().parent.text.text));
         drawableChildren
             .forEach((item: MenuItem, index: number) => {
+                let color = ColorsEnum.BLACK;
+                if (this.cursor === item.id) {
+                    this.canvas.drawPixels(DrawingUtils.getMenuItemBackground(index * MENU_ITEM_HEIGHT + config.TOP_BAR_HEIGHT));
+                    color = ColorsEnum.GREEN;
+                }
                 const pixels = item.text.getPixels({
                     offset: new Position(0, index * MENU_ITEM_HEIGHT + config.TOP_BAR_HEIGHT),
+                    color,
                 });
-                if (this.cursor === item.id) {
-                    this.canvas.drawPixels(DrawingUtils.getMenuItemBackground(index * MENU_ITEM_HEIGHT + config.TOP_BAR_HEIGHT), undefined, ColorsEnum.BLACK);
-                    this.canvas.drawPixels(pixels, new Position(2, 2), ColorsEnum.GREEN);
-                } else {
-                    this.canvas.drawPixels(pixels, new Position(2, 2));
-                }
+                this.canvas.drawPixels(pixels, new Position(2, 2));
             });
 
         this.canvas.drawPixels(DrawingUtils.drawScrollBar(currentIndex, availableChildren.length));

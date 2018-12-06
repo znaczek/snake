@@ -1,6 +1,7 @@
 import * as config from '../../../../config';
 import {Position} from '../../../common/model/position.model';
 import {Pixel} from '../../../common/model/pixel.model';
+import {ColorsEnum} from '../../../common/enums/color.enums';
 
 export const getGameBoardOffset = (): Position => {
     return new Position(
@@ -33,22 +34,23 @@ export const getGameBoarderPixels = (): Pixel[] => {
 
 export const getMaskPixels = (): Pixel[] => {
     const pixels: Pixel[] = [];
+    const color = config.DEBUG_CANVAS ? ColorsEnum.RED : ColorsEnum.GREEN;
     for (
         let i = config.BOARD.start.y + config.TOP_BAR_HEIGHT - 1;
         i < config.GAME_CANVAS_HEIGHT + config.TOP_BAR_HEIGHT - 1;
         i += 1
     ) {
-        pixels.push(new Pixel(1, i));
-        pixels.push(new Pixel(config.GAME_CANVAS_WIDTH - 2, i));
+        pixels.push(new Pixel(1, i, color));
+        pixels.push(new Pixel(config.GAME_CANVAS_WIDTH - 2, i, color));
     }
     for (
         let i = 1;
         i < config.GAME_CANVAS_WIDTH - 1;
         i += 1
     ) {
-        pixels.push(new Pixel(i, config.TOP_BAR_HEIGHT -1));
-        pixels.push(new Pixel(i, config.TOP_BAR_HEIGHT + 1));
-        pixels.push(new Pixel(i, config.TOP_BAR_HEIGHT + config.GAME_CANVAS_HEIGHT - 2));
+        pixels.push(new Pixel(i, config.TOP_BAR_HEIGHT -1, color));
+        pixels.push(new Pixel(i, config.TOP_BAR_HEIGHT + 1, color));
+        pixels.push(new Pixel(i, config.TOP_BAR_HEIGHT + config.GAME_CANVAS_HEIGHT - 2, color));
     }
 
     return pixels;

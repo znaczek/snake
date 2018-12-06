@@ -1,6 +1,6 @@
-import {Pixel} from './pixel.model';
+import {Position} from './position.model';
 
 export class Char {
-    constructor(public width: number, public pixels: Pixel[]) {
+    constructor(public width: number, public positions: Position[]) {
     }
 }

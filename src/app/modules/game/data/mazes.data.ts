@@ -1,12 +1,13 @@
 import {Pixel} from '../../../common/model/pixel.model';
 import * as config from '../../../../config';
+import {Position} from '../../../common/model/position.model';
 
 export class Mazez {
     public static getPixels(level: number): Pixel[] {
         return Mazez.mazez[level];
     }
 
-    public static getForbiddenPixels(level: number): Pixel[] {
+    public static getForbiddenPixels(level: number): Position[] {
         return Mazez.mazezForbiddenPixels[level];
     }
 
@@ -67,13 +68,13 @@ export class Mazez {
     };
 
     // in case of forbidden pixels would differ from those regular
-    private static readonly mazezForbiddenPixels: {[index: number]: Pixel[]} = {
+    private static readonly mazezForbiddenPixels: {[index: number]: Position[]} = {
         1: [],
-        2: Mazez.mazez[2],
-        3: Mazez.mazez[3],
-        4: Mazez.mazez[4],
-        5: Mazez.mazez[5],
-        6: Mazez.mazez[6],
+        2: Mazez.mazez[2].map((pixel: Pixel) => new Position(pixel.x, pixel.y)),
+        3: Mazez.mazez[3].map((pixel: Pixel) => new Position(pixel.x, pixel.y)),
+        4: Mazez.mazez[4].map((pixel: Pixel) => new Position(pixel.x, pixel.y)),
+        5: Mazez.mazez[5].map((pixel: Pixel) => new Position(pixel.x, pixel.y)),
+        6: Mazez.mazez[6].map((pixel: Pixel) => new Position(pixel.x, pixel.y)),
     };
 
     private static getBasicBorderPixels(): Pixel[] {

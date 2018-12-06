@@ -29,9 +29,8 @@ export class Canvas {
         }
     }
 
-    public drawPixels(pixels: Pixel[], offset: Position = new Position(0, 0), color: ColorsEnum = ColorsEnum.BLACK): void {
+    public drawPixels(pixels: Pixel[], offset: Position = new Position(0, 0)): void {
         this.ctx.save();
-        this.ctx.fillStyle = COLORS[color];
         pixels.forEach((pixel: Pixel) => this.drawPixel(
             new Pixel(pixel.x + offset.x, pixel.y + offset.y, pixel.color),
         ));
@@ -39,19 +38,13 @@ export class Canvas {
     }
 
     private drawPixel(pixel: Pixel): void {
-        if (pixel.color !== null) {
-            this.ctx.save();
-            this.ctx.fillStyle = COLORS[pixel.color];
-        }
+        this.ctx.fillStyle = COLORS[pixel.color];
         this.ctx.fillRect(
             pixel.x * config.PIXEL_SIZE,
             pixel.y * config.PIXEL_SIZE,
             config.PIXEL_SIZE - 1,
             config.PIXEL_SIZE - 1,
         );
-        if (pixel.color !== null) {
-            this.ctx.restore();
-        }
     }
 
     private drawGrid(): void {
