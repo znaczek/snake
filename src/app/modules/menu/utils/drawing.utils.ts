@@ -2,14 +2,14 @@ import {Pixel} from '../../../common/model/pixel.model';
 import {TextWriter} from '../../../common/text-writer';
 import {textSmallData} from '../../../common/data/text-small.data';
 import * as config from '../../../../config';
-import {MENU_ITEM_HEIGHT, MENU_ITEM_WIDTH} from '../constants/menu-item.constants';
+import {MENU_ITEM_HEIGHT} from '../constants/menu-item.constants';
 import {Position} from '../../../common/model/position.model';
 import {ColorsEnum} from '../../../common/enums/color.enums';
 
 export class DrawingUtils {
     public static getMenuItemBackground(yOffset: number = 0): Pixel[] {
         const pixels: Pixel[] = [];
-        for(let x = 0; x < MENU_ITEM_WIDTH; x += 1) {
+        for(let x = 0; x < config.CANVAS_WIDTH - 7; x += 1) {
             for(let y = yOffset; y < yOffset + MENU_ITEM_HEIGHT; y += 1) {
                 pixels.push(new Pixel(x, y));
             }

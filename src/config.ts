@@ -1,7 +1,7 @@
 /**
  * Default parameters:
- * CANVAS_WIDTH = 96;
- * CANVAS_HEIGHT = 56;
+ * CANVAS_WIDTH = 24 * 4;
+ * CANVAS_HEIGHT = 14 * 4;
  * MOVE = 4;
  * PIXEL_SIZE = 10;
  * INIT_LENGTH = 3;
@@ -15,8 +15,8 @@ export const DEBUG_MOVING = false;
 export const MOVE = 4;
 export const PIXEL_SIZE = 10;
 export const TOP_BAR_HEIGHT = 9;
-export const GAME_CANVAS_WIDTH = 20 * MOVE;
-export const GAME_CANVAS_HEIGHT = 16 * MOVE;
+export const GAME_CANVAS_WIDTH = 24 * MOVE;
+export const GAME_CANVAS_HEIGHT = 14 * MOVE;
 export const SPEED = 200;
 
 export const INIT_HEAD = {
