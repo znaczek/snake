@@ -1,5 +1,6 @@
 import {Observable} from 'rxjs/index';
 import {WindowParams} from './app/common/model/window-params.model';
+import {map} from 'rxjs/internal/operators';
 
 declare global {
     interface Window {
@@ -68,20 +69,13 @@ export class Config {
         }
     )(navigator.userAgent || navigator.vendor || window.opera);
 
-    private params: WindowParams;
-
     constructor(private windowParams: Observable<WindowParams>) {
-        this.windowParams.subscribe((params) => {
-            this.params = params;
-        });
     }
 
-    public get pixelSpace() {
-        return this.width >= 480 ? 1 : 0;
-    }
-
-    private get width() {
-        return Config.isMobile && this.params.isHorizontal ? this.params.height : this.params.width;
+    public get pixelSpace$() {
+        return this.windowParams.pipe(
+            map((params) => Config.isMobile && params.isHorizontal ? params.height : params.width >= 480 ? 1 : 0),
+        );
     }
 
 }
