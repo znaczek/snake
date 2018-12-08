@@ -42,8 +42,8 @@ export class Canvas {
         this.ctx.fillRect(
             pixel.x * Config.PIXEL_SIZE,
             pixel.y * Config.PIXEL_SIZE,
-            Config.PIXEL_SIZE - 1,
-            Config.PIXEL_SIZE - 1,
+            Config.PIXEL_SIZE - this.config.pixelSpace,
+            Config.PIXEL_SIZE - this.config.pixelSpace,
         );
     }
 

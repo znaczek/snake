@@ -6,14 +6,6 @@ import {mergeMap, takeUntil, tap} from 'rxjs/internal/operators';
 import {ColorsEnum} from './enums/color.enums';
 import {Position} from './model/position.model';
 
-declare global {
-    interface Window {
-        printPixels: any;
-        clearBoard: any;
-        toggle: any;
-    }
-}
-
 export class Blackboard {
     private pixels: Pixel[] = [];
     private lastPosition: Position = new Position(0 ,0);
