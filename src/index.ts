@@ -7,5 +7,5 @@ const canvas: HTMLCanvasElement = document.createElement('canvas');
 if (config.DEBUG_INTRO) {
     canvas.classList.add('debug');
 }
-new App(canvas).run();
+new App(canvas, document.getElementById('keyboard')).run();
 appRoot.appendChild(canvas);

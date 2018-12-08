@@ -1,7 +1,7 @@
 import {Game} from './modules/game/game';
 import {Canvas} from './common/canvas';
 import {MealFactory} from './modules/game/factory/meal.factory';
-import {fromEvent, Observable, Subject} from 'rxjs';
+import {fromEvent, merge, Observable, Subject} from 'rxjs';
 import {TextWriter} from './common/text-writer';
 import {AppEvent} from './common/model/game-event.model';
 import {Intro} from './modules/intro/intro';
@@ -28,12 +28,22 @@ export class App {
     private drawingUtils: DrawingUtils;
     private board: Blackboard;
 
-    constructor(canvas: HTMLCanvasElement) {
-        this.onClick = fromEvent(document, 'keydown').pipe(
-            map((event: KeyboardEvent) => {
-                return <ClicksEnum>event.keyCode;
-            }),
-            filter((event) =>  event in ClicksEnum),
+    constructor(canvas: HTMLCanvasElement, keyboard: HTMLElement) {
+        this.onClick = merge(
+            fromEvent(document, 'keydown').pipe(
+                map((event: KeyboardEvent) => {
+                    return <ClicksEnum>event.keyCode;
+                }),
+                filter((event) =>  event in ClicksEnum),
+            ),
+            fromEvent(keyboard, 'click').pipe(
+                map((event: MouseEvent) => {
+                    const code = (<HTMLElement>(event.target)).dataset.code ||
+                        (<HTMLElement>(event.target)).parentElement.dataset.code;
+                    return <ClicksEnum>parseInt(code, 10);
+                }),
+                filter((event) =>  event in ClicksEnum),
+            ),
         );
 
         this.windowParams = fromEvent(window, 'resize').pipe(
