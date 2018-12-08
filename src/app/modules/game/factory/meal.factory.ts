@@ -1,4 +1,4 @@
-import * as config from '../../../../config';
+import {Config} from '../../../../Config';
 import {Apple} from '../model/apple.model';
 import {Position} from '../../../common/model/position.model';
 import {Bug} from '../model/bug.model';
@@ -12,15 +12,15 @@ export class MealFactory {
     };
 
     constructor() {
-        for (let x = 0; x <= config.GAME_CANVAS_WIDTH; x += config.MOVE) {
-            for (let y = 0; y <= config.GAME_CANVAS_HEIGHT; y += config.MOVE) {
-                if (x <= config.GAME_CANVAS_WIDTH - Apple.width - config.MOVE &&
-                    y <= config.GAME_CANVAS_HEIGHT - Apple.height - config.MOVE
+        for (let x = 0; x <= Config.GAME_CANVAS_WIDTH; x += Config.MOVE) {
+            for (let y = 0; y <= Config.GAME_CANVAS_HEIGHT; y += Config.MOVE) {
+                if (x <= Config.GAME_CANVAS_WIDTH - Apple.width - Config.MOVE &&
+                    y <= Config.GAME_CANVAS_HEIGHT - Apple.height - Config.MOVE
                 ) {
                     this.allAvailableMealPositions[MealsEnum.APPLE].push(new Position(x, y));
                 }
-                if (x <= config.GAME_CANVAS_WIDTH - Bug.width - config.MOVE &&
-                    y <= config.GAME_CANVAS_HEIGHT - Bug.height - config.MOVE
+                if (x <= Config.GAME_CANVAS_WIDTH - Bug.width - Config.MOVE &&
+                    y <= Config.GAME_CANVAS_HEIGHT - Bug.height - Config.MOVE
                 ) {
                     this.allAvailableMealPositions[MealsEnum.BUG].push(new Position(x, y));
                 }
@@ -55,8 +55,8 @@ export class MealFactory {
                 const isAboveOrOnLeft = forbidden.x < availableMealPosition.x || forbidden.y < availableMealPosition.y;
                 const isBelowOrOnRight = forbidden.x >= availableMealPosition.x + xSpace ||
                     forbidden.y >= availableMealPosition.y + ySpace;
-                const shouldBeCheckedInFuture = forbidden.x >= availableMealPosition.x + config.MOVE ||
-                    forbidden.y >= availableMealPosition.y + config.MOVE;
+                const shouldBeCheckedInFuture = forbidden.x >= availableMealPosition.x + Config.MOVE ||
+                    forbidden.y >= availableMealPosition.y + Config.MOVE;
                 if (shouldBeCheckedInFuture) {
                     positionsForFutureChecking.push(forbidden);
                 }

@@ -1,11 +1,11 @@
 import {Eatable} from './eatable.model';
 import {DrawableInterface} from '../../../common/interfaces/drawable.interface';
 import {Pixel} from '../../../common/model/pixel.model';
-import * as config from '../../../../config';
+import {Config} from '../../../../Config';
 
 export class Apple extends Eatable implements DrawableInterface {
-    public static readonly width = config.MOVE;
-    public static readonly height = config.MOVE;
+    public static readonly width = Config.MOVE;
+    public static readonly height = Config.MOVE;
 
     constructor(public x: number, public y: number) {
         super(x, y);

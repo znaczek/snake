@@ -12,9 +12,8 @@ import {MenuItemFactory} from './factory/menu-item.factory';
 import {menuData} from './data/menu.data';
 import {AppState} from '../../common/app-state';
 import {DrawingUtils} from './utils/drawing.utils';
-import * as config from '../../../config';
+import {Config} from '../../../Config';
 import {CustomViewInterface} from '../../common/interfaces/custom-view.interface';
-import {Pixel} from '../../common/model/pixel.model';
 
 export class Menu {
 
@@ -26,7 +25,8 @@ export class Menu {
     private currentMenuItem: MenuItem;
     private customView: CustomViewInterface = null;
 
-    constructor(private stageHandler: Subject<AppEvent>,
+    constructor(private config: Config,
+                private stageHandler: Subject<AppEvent>,
                 private canvas: Canvas,
                 private onClick: Observable<ClicksEnum>,
                 private textWriter: TextWriter,
@@ -119,7 +119,7 @@ export class Menu {
         const currentIndex = this.getCurrentIndex();
         const availableChildren = this.getVisibleChildren();
         const availableMenuSlots = availableChildren.reduce((acc: number, curr: MenuItem, index: number) => {
-            if ((index + 1) * MENU_ITEM_HEIGHT < config.CANVAS_HEIGHT - config.TOP_BAR_HEIGHT) {
+            if ((index + 1) * MENU_ITEM_HEIGHT < Config.CANVAS_HEIGHT - Config.TOP_BAR_HEIGHT) {
                 return acc + 1;
             }
             return acc;
@@ -131,7 +131,7 @@ export class Menu {
         }
 
         const drawableChildren = this.getVisibleChildren().filter((item: MenuItem, index: number) => {
-            return index >= this.offset && (index - this.offset + 1) * MENU_ITEM_HEIGHT < config.CANVAS_HEIGHT - config.TOP_BAR_HEIGHT;
+            return index >= this.offset && (index - this.offset + 1) * MENU_ITEM_HEIGHT < Config.CANVAS_HEIGHT - Config.TOP_BAR_HEIGHT;
         });
 
         this.canvas.prepareBoard();
@@ -140,11 +140,11 @@ export class Menu {
             .forEach((item: MenuItem, index: number) => {
                 let color = ColorsEnum.BLACK;
                 if (this.cursor === item.id) {
-                    this.canvas.drawPixels(DrawingUtils.getMenuItemBackground(index * MENU_ITEM_HEIGHT + config.TOP_BAR_HEIGHT));
+                    this.canvas.drawPixels(DrawingUtils.getMenuItemBackground(index * MENU_ITEM_HEIGHT + Config.TOP_BAR_HEIGHT));
                     color = ColorsEnum.GREEN;
                 }
                 const pixels = item.text.getPixels({
-                    offset: new Position(0, index * MENU_ITEM_HEIGHT + config.TOP_BAR_HEIGHT),
+                    offset: new Position(0, index * MENU_ITEM_HEIGHT + Config.TOP_BAR_HEIGHT),
                     color,
                 });
                 this.canvas.drawPixels(pixels, new Position(2, 2));

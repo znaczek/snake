@@ -7,7 +7,7 @@ import {Position} from '../../../../common/model/position.model';
 import {ClicksEnum} from '../../../../common/enums/clicks.enum';
 import {textLargeData} from '../../../../common/data/text-large.data';
 import {Pixel} from '../../../../common/model/pixel.model';
-import * as config from '../../../../../config';
+import {Config} from '../../../../../Config';
 import {AnimationDataInterface} from './animation-data.interface';
 import {animationData} from './animation.data';
 
@@ -46,7 +46,7 @@ export class TopScoreView implements CustomViewInterface {
         pixels.push(...this.textWriter.write(topScore.toString()).getPixels({
             offset: new Position(2, 20),
         }));
-        pixels.push(...this.getAnimationPixels(counter, new Position(config.CANVAS_WIDTH - 4 * TopScoreView.STAR_WIDTH, 1)));
+        pixels.push(...this.getAnimationPixels(counter, new Position(Config.CANVAS_WIDTH - 4 * TopScoreView.STAR_WIDTH, 1)));
 
         this.canvas.prepareBoard();
         this.canvas.drawPixels(pixels);

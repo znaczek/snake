@@ -1,7 +1,7 @@
 import {fromEvent} from 'rxjs/index';
 import {Pixel} from './model/pixel.model';
 import {Canvas} from './canvas';
-import * as config from '../../config';
+import {Config} from '../../Config';
 import {mergeMap, takeUntil, tap} from 'rxjs/internal/operators';
 import {ColorsEnum} from './enums/color.enums';
 import {Position} from './model/position.model';
@@ -66,8 +66,8 @@ export class Blackboard {
 
     private drawPixel(e: MouseEvent, type: number): void {
         const newPixel = new Pixel(
-            Math.round(this.getX(e) / config.PIXEL_SIZE),
-            Math.round(this.getY(e) / config.PIXEL_SIZE),
+            Math.round(this.getX(e) / Config.PIXEL_SIZE),
+            Math.round(this.getY(e) / Config.PIXEL_SIZE),
             ColorsEnum.RED,
         );
 

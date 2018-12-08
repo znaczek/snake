@@ -1,10 +1,10 @@
 import './style.css';
 import {App} from './app/app';
-import * as config from './config';
+import {Config} from './Config';
 
 const appRoot: HTMLElement = document.getElementById('app-root');
 const canvas: HTMLCanvasElement = document.createElement('canvas');
-if (config.DEBUG_INTRO) {
+if (Config.DEBUG_INTRO) {
     canvas.classList.add('debug');
 }
 new App(canvas, document.getElementById('keyboard')).run();

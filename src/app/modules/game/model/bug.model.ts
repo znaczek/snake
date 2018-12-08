@@ -3,12 +3,12 @@ import {Eatable} from './eatable.model';
 import {bugData} from '../data/bug.data';
 import {Pixel} from '../../../common/model/pixel.model';
 import {DrawableInterface} from '../../../common/interfaces/drawable.interface';
-import * as config from '../../../../config';
+import {Config} from '../../../../Config';
 import {Position} from '../../../common/model/position.model';
 
 export class Bug extends Eatable implements DrawableInterface {
-    public static readonly width: number = config.MOVE * 2;
-    public static readonly height: number = config.MOVE;
+    public static readonly width: number = Config.MOVE * 2;
+    public static readonly height: number = Config.MOVE;
 
     public value: number;
 

@@ -1,56 +1,56 @@
-import * as config from '../../../../config';
+import {Config} from '../../../../Config';
 import {Position} from '../../../common/model/position.model';
 import {Pixel} from '../../../common/model/pixel.model';
 import {ColorsEnum} from '../../../common/enums/color.enums';
 
 export const getGameBoardOffset = (): Position => {
     return new Position(
-        config.BOARD.start.x,
-        config.BOARD.start.y + config.TOP_BAR_HEIGHT,
+        Config.BOARD.start.x,
+        Config.BOARD.start.y + Config.TOP_BAR_HEIGHT,
     );
 };
 
 export const getGameBoarderPixels = (): Pixel[] => {
     const pixels: Pixel[] = [];
     for (
-        let i = config.TOP_BAR_HEIGHT;
-        i < config.GAME_CANVAS_HEIGHT + config.TOP_BAR_HEIGHT;
+        let i = Config.TOP_BAR_HEIGHT;
+        i < Config.GAME_CANVAS_HEIGHT + Config.TOP_BAR_HEIGHT;
         i += 1
     ) {
         pixels.push(new Pixel(0, i));
-        pixels.push(new Pixel(config.GAME_CANVAS_WIDTH - 1, i));
+        pixels.push(new Pixel(Config.GAME_CANVAS_WIDTH - 1, i));
     }
     for (
         let i = 0;
-        i < config.GAME_CANVAS_WIDTH;
+        i < Config.GAME_CANVAS_WIDTH;
         i += 1
     ) {
-        pixels.push(new Pixel(i, config.TOP_BAR_HEIGHT));
-        pixels.push(new Pixel(i, config.TOP_BAR_HEIGHT - 2));
-        pixels.push(new Pixel(i, config.GAME_CANVAS_HEIGHT + config.TOP_BAR_HEIGHT - 1));
+        pixels.push(new Pixel(i, Config.TOP_BAR_HEIGHT));
+        pixels.push(new Pixel(i, Config.TOP_BAR_HEIGHT - 2));
+        pixels.push(new Pixel(i, Config.GAME_CANVAS_HEIGHT + Config.TOP_BAR_HEIGHT - 1));
     }
     return pixels;
 };
 
 export const getMaskPixels = (): Pixel[] => {
     const pixels: Pixel[] = [];
-    const color = config.DEBUG_CANVAS ? ColorsEnum.RED : ColorsEnum.GREEN;
+    const color = Config.DEBUG_CANVAS ? ColorsEnum.RED : ColorsEnum.GREEN;
     for (
-        let i = config.BOARD.start.y + config.TOP_BAR_HEIGHT - 1;
-        i < config.GAME_CANVAS_HEIGHT + config.TOP_BAR_HEIGHT - 1;
+        let i = Config.BOARD.start.y + Config.TOP_BAR_HEIGHT - 1;
+        i < Config.GAME_CANVAS_HEIGHT + Config.TOP_BAR_HEIGHT - 1;
         i += 1
     ) {
         pixels.push(new Pixel(1, i, color));
-        pixels.push(new Pixel(config.GAME_CANVAS_WIDTH - 2, i, color));
+        pixels.push(new Pixel(Config.GAME_CANVAS_WIDTH - 2, i, color));
     }
     for (
         let i = 1;
-        i < config.GAME_CANVAS_WIDTH - 1;
+        i < Config.GAME_CANVAS_WIDTH - 1;
         i += 1
     ) {
-        pixels.push(new Pixel(i, config.TOP_BAR_HEIGHT -1, color));
-        pixels.push(new Pixel(i, config.TOP_BAR_HEIGHT + 1, color));
-        pixels.push(new Pixel(i, config.TOP_BAR_HEIGHT + config.GAME_CANVAS_HEIGHT - 2, color));
+        pixels.push(new Pixel(i, Config.TOP_BAR_HEIGHT -1, color));
+        pixels.push(new Pixel(i, Config.TOP_BAR_HEIGHT + 1, color));
+        pixels.push(new Pixel(i, Config.TOP_BAR_HEIGHT + Config.GAME_CANVAS_HEIGHT - 2, color));
     }
 
     return pixels;

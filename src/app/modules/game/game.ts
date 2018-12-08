@@ -1,6 +1,6 @@
 import {Canvas} from '../../common/canvas';
 import {Snake} from './snake';
-import * as config from '../../../config';
+import {Config} from '../../../Config';
 import {MealFactory} from './factory/meal.factory';
 import {Apple} from './model/apple.model';
 import {Observable, Subject, Subscription} from 'rxjs/index';
@@ -29,7 +29,8 @@ export class Game {
     private gameState: GameStateEnum;
     private paused: boolean = false;
 
-    constructor(private stageHandler: Subject<AppEvent>,
+    constructor(private config: Config,
+                private stageHandler: Subject<AppEvent>,
                 private canvas: Canvas,
                 private onClick: Observable<ClicksEnum>,
                 private textWriter: TextWriter,
@@ -40,7 +41,7 @@ export class Game {
     }
 
     public start(resumed: boolean): Game {
-        this.speed = config.SPEED / AppState.getLevel();
+        this.speed = Config.SPEED / AppState.getLevel();
         this.maze = AppState.getMaze();
         this.bindEvents();
         this.canvas.clear();
@@ -93,7 +94,7 @@ export class Game {
                     }
                     this.paused = false;
                 }
-                if (config.DEBUG_MOVING) {
+                if (Config.DEBUG_MOVING) {
                     this.testMove();
                 }
             }
@@ -213,7 +214,7 @@ export class Game {
         if (this.bug) {
             gameBoardPixels.push(...this.bug.getPixels());
             const bugPointsLeftText = this.textWriter.write(TextWriter.padStart(this.bug.value.toString(), '0', 2));
-            const xBugPointsOffset = config.CANVAS_WIDTH - (2 * textSmallData[0].width);
+            const xBugPointsOffset = Config.CANVAS_WIDTH - (2 * textSmallData[0].width);
             const xBugOffset = xBugPointsOffset - 2 - Bug.width;
             absolutePixels.push(...this.bug.getPixels({
                 offset: new Position(xBugOffset, 2),
@@ -231,7 +232,7 @@ export class Game {
     }
 
     private loop(): void {
-        if (!config.DEBUG_MOVING) {
+        if (!Config.DEBUG_MOVING) {
             if (this.gameState === GameStateEnum.GAME) {
                 this.handleMove();
                 this.interval = setTimeout(this.loop.bind(this), this.speed);

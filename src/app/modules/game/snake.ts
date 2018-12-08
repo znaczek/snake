@@ -1,4 +1,4 @@
-import * as config from '../../../config';
+import {Config} from '../../../Config';
 import {DirectionEnum} from '../../common/enums/direction.enum';
 import {BodyPartEnum} from './enums/body-part.enum';
 import {Position} from '../../common/model/position.model';
@@ -274,8 +274,8 @@ export class Snake implements DrawableInterface {
     private didTailJumped() {
         const oldTail = this.oldBody[this.oldBody.length - 1];
         const newTail = this.body[this.body.length - 1];
-        return Math.abs(oldTail.position.x - newTail.position.x) > config.MOVE * 2 ||
-            Math.abs(oldTail.position.y - newTail.position.y) > config.MOVE * 2;
+        return Math.abs(oldTail.position.x - newTail.position.x) > Config.MOVE * 2 ||
+            Math.abs(oldTail.position.y - newTail.position.y) > Config.MOVE * 2;
     }
 
     private getNewHead(head: BodyPart): BodyPart {
@@ -286,35 +286,35 @@ export class Snake implements DrawableInterface {
         if (this.direction !== this.lastDirection) {
             switch (this.lastDirection) {
                 case DirectionEnum.RIGHT:
-                    newHeadPosition.x += (config.MOVE + 1);
+                    newHeadPosition.x += (Config.MOVE + 1);
                     newHeadPosition.y -= 1;
                     break;
                 case DirectionEnum.UP:
                     newHeadPosition.x -= 1;
-                    newHeadPosition.y -= (config.MOVE - 1);
+                    newHeadPosition.y -= (Config.MOVE - 1);
                     break;
                 case DirectionEnum.LEFT:
-                    newHeadPosition.x -= (config.MOVE - 1);
+                    newHeadPosition.x -= (Config.MOVE - 1);
                     newHeadPosition.y -= 1;
                     break;
                 case DirectionEnum.DOWN:
                     newHeadPosition.x -= 1;
-                    newHeadPosition.y += config.MOVE + 1;
+                    newHeadPosition.y += Config.MOVE + 1;
                     break;
             }
         } else {
             switch (this.direction) {
                 case DirectionEnum.RIGHT:
-                    newHeadPosition.x += config.MOVE;
+                    newHeadPosition.x += Config.MOVE;
                     break;
                 case DirectionEnum.LEFT:
-                    newHeadPosition.x -= config.MOVE;
+                    newHeadPosition.x -= Config.MOVE;
                     break;
                 case DirectionEnum.UP:
-                    newHeadPosition.y -= config.MOVE;
+                    newHeadPosition.y -= Config.MOVE;
                     break;
                 case DirectionEnum.DOWN:
-                    newHeadPosition.y += config.MOVE;
+                    newHeadPosition.y += Config.MOVE;
                     break;
             }
         }
@@ -328,14 +328,14 @@ export class Snake implements DrawableInterface {
     private getRecalculatedHeadPosition(newHead: BodyPart): Position {
         const recalculatedPosition = new Position(newHead.position.x, newHead.position.y);
         const nose = this.getNose(newHead);
-        if (this.direction === DirectionEnum.RIGHT && nose.x >= config.BOARD.end.x) {
-            recalculatedPosition.x -= (config.BOARD_WIDTH);
+        if (this.direction === DirectionEnum.RIGHT && nose.x >= Config.BOARD.end.x) {
+            recalculatedPosition.x -= (Config.BOARD_WIDTH);
         } else if (this.direction === DirectionEnum.LEFT && nose.x <= 0) {
-            recalculatedPosition.x += (config.BOARD_WIDTH);
-        } else if (this.direction === DirectionEnum.DOWN && nose.y >= config.BOARD.end.y) {
-            recalculatedPosition.y -= (config.BOARD_HEIGHT);
+            recalculatedPosition.x += (Config.BOARD_WIDTH);
+        } else if (this.direction === DirectionEnum.DOWN && nose.y >= Config.BOARD.end.y) {
+            recalculatedPosition.y -= (Config.BOARD_HEIGHT);
         } else if (this.direction === DirectionEnum.UP && nose.y <= 0) {
-            recalculatedPosition.y += (config.BOARD_HEIGHT);
+            recalculatedPosition.y += (Config.BOARD_HEIGHT);
         }
         return recalculatedPosition;
     }
@@ -345,21 +345,21 @@ export class Snake implements DrawableInterface {
     }
 
     private getInitialState (): BodyPart[] {
-        const bodyLength = config.INIT_LENGTH;
+        const bodyLength = Config.INIT_LENGTH;
         const initialState = [
             this.buildInitialPart(
                 BodyPartEnum.HEAD,
-                new Pixel(config.INIT_HEAD.x, config.INIT_HEAD.y),
+                new Pixel(Config.INIT_HEAD.x, Config.INIT_HEAD.y),
             ),
         ];
         for (let i = 1; i <= bodyLength; i += 1) {
             initialState.push(this.buildInitialPart(
                 BodyPartEnum.BODY,
-                new Pixel(config.INIT_HEAD.x - i * config.MOVE, config.INIT_HEAD.y)),
+                new Pixel(Config.INIT_HEAD.x - i * Config.MOVE, Config.INIT_HEAD.y)),
             );
         }
         initialState.push(this.buildInitialPart(
-            BodyPartEnum.TAIL, new Pixel(config.INIT_HEAD.x - (bodyLength + 1) * config.MOVE, config.INIT_HEAD.y)),
+            BodyPartEnum.TAIL, new Pixel(Config.INIT_HEAD.x - (bodyLength + 1) * Config.MOVE, Config.INIT_HEAD.y)),
         );
 
         return initialState;
