@@ -6,13 +6,12 @@ import {TextWriter} from './common/text-writer';
 import {AppEvent} from './common/model/game-event.model';
 import {Intro} from './modules/intro/intro';
 import {Menu} from './modules/menu/menu';
-import {map, filter} from 'rxjs/operators';
+import {filter, map, startWith} from 'rxjs/operators';
 import {ClicksEnum} from './common/enums/clicks.enum';
 import {MenuItemFactory} from './modules/menu/factory/menu-item.factory';
 import {DrawingUtils} from './modules/menu/utils/drawing.utils';
 import {Blackboard} from './common/blackboard';
-import {WindowParamsInterface} from './common/interfaces/window-params.interface';
-import {OrientationEnum} from './common/enums/orientation.enum';
+import {WindowParams} from './common/model/window-params.model';
 
 export class App {
     private canvas: Canvas;
@@ -22,7 +21,7 @@ export class App {
     private mealFactory: MealFactory;
     private textWriter: TextWriter;
     private onClick: Observable<ClicksEnum>;
-    private windowParams: Observable<WindowParamsInterface>;
+    private windowParams: Observable<WindowParams>;
     private stageHandler: Subject<AppEvent>;
     private menuItemFactory: MenuItemFactory;
     private drawingUtils: DrawingUtils;
@@ -45,19 +44,14 @@ export class App {
                 filter((event) =>  event in ClicksEnum),
             ),
         );
-
         this.windowParams = fromEvent(window, 'resize').pipe(
             map((event: Event ) => {
                 const eventTarget = <Window>event.target;
-                return {
-                    width: eventTarget.innerWidth,
-                    height: eventTarget.innerHeight,
-                    orientation: eventTarget.innerHeight > eventTarget.innerWidth ?
-                        OrientationEnum.VERTICAL : OrientationEnum.HORIONTAL,
-                };
+                return new WindowParams(eventTarget.innerWidth, eventTarget.innerHeight);
             }),
+            startWith(new WindowParams(window.innerWidth, window.innerHeight)),
         );
-
+        this.windowParams.subscribe((v) => console.log(v));
         this.stageHandler = new Subject<AppEvent>();
         this.mealFactory = new MealFactory();
         this.canvas = new Canvas(canvas);
@@ -91,16 +85,33 @@ export class App {
     }
 
     private createIntro() {
-        this.intro = new Intro(this.stageHandler, this.canvas).start();
+        this.intro = new Intro(
+            this.stageHandler,
+            this.canvas,
+        ).start();
     }
 
     private createMenu() {
-        this.menu = new Menu(this.stageHandler, this.canvas, this.onClick, this.textWriter, this.menuItemFactory, this.drawingUtils).start();
+        this.menu = new Menu(
+            this.stageHandler,
+            this.canvas,
+            this.onClick,
+            this.textWriter,
+            this.menuItemFactory,
+            this.drawingUtils,
+        ).start();
     }
 
     private createGame(payload: {resumed: boolean}) {
-        this.game = new Game(this.stageHandler, this.canvas, this.onClick, this.textWriter, this.mealFactory).start(payload.resumed);
+        this.game = new Game(
+            this.stageHandler,
+            this.canvas,
+            this.onClick,
+            this.textWriter,
+            this.mealFactory,
+        ).start(payload.resumed);
     }
+
     private createBlackBoard() {
         this.board = new Blackboard(this.canvas);
     }
