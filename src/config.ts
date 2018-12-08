@@ -12,11 +12,11 @@ export const DEBUG_INTRO = false;
 export const DEBUG_CANVAS = false;
 export const DEBUG_MOVING = false;
 
+export const MOVE = 4;
 export const PIXEL_SIZE = 10;
 export const TOP_BAR_HEIGHT = 9;
-export const GAME_CANVAS_WIDTH = 96;
-export const GAME_CANVAS_HEIGHT = 56;
-export const MOVE = 4;
+export const GAME_CANVAS_WIDTH = 20 * MOVE;
+export const GAME_CANVAS_HEIGHT = 16 * MOVE;
 export const SPEED = 200;
 
 export const INIT_HEAD = {

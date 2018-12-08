@@ -11,6 +11,8 @@ import {ClicksEnum} from './common/enums/clicks.enum';
 import {MenuItemFactory} from './modules/menu/factory/menu-item.factory';
 import {DrawingUtils} from './modules/menu/utils/drawing.utils';
 import {Blackboard} from './common/blackboard';
+import {WindowParamsInterface} from './common/interfaces/window-params.interface';
+import {OrientationEnum} from './common/enums/orientation.enum';
 
 export class App {
     private canvas: Canvas;
@@ -20,6 +22,7 @@ export class App {
     private mealFactory: MealFactory;
     private textWriter: TextWriter;
     private onClick: Observable<ClicksEnum>;
+    private windowParams: Observable<WindowParamsInterface>;
     private stageHandler: Subject<AppEvent>;
     private menuItemFactory: MenuItemFactory;
     private drawingUtils: DrawingUtils;
@@ -32,6 +35,19 @@ export class App {
             }),
             filter((event) =>  event in ClicksEnum),
         );
+
+        this.windowParams = fromEvent(window, 'resize').pipe(
+            map((event: Event ) => {
+                const eventTarget = <Window>event.target;
+                return {
+                    width: eventTarget.innerWidth,
+                    height: eventTarget.innerHeight,
+                    orientation: eventTarget.innerHeight > eventTarget.innerWidth ?
+                        OrientationEnum.VERTICAL : OrientationEnum.HORIONTAL,
+                };
+            }),
+        );
+
         this.stageHandler = new Subject<AppEvent>();
         this.mealFactory = new MealFactory();
         this.canvas = new Canvas(canvas);

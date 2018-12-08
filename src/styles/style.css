@@ -1,20 +1,27 @@
 * {
     box-sizing: border-box;
 }
+html {
+    font-size: 20px;
+}
 body {
-    background-color: #0e52ab;
+    background-color: #819c0a;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
 }
 
 #app-root {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+
 }
 
 canvas {
     display: none;
     background-color: #a4c70b;
+    width: 100%;
 }
 
 canvas.debug {
@@ -22,3 +29,99 @@ canvas.debug {
     background-position: -375px -97px;
     background-size: 1709px;
 }
+#keyboard {
+    height: 6rem;
+    width: 12rem;
+    position: relative;
+}
+
+#keyboard button {
+    font-size: inherit;
+    position: absolute;
+    background: #a4c70b;
+    border: none;
+    padding: 0;
+}
+
+#keyboard button:focus {
+    outline: none;
+}
+
+#keyboard button:active {
+    background: #617508;
+}
+
+button.direction {
+    height: 2em;
+    width: 2em;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+button.escape, button.enter {
+    bottom: 0;
+    width: 3.8em;
+}
+
+button.escape {
+    left: 0;
+}
+
+button.enter {
+    right: 0;
+}
+
+.arrow {
+    width: 1em;
+    height: 1em;
+    border-left: 2px solid black;
+    border-bottom: 2px solid black;
+}
+
+button.left {
+    top: 50%;
+    left: 25%;
+    transform: translateY(-50%);
+}
+
+button.left .arrow {
+    transform: rotate(45deg);
+    margin-left: 5px;
+}
+
+button.up {
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+button.up .arrow {
+    transform: rotate(135deg);
+    margin-top: 5px;
+}
+
+button.right {
+    top: 50%;
+    right: 25%;
+    transform: translateY(-50%);
+}
+
+button.right .arrow {
+    transform: rotate(225deg);
+    margin-right: 5px;
+
+}
+
+button.down {
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+button.down .arrow {
+    transform: rotate(315deg);
+    margin-bottom: 5px;
+}
+
