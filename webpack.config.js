@@ -35,7 +35,8 @@ module.exports = (env, argv) => {
             contentBase: path.join(__dirname, 'dist'),
             inline: true,
             compress: true,
-            port: 4200
+            port: 80,
+            host: '0.0.0.0',
         }
     };
 

@@ -14,10 +14,6 @@ body {
     overflow: hidden;
 }
 
-#app-root {
-
-}
-
 canvas {
     display: none;
     background-color: #a4c70b;
@@ -30,23 +26,28 @@ canvas.debug {
     background-size: 1709px;
 }
 #keyboard {
-    display: none;
     min-height: 6rem;
-    height: 6rem;
-    width: 12rem;
+    height: 7rem;
+    width: 16rem;
     position: relative;
+    overflow: hidden;
+    background: red;
+    padding: 0 2.5rem;
+    margin-top: 20px;
 }
-
-html.mobile #keyboard {
-    display: block;
+#keyboard .arrows {
+    overflow: hidden;
+    width: 11rem;
+    height: 100%;
+    position: relative;
 }
 
 #keyboard button {
     font-size: inherit;
     position: absolute;
     background: #a4c70b;
-    border: none;
     padding: 0;
+    border: 1px solid black;
 }
 
 #keyboard button:focus {
@@ -58,25 +59,12 @@ html.mobile #keyboard {
 }
 
 button.direction {
-    height: 2em;
-    width: 2em;
-    border-radius: 50%;
+    height: 4.94rem;
+    width: 4.94rem;
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-button.escape, button.enter {
-    bottom: 0;
-    width: 3.8em;
-}
-
-button.escape {
-    left: 0;
-}
-
-button.enter {
-    right: 0;
+    transform: translate(-50%, -50%) scaleX(1.571) rotate(-45deg)
 }
 
 .arrow {
@@ -88,46 +76,64 @@ button.enter {
 
 button.left {
     top: 50%;
-    left: 25%;
-    transform: translateY(-50%);
+    left: 0;
 }
 
 button.left .arrow {
-    transform: rotate(45deg);
-    margin-left: 5px;
+    transform: rotate(90deg);
+    margin-top: 40px;
+    margin-left: 40px;
 }
 
 button.up {
-    top: 10%;
+    top: 0;
     left: 50%;
-    transform: translateX(-50%);
 }
 
 button.up .arrow {
-    transform: rotate(135deg);
-    margin-top: 5px;
+    transform: rotate(180deg);
+    margin-top: 40px;
+    margin-left: -40px;
 }
 
 button.right {
     top: 50%;
-    right: 25%;
-    transform: translateY(-50%);
+    left: 100%;
 }
 
 button.right .arrow {
-    transform: rotate(225deg);
-    margin-right: 5px;
+    transform: rotate(270deg);
+    margin-top: -40px;
+    margin-left: -40px;
 
 }
 
 button.down {
-    bottom: 10%;
+    bottom: -70.7%;
     left: 50%;
-    transform: translateX(-50%);
 }
 
 button.down .arrow {
-    transform: rotate(315deg);
-    margin-bottom: 5px;
+    transform: rotate(0);
+    margin-top: -40px;
+    margin-left: 40px;
 }
 
+button.escape, button.enter {
+    bottom: 0;
+    width: 2.5rem;
+    height: 100%;
+    vertical-align: middle;
+}
+
+button.escape svg, button.enter svg {
+    width: 100%;
+}
+
+button.escape {
+    left: 0;
+}
+
+button.enter {
+    right: 0;
+}
