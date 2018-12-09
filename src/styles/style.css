@@ -30,9 +30,15 @@ canvas.debug {
     background-size: 1709px;
 }
 #keyboard {
+    display: none;
+    min-height: 6rem;
     height: 6rem;
     width: 12rem;
     position: relative;
+}
+
+html.mobile #keyboard {
+    display: block;
 }
 
 #keyboard button {
