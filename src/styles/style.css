@@ -1,23 +1,7 @@
-* {
-    box-sizing: border-box;
-}
-html {
-    font-size: 20px;
-}
-body {
-    background-color: #819c0a;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-}
-
 canvas {
     display: none;
     background-color: #a4c70b;
-    width: 100%;
+    width: 480px;
 }
 
 canvas.debug {
@@ -26,97 +10,22 @@ canvas.debug {
     background-size: 1709px;
 }
 #keyboard {
-    min-height: 6rem;
-    height: 7rem;
-    width: 16rem;
-    position: relative;
-    overflow: hidden;
-    background: red;
-    padding: 0 2.5rem;
     margin-top: 20px;
-}
-#keyboard .arrows {
-    overflow: hidden;
-    width: 11rem;
-    height: 100%;
-    position: relative;
+    width: 320px;
 }
 
-#keyboard button {
-    font-size: inherit;
-    position: absolute;
-    background: #a4c70b;
-    padding: 0;
-    border: 1px solid black;
+#keyboard polygon, rect {
+    fill: #a4c70b;
+    stroke: black;
 }
 
-#keyboard button:focus {
-    outline: none;
+
+#keyboard polygon:active, rect:active {
+    fill: #617508;
 }
 
-#keyboard button:active {
-    background: #617508;
-}
-
-button.direction {
-    height: 4.94rem;
-    width: 4.94rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transform: translate(-50%, -50%) scaleX(1.571) rotate(-45deg)
-}
-
-.arrow {
-    width: 1em;
-    height: 1em;
-    border-left: 2px solid black;
-    border-bottom: 2px solid black;
-}
-
-button.left {
-    top: 50%;
-    left: 0;
-}
-
-button.left .arrow {
-    transform: rotate(90deg);
-    margin-top: 40px;
-    margin-left: 40px;
-}
-
-button.up {
-    top: 0;
-    left: 50%;
-}
-
-button.up .arrow {
-    transform: rotate(180deg);
-    margin-top: 40px;
-    margin-left: -40px;
-}
-
-button.right {
-    top: 50%;
-    left: 100%;
-}
-
-button.right .arrow {
-    transform: rotate(270deg);
-    margin-top: -40px;
-    margin-left: -40px;
-
-}
-
-button.down {
-    bottom: -70.7%;
-    left: 50%;
-}
-
-button.down .arrow {
-    transform: rotate(0);
-    margin-top: -40px;
-    margin-left: 40px;
+#keyboard g {
+    pointer-events: none;
 }
 
 button.escape, button.enter {

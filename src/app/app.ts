@@ -82,9 +82,9 @@ export class App {
                 }
             }
         });
-        // this.createIntro();
+        this.createIntro();
         // this.createGame({resumed: false});
-        this.createMenu();
+        // this.createMenu();
         // this.createBlackBoard();
     }
 

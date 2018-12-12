@@ -7,21 +7,22 @@
     <title>Snake</title>
 </head>
 <body>
-    <div id="app-root"></div>
-    <div id="keyboard" style="display: none">
-        <div class="arrows">
-            <button data-code="37" class="left direction"><div class="arrow"></div></button>
-            <button data-code="38" class="up direction"><div class="arrow"></div></button>
-            <button data-code="39" class="right direction"><div class="arrow"></div></button>
-            <button data-code="40" class="down direction"><div class="arrow"></div></button>
-        </div>
-
-        <button data-code="27" class="escape">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 7v4H5.83l3.58-3.59L8 6l-6 6 6 6 1.41-1.41L5.83 13H21V7z"/></svg>
-        </button>
-        <button data-code="13" class="enter">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
-        </button>
-    </div>
+<div id="app-root"></div>
+<svg id="keyboard" viewBox="0 0 200 130" preserveAspectRatio="xMinYMin slice" display="none">
+    <polygon data-code="37" points="0,0 100,50 0,100"/>
+    <polygon data-code="38" points="0,0 100,50 200,0"/>
+    <polygon data-code="39" points="200,0 100,50 200,100"/>
+    <polygon data-code="40" points="0,100 100,50 200,100"/>
+    <rect data-code="27" x="0" y="100" width="100" height="30"></rect>
+    <rect data-code="13" x="100" y="100" width="100" height="30"></rect>
+    <g transform="translate(40, 105)">
+        <path d="M0 0h24v24H0z" fill="none"/>
+        <path d="M19 7v4H5.83l3.58-3.59L8 6l-6 6 6 6 1.41-1.41L5.83 13H21V7z"/>
+    </g>
+    <g transform="translate(140, 104)">
+        <path fill="none" d="M0 0h24v24H0z"/>
+        <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+    </g>
+</svg>
 </body>
 </html>
