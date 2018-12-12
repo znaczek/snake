@@ -40,11 +40,11 @@ export class Config {
     )(navigator.userAgent || navigator.vendor || window.opera);
 
     public static readonly GAME_CANVAS_WIDTH = (() => {
-        return Config.MOVE * (Config.isMobile ? 20 : 24);
+        return Config.MOVE * (Config.isMobile ? 24 : 24);
     }) ();
 
     public static readonly GAME_CANVAS_HEIGHT = (() => {
-        return Config.MOVE * (Config.isMobile ? 16 : 14);
+        return Config.MOVE * (Config.isMobile ? 14 : 14);
     }) ();
 
     public static readonly SPEED = 200;
@@ -75,13 +75,12 @@ export class Config {
         },
     };
 
-    constructor(private windowParams: Observable<WindowParams>) {
+    constructor(private windowParams$: Observable<WindowParams>) {
     }
 
-    // TODO change 1px always
     public get pixelSpace$() {
-        return this.windowParams.pipe(
-            map((params) => (Config.isMobile && params.isHorizontal ? params.height : params.width) >= 480 ? 1 : 1),
+        return this.windowParams$.pipe(
+            map((params) => (Config.isMobile && params.isHorizontal ? params.height : params.width) >= 480 ? 1 : 0),
         );
     }
 

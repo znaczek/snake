@@ -9,9 +9,14 @@ canvas.debug {
     background-position: -375px -97px;
     background-size: 1709px;
 }
+
 #keyboard {
     margin-top: 20px;
     width: 320px;
+}
+
+html:not(.mobile) #keyboard {
+    display: none !important;
 }
 
 #keyboard polygon, rect {

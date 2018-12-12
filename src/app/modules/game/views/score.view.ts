@@ -10,19 +10,19 @@ export class ScoreView implements CustomViewInterface {
     private static readonly GAME_OVER = 'Game over!';
     private static readonly YOUR_SCORE = 'Your score:';
 
-    public exit: Subject<void> = new Subject();
+    public exit$: Subject<void> = new Subject();
 
     constructor(private canvas: Canvas,
                 private textWriter: TextWriter,
-                private onClick: Observable<ClicksEnum>) {
+                private onClick$: Observable<ClicksEnum>) {
         this.textWriter.setCharData(textLargeData);
 
-        const onClickSubscription = this.onClick.subscribe(() => {
+        const onClickSubscription = this.onClick$.subscribe(() => {
             onClickSubscription.unsubscribe();
-            this.exit.next();
+            this.exit$.next();
         });
         setTimeout(() => {
-            this.exit.next();
+            this.exit$.next();
         }, 3000);
     }
 

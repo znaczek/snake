@@ -28,7 +28,7 @@ export class Menu {
     constructor(private config: Config,
                 private stageHandler: Subject<AppEvent>,
                 private canvas: Canvas,
-                private onClick: Observable<ClicksEnum>,
+                private onClick$: Observable<ClicksEnum>,
                 private textWriter: TextWriter,
                 private menuItemFactory: MenuItemFactory,
                 private drawingUtils: DrawingUtils) {
@@ -36,7 +36,7 @@ export class Menu {
     }
 
     public start(): Menu {
-        this.onClickSubscription = this.onClick.subscribe((event) => {
+        this.onClickSubscription = this.onClick$.subscribe((event) => {
             if (this.customView) {
                 return;
             }
@@ -104,9 +104,9 @@ export class Menu {
     private drawMenu() {
         if (this.currentMenuItem.customView) {
             this.customView = new this.currentMenuItem.customView(
-                this.canvas, this.textWriter, this.onClick, this.drawingUtils,
+                this.canvas, this.textWriter, this.onClick$, this.drawingUtils,
             );
-            const exitSubscription = this.customView.exit.subscribe(() => {
+            const exitSubscription = this.customView.exit$.subscribe(() => {
                 exitSubscription.unsubscribe();
                 this.currentMenuItem = this.currentMenuItem.parent;
                 this.customView = null;

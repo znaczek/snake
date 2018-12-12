@@ -5,14 +5,14 @@ import {stageData} from './data/stage.data';
 import {Pixel} from '../../common/model/pixel.model';
 
 export class Intro {
-    constructor (private stageHandler: Subject<AppEvent>, private canvas: Canvas) {
+    constructor (private stageHandler$: Subject<AppEvent>, private canvas: Canvas) {
     }
 
     public start(): Intro {
         this.canvas.prepareBoard();
         this.canvas.drawPixels(stageData.map((item) => new Pixel(item.x, item.y)));
         setTimeout(() => {
-            this.stageHandler.next(AppEvent.startMenu());
+            this.stageHandler$.next(AppEvent.startMenu());
         }, 2500);
 
         return this;

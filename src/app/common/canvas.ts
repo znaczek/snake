@@ -8,7 +8,7 @@ import {scan, tap} from 'rxjs/internal/operators';
 
 export class Canvas {
     private ctx: CanvasRenderingContext2D = null;
-    private drawer: Subject<Pixel[]> = new Subject();
+    private drawer$: Subject<Pixel[]> = new Subject();
 
     constructor(private canvas: HTMLCanvasElement,
                 private config: Config) {
@@ -22,7 +22,7 @@ export class Canvas {
         this.ctx.scale(1, 1);
         combineLatest(
             this.config.pixelSpace$.pipe(tap(() => this._clear())),
-            this.drawer.pipe(scan((a, b) => !b ? [] : [...a, ...b], [])),
+            this.drawer$.pipe(scan((a, b) => !b ? [] : [...a, ...b], [])),
         ).subscribe(([pixelSpace, pixels]) => {
             this._drawPixels(pixels, pixelSpace);
         });
@@ -30,7 +30,7 @@ export class Canvas {
 
     public clear(): void {
         this._clear();
-        this.drawer.next();
+        this.drawer$.next();
     }
 
     public prepareBoard(): void {
@@ -41,7 +41,7 @@ export class Canvas {
     }
 
     public drawPixels(pixels: Pixel[], offset: Position = new Position(0, 0)): void {
-        this.drawer.next(pixels.map((pixel: Pixel) => new Pixel(pixel.x + offset.x, pixel.y + offset.y, pixel.color)));
+        this.drawer$.next(pixels.map((pixel: Pixel) => new Pixel(pixel.x + offset.x, pixel.y + offset.y, pixel.color)));
     }
 
     private drawPixel(pixel: Pixel, pixelSpace: number): void {

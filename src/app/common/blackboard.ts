@@ -16,7 +16,7 @@ export class Blackboard {
         const move$ = fromEvent(document, 'mousemove');
         const down$ = fromEvent(document, 'mousedown');
         const up$ = fromEvent(document, 'mouseup');
-        const contextmenu$ = fromEvent(document, 'contextmenu').subscribe((e: MouseEvent) => e.preventDefault());
+        fromEvent(document, 'contextmenu').subscribe((e: MouseEvent) => e.preventDefault());
         down$.pipe(
             tap((event: MouseEvent) => {
                 event.preventDefault();

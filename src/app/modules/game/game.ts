@@ -30,9 +30,9 @@ export class Game {
     private paused: boolean = false;
 
     constructor(private config: Config,
-                private stageHandler: Subject<AppEvent>,
+                private stageHandler$: Subject<AppEvent>,
                 private canvas: Canvas,
-                private onClick: Observable<ClicksEnum>,
+                private onClick$: Observable<ClicksEnum>,
                 private textWriter: TextWriter,
                 private mealFactory: MealFactory,
                 ) {
@@ -66,7 +66,7 @@ export class Game {
     }
 
     private bindEvents(): void {
-        this.onClickSubscribe = this.onClick.subscribe((event) => {
+        this.onClickSubscribe = this.onClick$.subscribe((event) => {
             if (this.gameState === GameStateEnum.GAME) {
                 switch (event) {
                     case ClicksEnum.LEFT:
@@ -154,7 +154,7 @@ export class Game {
             bug: this.bug,
         });
         this.close();
-        this.stageHandler.next(AppEvent.endGame());
+        this.stageHandler$.next(AppEvent.endGame());
     }
 
     private drawEndState(counter: number = 7): void {
@@ -173,11 +173,11 @@ export class Game {
 
     private drawHighScore() {
         this.gameState = GameStateEnum.HIGH_SCORE;
-        const scoreView = new ScoreView(this.canvas, this.textWriter, this.onClick);
-        const subscription = scoreView.exit.subscribe(() => {
+        const scoreView = new ScoreView(this.canvas, this.textWriter, this.onClick$);
+        const subscription = scoreView.exit$.subscribe(() => {
             subscription.unsubscribe();
             this.close();
-            this.stageHandler.next(AppEvent.endGame());
+            this.stageHandler$.next(AppEvent.endGame());
         });
         scoreView.draw(this.points);
     }

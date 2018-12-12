@@ -16,17 +16,17 @@ export class TopScoreView implements CustomViewInterface {
     private static STAR_WIDTH = 5;
     private static STAR_HEIGHT = 4;
 
-    public exit: Subject<void> = new Subject();
+    public exit$: Subject<void> = new Subject();
     private timer: number;
 
     constructor(private canvas: Canvas,
                 private textWriter: TextWriter,
-                private onClick: Observable<ClicksEnum>) {
-        const onClickSubscription = this.onClick.subscribe((event) => {
+                private onClick$: Observable<ClicksEnum>) {
+        const onClickSubscription = this.onClick$.subscribe((event) => {
             if (event === ClicksEnum.ENTER || event === ClicksEnum.ESCAPE) {
                 onClickSubscription.unsubscribe();
                 clearTimeout(this.timer);
-                this.exit.next();
+                this.exit$.next();
             }
         });
     }

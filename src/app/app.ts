@@ -22,15 +22,15 @@ export class App {
     private config: Config;
     private mealFactory: MealFactory;
     private textWriter: TextWriter;
-    private onClick: Observable<ClicksEnum>;
-    private windowParams: Observable<WindowParams>;
-    private stageHandler: Subject<AppEvent>;
+    private onClick$: Observable<ClicksEnum>;
+    private windowParams$: Observable<WindowParams>;
+    private stageHandler$: Subject<AppEvent>;
     private menuItemFactory: MenuItemFactory;
     private drawingUtils: DrawingUtils;
     private board: Blackboard;
 
     constructor(canvas: HTMLCanvasElement, keyboard: HTMLElement) {
-        this.onClick = merge(
+        this.onClick$ = merge(
             fromEvent(document, 'keydown').pipe(
                 map((event: KeyboardEvent) => {
                     return <ClicksEnum>event.keyCode;
@@ -46,7 +46,7 @@ export class App {
                 filter((event) =>  event in ClicksEnum),
             ),
         );
-        this.windowParams = fromEvent(window, 'resize').pipe(
+        this.windowParams$ = fromEvent(window, 'resize').pipe(
             debounceTime(500),
             map((event: Event ) => {
                 const eventTarget = <Window>event.target;
@@ -55,8 +55,8 @@ export class App {
             startWith(new WindowParams(window.innerWidth, window.innerHeight)),
         );
 
-        this.config = new Config(this.windowParams);
-        this.stageHandler = new Subject<AppEvent>();
+        this.config = new Config(this.windowParams$);
+        this.stageHandler$ = new Subject<AppEvent>();
         this.mealFactory = new MealFactory();
         this.canvas = new Canvas(canvas, this.config);
         this.textWriter = new TextWriter();
@@ -65,7 +65,7 @@ export class App {
     }
 
     public run() {
-        this.stageHandler.subscribe((event) => {
+        this.stageHandler$.subscribe((event) => {
             this.canvas.clear();
             switch (event.type) {
                 case AppEvent.START_MENU: {
@@ -83,14 +83,11 @@ export class App {
             }
         });
         this.createIntro();
-        // this.createGame({resumed: false});
-        // this.createMenu();
-        // this.createBlackBoard();
     }
 
     private createIntro() {
         this.intro = new Intro(
-            this.stageHandler,
+            this.stageHandler$,
             this.canvas,
         ).start();
     }
@@ -98,9 +95,9 @@ export class App {
     private createMenu() {
         this.menu = new Menu(
             this.config,
-            this.stageHandler,
+            this.stageHandler$,
             this.canvas,
-            this.onClick,
+            this.onClick$,
             this.textWriter,
             this.menuItemFactory,
             this.drawingUtils,
@@ -110,9 +107,9 @@ export class App {
     private createGame(payload: {resumed: boolean}) {
         this.game = new Game(
             this.config,
-            this.stageHandler,
+            this.stageHandler$,
             this.canvas,
-            this.onClick,
+            this.onClick$,
             this.textWriter,
             this.mealFactory,
         ).start(payload.resumed);
