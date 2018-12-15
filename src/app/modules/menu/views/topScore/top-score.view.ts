@@ -10,6 +10,7 @@ import {Pixel} from '../../../../common/model/pixel.model';
 import {Config} from '../../../../../Config';
 import {AnimationDataInterface} from './animation-data.interface';
 import {animationData} from './animation.data';
+import {takeUntil} from 'rxjs/internal/operators';
 
 export class TopScoreView implements CustomViewInterface {
     private static readonly TITLE = 'Top score:';
@@ -22,9 +23,8 @@ export class TopScoreView implements CustomViewInterface {
     constructor(private canvas: Canvas,
                 private textWriter: TextWriter,
                 private onClick$: Observable<ClicksEnum>) {
-        const onClickSubscription = this.onClick$.subscribe((event) => {
+        this.onClick$.pipe(takeUntil(this.exit$)).subscribe((event) => {
             if (event === ClicksEnum.ENTER || event === ClicksEnum.ESCAPE) {
-                onClickSubscription.unsubscribe();
                 clearTimeout(this.timer);
                 this.exit$.next();
             }

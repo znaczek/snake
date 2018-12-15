@@ -5,7 +5,7 @@ import {Position} from '../../common/model/position.model';
 import {BodyPart} from './model/body-part.model';
 import {clone, getRectangleFromPixels, isOverlapping} from '../../common/utils/utils';
 import {Pixel} from '../../common/model/pixel.model';
-import {DRAW_DATA, INIT_HEAD} from './data/snake.data';
+import {DRAW_DATA} from './data/snake.data';
 import {Rectangle} from '../../common/model/rectangle.model';
 import {Eatable} from './model/eatable.model';
 import {EatenMeal} from './model/eaten-meal.model';
@@ -21,8 +21,8 @@ export class Snake implements DrawableInterface {
     private direction: DirectionEnum = DirectionEnum.RIGHT;
     private lastDirection: DirectionEnum = DirectionEnum.RIGHT;
 
-    constructor(maze: number) {
-        this.body = this.getInitialState(maze);
+    constructor(start: Position) {
+        this.body = this.getInitialState(start);
         this.oldBody = clone(this.body);
         this.length = this.body.length;
     }
@@ -175,7 +175,7 @@ export class Snake implements DrawableInterface {
         this.body = this.oldBody;
     }
 
-    public getPixels(options: {
+    public getPixels(options?: {
         additionalPixelsSets: Pixel[][],
     }): Pixel[] {
         const snakePixels: Pixel[] = this.body.reduce((acc: Pixel[], _, index: number) => {
@@ -188,32 +188,34 @@ export class Snake implements DrawableInterface {
                     futureHeadPosition,
                     head.direction,
                 );
-                options.additionalPixelsSets.forEach((pxs) => {
-                    if (isOverlapping(getRectangleFromPixels(pxs),getRectangleFromPixels(this.getPartPixels(0, futureHead)))) {
-                        switch (head.direction) {
-                            case DirectionEnum.RIGHT: {
-                                pixels[0].y -= 1;
-                                pixels[1].y += 1;
-                                break;
-                            }
-                            case DirectionEnum.UP: {
-                                pixels[0].x += 1;
-                                pixels[1].x -= 1;
-                                break;
-                            }
-                            case DirectionEnum.LEFT: {
-                                pixels[0].y += 1;
-                                pixels[1].y -= 1;
-                                break;
-                            }
-                            case DirectionEnum.DOWN: {
-                                pixels[0].x += 1;
-                                pixels[1].x -= 1;
-                                break;
+                if (options) {
+                    (options.additionalPixelsSets || []).forEach((pxs) => {
+                        if (isOverlapping(getRectangleFromPixels(pxs),getRectangleFromPixels(this.getPartPixels(0, futureHead)))) {
+                            switch (head.direction) {
+                                case DirectionEnum.RIGHT: {
+                                    pixels[0].y -= 1;
+                                    pixels[1].y += 1;
+                                    break;
+                                }
+                                case DirectionEnum.UP: {
+                                    pixels[0].x += 1;
+                                    pixels[1].x -= 1;
+                                    break;
+                                }
+                                case DirectionEnum.LEFT: {
+                                    pixels[0].y += 1;
+                                    pixels[1].y -= 1;
+                                    break;
+                                }
+                                case DirectionEnum.DOWN: {
+                                    pixels[0].x += 1;
+                                    pixels[1].x -= 1;
+                                    break;
+                                }
                             }
                         }
-                    }
-                });
+                    });
+                }
             }
             return [...acc, ...pixels];
         }, []);
@@ -344,22 +346,22 @@ export class Snake implements DrawableInterface {
         return new BodyPart(type, position, DirectionEnum.RIGHT);
     }
 
-    private getInitialState (maze: number): BodyPart[] {
+    private getInitialState (start: Position): BodyPart[] {
         const bodyLength = Config.INIT_LENGTH;
         const initialState = [
             this.buildInitialPart(
                 BodyPartEnum.HEAD,
-                new Pixel(INIT_HEAD[maze].x, INIT_HEAD[maze].y),
+                new Pixel(start.x, start.y),
             ),
         ];
         for (let i = 1; i <= bodyLength; i += 1) {
             initialState.push(this.buildInitialPart(
                 BodyPartEnum.BODY,
-                new Pixel(INIT_HEAD[maze].x - i * Config.MOVE, INIT_HEAD[maze].y)),
+                new Pixel(start.x - i * Config.MOVE, start.y)),
             );
         }
         initialState.push(this.buildInitialPart(
-            BodyPartEnum.TAIL, new Pixel(INIT_HEAD[maze].x - (bodyLength + 1) * Config.MOVE, INIT_HEAD[maze].y)),
+            BodyPartEnum.TAIL, new Pixel(start.x - (bodyLength + 1) * Config.MOVE, start.y)),
         );
 
         return initialState;

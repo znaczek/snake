@@ -82,7 +82,8 @@ export class App {
                 }
             }
         });
-        this.createIntro();
+        // this.createIntro();
+        this.createMenu();
     }
 
     private createIntro() {

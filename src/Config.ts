@@ -70,7 +70,7 @@ export class Config {
 
     public get pixelSpace$() {
         return this.windowParams.pipe(
-            map((params) => (Config.isMobile && params.isHorizontal ? params.height : params.width) >= 480 ? 1 : 0),
+            map((params) => (Config.isMobile && params.isHorizontal ? params.height : params.width) >= 480 ? 1 : 1),
         );
     }
 

@@ -16,6 +16,7 @@ import {AppState} from '../../common/app-state';
 import {ScoreView} from './views/score.view';
 import {GameStateEnum} from './enums/game-state.enum';
 import {Mazez} from './data/mazes.data';
+import {INIT_HEAD} from './data/snake.data';
 
 export class Game {
     private snake: Snake;
@@ -37,7 +38,8 @@ export class Game {
                 private mealFactory: MealFactory,
                 ) {
         this.maze = AppState.getMaze();
-        this.snake = new Snake(this.maze);
+
+        this.snake = new Snake(INIT_HEAD[this.maze]);
         this.textWriter.setCharData(textSmallData);
     }
 
