@@ -26,7 +26,7 @@ export class Menu {
     private customView: CustomViewInterface = null;
 
     constructor(private config: Config,
-                private stageHandler: Subject<AppEvent>,
+                private stageHandler$: Subject<AppEvent>,
                 private canvas: Canvas,
                 private onClick$: Observable<ClicksEnum>,
                 private textWriter: TextWriter,
