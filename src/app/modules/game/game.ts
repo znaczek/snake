@@ -36,13 +36,13 @@ export class Game {
                 private textWriter: TextWriter,
                 private mealFactory: MealFactory,
                 ) {
-        this.snake = new Snake();
+        this.maze = AppState.getMaze();
+        this.snake = new Snake(this.maze);
         this.textWriter.setCharData(textSmallData);
     }
 
     public start(resumed: boolean): Game {
         this.speed = Config.SPEED / AppState.getLevel();
-        this.maze = AppState.getMaze();
         this.bindEvents();
         this.canvas.clear();
         this.gameState = GameStateEnum.GAME;

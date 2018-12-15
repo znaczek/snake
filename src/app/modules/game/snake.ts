@@ -5,7 +5,7 @@ import {Position} from '../../common/model/position.model';
 import {BodyPart} from './model/body-part.model';
 import {clone, getRectangleFromPixels, isOverlapping} from '../../common/utils/utils';
 import {Pixel} from '../../common/model/pixel.model';
-import {drawData} from './data/snake.data';
+import {DRAW_DATA, INIT_HEAD} from './data/snake.data';
 import {Rectangle} from '../../common/model/rectangle.model';
 import {Eatable} from './model/eatable.model';
 import {EatenMeal} from './model/eaten-meal.model';
@@ -21,9 +21,9 @@ export class Snake implements DrawableInterface {
     private direction: DirectionEnum = DirectionEnum.RIGHT;
     private lastDirection: DirectionEnum = DirectionEnum.RIGHT;
 
-    constructor() {
-        this.body = this.getInitialState();
-        this.oldBody = this.getInitialState();
+    constructor(maze: number) {
+        this.body = this.getInitialState(maze);
+        this.oldBody = clone(this.body);
         this.length = this.body.length;
     }
 
@@ -344,22 +344,22 @@ export class Snake implements DrawableInterface {
         return new BodyPart(type, position, DirectionEnum.RIGHT);
     }
 
-    private getInitialState (): BodyPart[] {
+    private getInitialState (maze: number): BodyPart[] {
         const bodyLength = Config.INIT_LENGTH;
         const initialState = [
             this.buildInitialPart(
                 BodyPartEnum.HEAD,
-                new Pixel(Config.INIT_HEAD.x, Config.INIT_HEAD.y),
+                new Pixel(INIT_HEAD[maze].x, INIT_HEAD[maze].y),
             ),
         ];
         for (let i = 1; i <= bodyLength; i += 1) {
             initialState.push(this.buildInitialPart(
                 BodyPartEnum.BODY,
-                new Pixel(Config.INIT_HEAD.x - i * Config.MOVE, Config.INIT_HEAD.y)),
+                new Pixel(INIT_HEAD[maze].x - i * Config.MOVE, INIT_HEAD[maze].y)),
             );
         }
         initialState.push(this.buildInitialPart(
-            BodyPartEnum.TAIL, new Pixel(Config.INIT_HEAD.x - (bodyLength + 1) * Config.MOVE, Config.INIT_HEAD.y)),
+            BodyPartEnum.TAIL, new Pixel(INIT_HEAD[maze].x - (bodyLength + 1) * Config.MOVE, INIT_HEAD[maze].y)),
         );
 
         return initialState;
@@ -376,13 +376,13 @@ export class Snake implements DrawableInterface {
         let partData: Pixel[];
         switch (part.type) {
             case BodyPartEnum.HEAD:
-                partData = drawData.head[part.direction][prevPart.direction][nextPart.direction];
+                partData = DRAW_DATA.head[part.direction][prevPart.direction][nextPart.direction];
                 break;
             case BodyPartEnum.BODY:
-                partData = drawData.body[part.direction][prevPart.direction][nextPart.direction];
+                partData = DRAW_DATA.body[part.direction][prevPart.direction][nextPart.direction];
                 break;
             case BodyPartEnum.TAIL:
-                partData = drawData.tail[part.direction][prevPart.direction][nextPart.direction];
+                partData = DRAW_DATA.tail[part.direction][prevPart.direction][nextPart.direction];
                 break;
         }
         const partPixels: Pixel[] = [];

@@ -24,7 +24,7 @@ export class Config {
 
     public static readonly DEBUG_INTRO = false;
     public static readonly DEBUG_CANVAS = false;
-    public static readonly DEBUG_MOVING = false;
+    public static readonly DEBUG_MOVING = true;
 
     public static readonly MOVE = 4;
 
@@ -39,24 +39,14 @@ export class Config {
         }
     )(navigator.userAgent || navigator.vendor || window.opera);
 
-    public static readonly GAME_CANVAS_WIDTH = (() => {
-        return Config.MOVE * (Config.isMobile ? 24 : 24);
-    }) ();
-
-    public static readonly GAME_CANVAS_HEIGHT = (() => {
-        return Config.MOVE * (Config.isMobile ? 14 : 14);
-    }) ();
+    public static readonly GAME_CANVAS_WIDTH = Config.MOVE * 24;
+    public static readonly GAME_CANVAS_HEIGHT = Config.MOVE * 14;
 
     public static readonly SPEED = 200;
     public static readonly TOP_BAR_HEIGHT = 9;
     public static readonly INIT_LENGTH = 3;
 
     public static readonly PIXEL_SIZE = 10;
-
-    public static readonly INIT_HEAD = {
-        x: 34,
-        y: 18,
-    };
 
     public static readonly CANVAS_WIDTH = Config.GAME_CANVAS_WIDTH;
     public static readonly CANVAS_HEIGHT = Config.GAME_CANVAS_HEIGHT + Config.TOP_BAR_HEIGHT;
@@ -75,11 +65,11 @@ export class Config {
         },
     };
 
-    constructor(private windowParams$: Observable<WindowParams>) {
+    constructor(private windowParams: Observable<WindowParams>) {
     }
 
     public get pixelSpace$() {
-        return this.windowParams$.pipe(
+        return this.windowParams.pipe(
             map((params) => (Config.isMobile && params.isHorizontal ? params.height : params.width) >= 480 ? 1 : 0),
         );
     }

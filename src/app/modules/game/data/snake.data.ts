@@ -1,8 +1,36 @@
 import {DirectionEnum} from '../../../common/enums/direction.enum';
 import {Pixel} from '../../../common/model/pixel.model';
 import {DrawDataInterface} from '../interface/draw-data.interface';
+import {Position} from '../../../common/model/position.model';
 
-const common = {
+export const INIT_HEAD: {[index: number]: Position} = {
+    1: {
+        x: 34,
+        y: 18,
+    },
+    2: {
+        x: 34,
+        y: 18,
+    },
+    3: {
+        x: 24,
+        y: 4,
+    },
+    4: {
+        x: 34,
+        y: 18,
+    },
+    5: {
+        x: 34,
+        y: 18,
+    },
+    6: {
+        x: 34,
+        y: 18,
+    },
+};
+
+const COMMON = {
     head: {
         [DirectionEnum.RIGHT]: [
             // lips
@@ -125,20 +153,20 @@ const common = {
     },
 };
 
-export const drawData: DrawDataInterface = {
+export const DRAW_DATA: DrawDataInterface = {
     head: {
         [DirectionEnum.RIGHT]: {
             [DirectionEnum.RIGHT]: {
                 [DirectionEnum.RIGHT]: [
-                    ...common.head[DirectionEnum.RIGHT],
+                    ...COMMON.head[DirectionEnum.RIGHT],
                     new Pixel(0, 0),
                 ],
                 [DirectionEnum.UP]: [
-                    ...common.head[DirectionEnum.RIGHT],
+                    ...COMMON.head[DirectionEnum.RIGHT],
                     new Pixel(0, -1),
                 ],
                 [DirectionEnum.DOWN]: [
-                    ...common.head[DirectionEnum.RIGHT],
+                    ...COMMON.head[DirectionEnum.RIGHT],
                     new Pixel(0, 0),
                 ],
             },
@@ -146,15 +174,15 @@ export const drawData: DrawDataInterface = {
         [DirectionEnum.UP]: {
             [DirectionEnum.UP]: {
                 [DirectionEnum.UP]: [
-                    ...common.head[DirectionEnum.UP],
+                    ...COMMON.head[DirectionEnum.UP],
                     new Pixel(-1, 0),
                 ],
                 [DirectionEnum.LEFT]: [
-                    ...common.head[DirectionEnum.UP],
+                    ...COMMON.head[DirectionEnum.UP],
                     new Pixel(-2, 0),
                 ],
                 [DirectionEnum.RIGHT]: [
-                    ...common.head[DirectionEnum.UP],
+                    ...COMMON.head[DirectionEnum.UP],
                     new Pixel(-1, 0),
                 ],
             },
@@ -162,15 +190,15 @@ export const drawData: DrawDataInterface = {
         [DirectionEnum.LEFT]: {
             [DirectionEnum.LEFT]: {
                 [DirectionEnum.LEFT]: [
-                    ...common.head[DirectionEnum.LEFT],
+                    ...COMMON.head[DirectionEnum.LEFT],
                     new Pixel(-1, 0),
                 ],
                 [DirectionEnum.DOWN]: [
-                    ...common.head[DirectionEnum.LEFT],
+                    ...COMMON.head[DirectionEnum.LEFT],
                     new Pixel(-1, 0),
                 ],
                 [DirectionEnum.UP]: [
-                    ...common.head[DirectionEnum.LEFT],
+                    ...COMMON.head[DirectionEnum.LEFT],
                     new Pixel(-1, -1),
                 ],
             },
@@ -178,15 +206,15 @@ export const drawData: DrawDataInterface = {
         [DirectionEnum.DOWN]: {
             [DirectionEnum.DOWN]: {
                 [DirectionEnum.DOWN]: [
-                    ...common.head[DirectionEnum.DOWN],
+                    ...COMMON.head[DirectionEnum.DOWN],
                     new Pixel(-1, 1),
                 ],
                 [DirectionEnum.RIGHT]: [
-                    ...common.head[DirectionEnum.DOWN],
+                    ...COMMON.head[DirectionEnum.DOWN],
                     new Pixel(-1, 1),
                 ],
                 [DirectionEnum.LEFT]: [
-                    ...common.head[DirectionEnum.DOWN],
+                    ...COMMON.head[DirectionEnum.DOWN],
                     new Pixel(-2, 1),
                 ],
             },
@@ -197,51 +225,51 @@ export const drawData: DrawDataInterface = {
         [DirectionEnum.RIGHT]: {
             [DirectionEnum.RIGHT]: {
                 [DirectionEnum.RIGHT]: [
-                    ...common.body[DirectionEnum.RIGHT],
+                    ...COMMON.body[DirectionEnum.RIGHT],
                     new Pixel(0, 0),
                     new Pixel(3, -1),
                 ],
                 [DirectionEnum.UP]: [
-                    ...common.body[DirectionEnum.RIGHT],
+                    ...COMMON.body[DirectionEnum.RIGHT],
                     new Pixel(0, -1),
                     new Pixel(3, -1),
                 ],
                 [DirectionEnum.DOWN]: [
-                    ...common.body[DirectionEnum.RIGHT],
+                    ...COMMON.body[DirectionEnum.RIGHT],
                     new Pixel(0, 0),
                     new Pixel(3, -1),
                 ],
             },
             [DirectionEnum.UP]: {
                 [DirectionEnum.RIGHT]: [
-                    ...common.body[DirectionEnum.RIGHT],
+                    ...COMMON.body[DirectionEnum.RIGHT],
                     new Pixel(0, 0),
                     new Pixel(3, 0),
                 ],
                 [DirectionEnum.UP]: [
-                    ...common.body[DirectionEnum.RIGHT],
+                    ...COMMON.body[DirectionEnum.RIGHT],
                     new Pixel(0, -1),
                     new Pixel(3, 0),
                 ],
                 [DirectionEnum.DOWN]: [
-                    ...common.body[DirectionEnum.RIGHT],
+                    ...COMMON.body[DirectionEnum.RIGHT],
                     new Pixel(0, 0),
                     new Pixel(3, 0),
                 ],
             },
             [DirectionEnum.DOWN]: {
                 [DirectionEnum.RIGHT]: [
-                    ...common.body[DirectionEnum.RIGHT],
+                    ...COMMON.body[DirectionEnum.RIGHT],
                     new Pixel(3, -1),
                     new Pixel(0, 0),
                 ],
                 [DirectionEnum.UP]: [
-                    ...common.body[DirectionEnum.RIGHT],
+                    ...COMMON.body[DirectionEnum.RIGHT],
                     new Pixel(0, -1),
                     new Pixel(3, -1),
                 ],
                 [DirectionEnum.DOWN]: [
-                    ...common.body[DirectionEnum.RIGHT],
+                    ...COMMON.body[DirectionEnum.RIGHT],
                     new Pixel(3, -1),
                     new Pixel(0, 0),
                 ],
@@ -250,51 +278,51 @@ export const drawData: DrawDataInterface = {
         [DirectionEnum.UP]: {
             [DirectionEnum.UP]: {
                 [DirectionEnum.UP]: [
-                    ...common.body[DirectionEnum.UP],
+                    ...COMMON.body[DirectionEnum.UP],
                     new Pixel(-1, 0),
                     new Pixel(-2, -3),
                 ],
                 [DirectionEnum.LEFT]: [
-                    ...common.body[DirectionEnum.UP],
+                    ...COMMON.body[DirectionEnum.UP],
                     new Pixel(-2, 0),
                     new Pixel(-2, -3),
                 ],
                 [DirectionEnum.RIGHT]: [
-                    ...common.body[DirectionEnum.UP],
+                    ...COMMON.body[DirectionEnum.UP],
                     new Pixel(-1, 0),
                     new Pixel(-2, -3),
                 ],
             },
             [DirectionEnum.LEFT]: {
                 [DirectionEnum.UP]: [
-                    ...common.body[DirectionEnum.UP],
+                    ...COMMON.body[DirectionEnum.UP],
                     new Pixel(-1, -3),
                     new Pixel(-1, 0),
                 ],
                 [DirectionEnum.LEFT]: [
-                    ...common.body[DirectionEnum.UP],
+                    ...COMMON.body[DirectionEnum.UP],
                     new Pixel(-1, -3),
                     new Pixel(-2, 0),
                 ],
                 [DirectionEnum.RIGHT]: [
-                    ...common.body[DirectionEnum.UP],
+                    ...COMMON.body[DirectionEnum.UP],
                     new Pixel(-1, -3),
                     new Pixel(-1, 0),
                 ],
             },
             [DirectionEnum.RIGHT]: {
                 [DirectionEnum.UP]: [
-                    ...common.body[DirectionEnum.UP],
+                    ...COMMON.body[DirectionEnum.UP],
                     new Pixel(-1, 0),
                     new Pixel(-2, -3),
                 ],
                 [DirectionEnum.LEFT]: [
-                    ...common.body[DirectionEnum.UP],
+                    ...COMMON.body[DirectionEnum.UP],
                     new Pixel(-2, 0),
                     new Pixel(-2, -3),
                 ],
                 [DirectionEnum.RIGHT]: [
-                    ...common.body[DirectionEnum.UP],
+                    ...COMMON.body[DirectionEnum.UP],
                     new Pixel(-1, 0),
                     new Pixel(-2, -3),
                 ],
@@ -303,51 +331,51 @@ export const drawData: DrawDataInterface = {
         [DirectionEnum.LEFT]: {
             [DirectionEnum.LEFT]: {
                 [DirectionEnum.LEFT]: [
-                    ...common.body[DirectionEnum.LEFT],
+                    ...COMMON.body[DirectionEnum.LEFT],
                     new Pixel(-1, 0),
                     new Pixel(-4, -1),
                 ],
                 [DirectionEnum.DOWN]: [
-                    ...common.body[DirectionEnum.LEFT],
+                    ...COMMON.body[DirectionEnum.LEFT],
                     new Pixel(-1, 0),
                     new Pixel(-4, -1),
                 ],
                 [DirectionEnum.UP]: [
-                    ...common.body[DirectionEnum.LEFT],
+                    ...COMMON.body[DirectionEnum.LEFT],
                     new Pixel(-1, -1),
                     new Pixel(-4, -1),
                 ],
             },
             [DirectionEnum.DOWN]: {
                 [DirectionEnum.LEFT]: [
-                    ...common.body[DirectionEnum.LEFT],
+                    ...COMMON.body[DirectionEnum.LEFT],
                     new Pixel(-1, 0),
                     new Pixel(-4, -1),
                 ],
                 [DirectionEnum.DOWN]: [
-                    ...common.body[DirectionEnum.LEFT],
+                    ...COMMON.body[DirectionEnum.LEFT],
                     new Pixel(-1, 0),
                     new Pixel(-4, -1),
                 ],
                 [DirectionEnum.UP]: [
-                    ...common.body[DirectionEnum.LEFT],
+                    ...COMMON.body[DirectionEnum.LEFT],
                     new Pixel(-1, -1),
                     new Pixel(-4, -1),
                 ],
             },
             [DirectionEnum.UP]: {
                 [DirectionEnum.LEFT]: [
-                    ...common.body[DirectionEnum.LEFT],
+                    ...COMMON.body[DirectionEnum.LEFT],
                     new Pixel(-4, 0),
                     new Pixel(-1, 0),
                 ],
                 [DirectionEnum.DOWN]: [
-                    ...common.body[DirectionEnum.LEFT],
+                    ...COMMON.body[DirectionEnum.LEFT],
                     new Pixel(-4, 0),
                     new Pixel(-1, 0),
                 ],
                 [DirectionEnum.UP]: [
-                    ...common.body[DirectionEnum.LEFT],
+                    ...COMMON.body[DirectionEnum.LEFT],
                     new Pixel(-4, 0),
                     new Pixel(-1, -1),
                 ],
@@ -356,51 +384,51 @@ export const drawData: DrawDataInterface = {
         [DirectionEnum.DOWN]: {
             [DirectionEnum.DOWN]: {
                 [DirectionEnum.DOWN]: [
-                    ...common.body[DirectionEnum.DOWN],
+                    ...COMMON.body[DirectionEnum.DOWN],
                     new Pixel(-2, 4),
                     new Pixel(-1, 1),
                 ],
                 [DirectionEnum.RIGHT]: [
-                    ...common.body[DirectionEnum.DOWN],
+                    ...COMMON.body[DirectionEnum.DOWN],
                     new Pixel(-2, 4),
                     new Pixel(-1, 1),
                 ],
                 [DirectionEnum.LEFT]: [
-                    ...common.body[DirectionEnum.DOWN],
+                    ...COMMON.body[DirectionEnum.DOWN],
                     new Pixel(-2, 1),
                     new Pixel(-2, 4),
                 ],
             },
             [DirectionEnum.RIGHT]: {
                 [DirectionEnum.DOWN]: [
-                    ...common.body[DirectionEnum.DOWN],
+                    ...COMMON.body[DirectionEnum.DOWN],
                     new Pixel(-2, 4),
                     new Pixel(-1, 1),
                 ],
                 [DirectionEnum.RIGHT]: [
-                    ...common.body[DirectionEnum.DOWN],
+                    ...COMMON.body[DirectionEnum.DOWN],
                     new Pixel(-2, 4),
                     new Pixel(-1, 1),
                 ],
                 [DirectionEnum.LEFT]: [
-                    ...common.body[DirectionEnum.DOWN],
+                    ...COMMON.body[DirectionEnum.DOWN],
                     new Pixel(-2, 1),
                     new Pixel(-2, 4),
                 ],
             },
             [DirectionEnum.LEFT]: {
                 [DirectionEnum.DOWN]: [
-                    ...common.body[DirectionEnum.DOWN],
+                    ...COMMON.body[DirectionEnum.DOWN],
                     new Pixel(-1, 4),
                     new Pixel(-1, 1),
                 ],
                 [DirectionEnum.RIGHT]: [
-                    ...common.body[DirectionEnum.DOWN],
+                    ...COMMON.body[DirectionEnum.DOWN],
                     new Pixel(-1, 4),
                     new Pixel(-1, 1),
                 ],
                 [DirectionEnum.LEFT]: [
-                    ...common.body[DirectionEnum.DOWN],
+                    ...COMMON.body[DirectionEnum.DOWN],
                     new Pixel(-2, 1),
                     new Pixel(-1, 4),
                 ],
@@ -412,21 +440,21 @@ export const drawData: DrawDataInterface = {
         [DirectionEnum.RIGHT]: {
             [DirectionEnum.RIGHT]: {
                 [DirectionEnum.RIGHT]: [
-                    ...common.tail[DirectionEnum.RIGHT],
+                    ...COMMON.tail[DirectionEnum.RIGHT],
                     new Pixel(2, 0),
                     new Pixel(3, -1),
                 ],
             },
             [DirectionEnum.UP]: {
                 [DirectionEnum.RIGHT]: [
-                    ...common.tail[DirectionEnum.RIGHT],
+                    ...COMMON.tail[DirectionEnum.RIGHT],
                     new Pixel(2, 0),
                     new Pixel(3, 0),
                 ],
             },
             [DirectionEnum.DOWN]: {
                 [DirectionEnum.RIGHT]: [
-                    ...common.tail[DirectionEnum.RIGHT],
+                    ...COMMON.tail[DirectionEnum.RIGHT],
                     new Pixel(2, 0),
                     new Pixel(3, -1),
                 ],
@@ -435,21 +463,21 @@ export const drawData: DrawDataInterface = {
         [DirectionEnum.UP]: {
             [DirectionEnum.UP]: {
                 [DirectionEnum.UP]: [
-                    ...common.tail[DirectionEnum.UP],
+                    ...COMMON.tail[DirectionEnum.UP],
                     new Pixel(-1, 2),
                     new Pixel(-2, -3),
                 ],
             },
             [DirectionEnum.LEFT]: {
                 [DirectionEnum.UP]: [
-                    ...common.tail[DirectionEnum.UP],
+                    ...COMMON.tail[DirectionEnum.UP],
                     new Pixel(-1, 2),
                     new Pixel(-1, -3),
                 ],
             },
             [DirectionEnum.RIGHT]: {
                 [DirectionEnum.UP]: [
-                    ...common.tail[DirectionEnum.UP],
+                    ...COMMON.tail[DirectionEnum.UP],
                     new Pixel(-1, 2),
                     new Pixel(-2, -3),
                 ],
@@ -458,21 +486,21 @@ export const drawData: DrawDataInterface = {
         [DirectionEnum.LEFT]: {
             [DirectionEnum.LEFT]: {
                 [DirectionEnum.LEFT]: [
-                    ...common.tail[DirectionEnum.LEFT],
+                    ...COMMON.tail[DirectionEnum.LEFT],
                     new Pixel(1, 0),
                     new Pixel(-4, -1),
                 ],
             },
             [DirectionEnum.DOWN]: {
                 [DirectionEnum.LEFT]: [
-                    ...common.tail[DirectionEnum.LEFT],
+                    ...COMMON.tail[DirectionEnum.LEFT],
                     new Pixel(1, 0),
                     new Pixel(-4, -1),
                 ],
             },
             [DirectionEnum.UP]: {
                 [DirectionEnum.LEFT]: [
-                    ...common.tail[DirectionEnum.LEFT],
+                    ...COMMON.tail[DirectionEnum.LEFT],
                     new Pixel(1, 0),
                     new Pixel(-4, 0),
                 ],
@@ -481,21 +509,21 @@ export const drawData: DrawDataInterface = {
         [DirectionEnum.DOWN]: {
             [DirectionEnum.DOWN]: {
                 [DirectionEnum.DOWN]: [
-                    ...common.tail[DirectionEnum.DOWN],
+                    ...COMMON.tail[DirectionEnum.DOWN],
                     new Pixel(-1, 3),
                     new Pixel(-2, 4),
                 ],
             },
             [DirectionEnum.RIGHT]: {
                 [DirectionEnum.DOWN]: [
-                    ...common.tail[DirectionEnum.DOWN],
+                    ...COMMON.tail[DirectionEnum.DOWN],
                     new Pixel(-1, 3),
                     new Pixel(-2, 4),
                 ],
             },
             [DirectionEnum.LEFT]: {
                 [DirectionEnum.DOWN]: [
-                    ...common.tail[DirectionEnum.DOWN],
+                    ...COMMON.tail[DirectionEnum.DOWN],
                     new Pixel(-1, 3),
                     new Pixel(-1, 4),
                 ],
