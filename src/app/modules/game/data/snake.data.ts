@@ -13,8 +13,8 @@ export const INIT_HEAD: {[index: number]: Position} = {
         y: 18,
     },
     3: {
-        x: 24,
-        y: 4,
+        x: 22,
+        y: 6,
     },
     4: {
         x: 34,
