@@ -1,7 +1,7 @@
 import {Position} from './model/position.model';
 import {Char} from './model/char.model';
 import {AppText} from './model/game-text.model';
-import {CharDataInterface} from '../modules/game/interface/char-data.interface';
+import {CharDataInterface} from './interfaces/char-data.interface';
 
 export class TextWriter {
     public static padStart(text: string, char: string, amount: number): string {

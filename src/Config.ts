@@ -24,7 +24,7 @@ export class Config {
 
     public static readonly DEBUG_INTRO = false;
     public static readonly DEBUG_CANVAS = false;
-    public static readonly DEBUG_MOVING = true;
+    public static readonly DEBUG_MOVING = false;
 
     public static readonly MOVE = 4;
 
@@ -42,7 +42,7 @@ export class Config {
     public static readonly GAME_CANVAS_WIDTH = Config.MOVE * 24;
     public static readonly GAME_CANVAS_HEIGHT = Config.MOVE * 14;
 
-    public static readonly SPEED = 200;
+    public static readonly SPEED = 350;
     public static readonly TOP_BAR_HEIGHT = 9;
     public static readonly INIT_LENGTH = 3;
 

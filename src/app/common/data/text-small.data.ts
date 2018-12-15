@@ -1,6 +1,6 @@
 import {Char} from '../model/char.model';
 import {Pixel} from '../model/pixel.model';
-import {CharDataInterface} from '../../modules/game/interface/char-data.interface';
+import {CharDataInterface} from '../interfaces/char-data.interface';
 
 export const textSmallData: CharDataInterface = {
     '-': new Char(4, [

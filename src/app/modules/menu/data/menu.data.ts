@@ -8,7 +8,7 @@ export const menuData: MenuDataInterface = {
     id: 1,
     children: [
         {
-            text: 'Resume game',
+            text: 'Continue',
             id: 11,
             callback() {
                 this.close();
@@ -47,8 +47,44 @@ export const menuData: MenuDataInterface = {
                     callback() {return this.setLevel(3);},
                 },
                 {
-                    text: 'Back',
+                    text: '4',
                     id: 134,
+                    setCursorCondition() {return this.checkLevelCursor(4);},
+                    callback() {return this.setLevel(4);},
+                },
+                {
+                    text: '5',
+                    id: 135,
+                    setCursorCondition() {return this.checkLevelCursor(5);},
+                    callback() {return this.setLevel(5);},
+                },
+                {
+                    text: '6',
+                    id: 136,
+                    setCursorCondition() {return this.checkLevelCursor(6);},
+                    callback() {return this.setLevel(6);},
+                },
+                {
+                    text: '7',
+                    id: 137,
+                    setCursorCondition() {return this.checkLevelCursor(7);},
+                    callback() {return this.setLevel(7);},
+                },
+                {
+                    text: '8',
+                    id: 138,
+                    setCursorCondition() {return this.checkLevelCursor(8);},
+                    callback() {return this.setLevel(8);},
+                },
+                {
+                    text: '9',
+                    id: 139,
+                    setCursorCondition() {return this.checkLevelCursor(9);},
+                    callback() {return this.setLevel(9);},
+                },
+                {
+                    text: 'Back',
+                    id: 1310,
                     back: true,
                 },
             ],
@@ -58,37 +94,37 @@ export const menuData: MenuDataInterface = {
             id: 14,
             children: [
                 {
-                    text: '1',
+                    text: 'No maze',
                     id: 141,
                     setCursorCondition() {return this.checkMazeCursor(1);},
                     callback() {return this.setMaze(1);},
                 },
                 {
-                    text: '2',
+                    text: 'Box',
                     id: 142,
                     setCursorCondition() {return this.checkMazeCursor(2);},
                     callback() {return this.setMaze(2);},
                 },
                 {
-                    text: '3',
+                    text: 'Cross',
                     id: 143,
                     setCursorCondition() {return this.checkMazeCursor(3);},
                     callback() {return this.setMaze(3);},
                 },
                 {
-                    text: '4',
+                    text: 'Tunnel',
                     id: 144,
                     setCursorCondition() {return this.checkMazeCursor(4);},
                     callback() {return this.setMaze(4);},
                 },
                 {
-                    text: '5',
+                    text: 'Spiral',
                     id: 145,
                     setCursorCondition() {return this.checkMazeCursor(5);},
                     callback() {return this.setMaze(5);},
                 },
                 {
-                    text: '6',
+                    text: 'Racetrack',
                     id: 146,
                     setCursorCondition() {return this.checkMazeCursor(6);},
                     callback() {return this.setMaze(6);},

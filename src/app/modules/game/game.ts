@@ -19,7 +19,7 @@ import {Mazez} from './data/mazes.data';
 
 export class Game {
     private snake: Snake;
-    private speed: number;
+    private loopTick: number;
     private maze: number;
     private interval: number;
     private apple: Apple;
@@ -42,7 +42,7 @@ export class Game {
     }
 
     public start(resumed: boolean): Game {
-        this.speed = Config.SPEED / AppState.getLevel();
+        this.loopTick = Config.SPEED / AppState.getLevel();
         this.bindEvents();
         this.canvas.clear();
         this.gameState = GameStateEnum.GAME;
@@ -235,7 +235,7 @@ export class Game {
         if (!Config.DEBUG_MOVING) {
             if (this.gameState === GameStateEnum.GAME) {
                 this.handleMove();
-                this.interval = setTimeout(this.loop.bind(this), this.speed);
+                this.interval = setTimeout(this.loop.bind(this), this.loopTick);
             }
         }
     }
@@ -268,7 +268,7 @@ export class Game {
     }
 
     private handleBugGeneration(): void {
-        if (!this.bug && (Math.random() * 100 > 85)) {
+        if (!this.bug && (Math.random() * 10 > 9)) {
             this.bug = this.mealFactory.generateBug(this.getForbiddenPixelsForBug());
         }
     }

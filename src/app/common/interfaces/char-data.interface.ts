@@ -1,4 +1,4 @@
-import {Char} from '../../../common/model/char.model';
+import {Char} from '../model/char.model';
 
 export interface CharDataInterface {
     [index: string]: Char;
