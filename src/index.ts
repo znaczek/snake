@@ -9,7 +9,6 @@ const canvas: HTMLCanvasElement = document.createElement('canvas');
 const keyboard = document.getElementById('keyboard');
 
 /* tslint:disable:no-console */
-console.log(__PRODUCTION__);
 if ('serviceWorker' in navigator) {
     if (__PRODUCTION__ || Config.DEBUG_SERVICE_WORKER) {
         navigator.serviceWorker.register('sw.js')
