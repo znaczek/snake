@@ -1,7 +1,6 @@
 canvas {
     display: none;
     background-color: #a4c70b;
-    width: 480px;
 }
 
 canvas.debug {

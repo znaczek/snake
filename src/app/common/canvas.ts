@@ -1,10 +1,10 @@
 import {Config} from '../../Config';
 import {Pixel} from './model/pixel.model';
 import {COLORS} from './common.constants';
-import {ColorsEnum} from './enums/color.enums';
 import {Position} from './model/position.model';
 import {combineLatest, Subject} from 'rxjs';
 import {scan, tap} from 'rxjs/internal/operators';
+import {DrawingConfigInterface} from './interfaces/drawing-config.interface';
 
 export class Canvas {
     private ctx: CanvasRenderingContext2D = null;
@@ -15,21 +15,20 @@ export class Canvas {
         if (this.ctx !== null) {
             throw new Error('Canvas element is already set');
         }
-        this.canvas.width = Config.CANVAS_WIDTH_PX;
-        this.canvas.height = Config.CANVAS_HEIGHT_PX;
-        this.canvas.style.display = 'block';
+
         this.ctx = this.canvas.getContext('2d');
-        this.ctx.scale(1, 1);
         combineLatest(
-            this.config.pixelSpace$.pipe(tap(() => this._clear())),
+            this.config.drawingConfig$.pipe(tap((drawingConfig) => {
+                this._clear(drawingConfig);
+                this.setCanvasParams(drawingConfig);
+            })),
             this.drawer$.pipe(scan((a, b) => !b ? [] : [...a, ...b], [])),
-        ).subscribe(([pixelSpace, pixels]) => {
-            this._drawPixels(pixels, pixelSpace);
+        ).subscribe(([drawingConfig, pixels]) => {
+            this._drawPixels(pixels, drawingConfig);
         });
     }
 
     public clear(): void {
-        this._clear();
         this.drawer$.next();
     }
 
@@ -44,43 +43,55 @@ export class Canvas {
         this.drawer$.next(pixels.map((pixel: Pixel) => new Pixel(pixel.x + offset.x, pixel.y + offset.y, pixel.color)));
     }
 
-    private drawPixel(pixel: Pixel, pixelSpace: number): void {
+    private setCanvasParams(config: DrawingConfigInterface) {
+        this.canvas.width = config.width;
+        this.canvas.height = config.height;
+        this.canvas.style.display = 'block';
+        this.canvas.style.width = (config.width / 2).toString() + 'px';
+    }
+
+    private drawPixel(pixel: Pixel, config: DrawingConfigInterface): void {
         this.ctx.fillStyle = COLORS[pixel.color];
         this.ctx.fillRect(
-            pixel.x * Config.PIXEL_SIZE,
-            pixel.y * Config.PIXEL_SIZE,
-            Config.PIXEL_SIZE - pixelSpace,
-            Config.PIXEL_SIZE - pixelSpace,
+            pixel.x * config.pixelSize,
+            pixel.y * config.pixelSize,
+            config.pixelSize- config.pixelSpace,
+            config.pixelSize- config.pixelSpace,
         );
     }
 
-    private _drawPixels(pixels: Pixel[], pixelSpace: number) {
+    private _drawPixels(pixels: Pixel[], config: DrawingConfigInterface) {
         this.ctx.save();
-        pixels.forEach((pixel: Pixel) => this.drawPixel(pixel, pixelSpace));
+        if (pixels.length === 0) {
+            this._clear(config);
+        } else {
+            pixels.forEach((pixel: Pixel) => this.drawPixel(pixel, config));
+        }
         this.ctx.restore();
     }
 
-    private _clear(): void {
-        this.ctx.clearRect(0, 0, Config.CANVAS_WIDTH_PX, Config.CANVAS_HEIGHT_PX);
+    private _clear(config: DrawingConfigInterface): void {
+        this.ctx.clearRect(0, 0, config.width, config.height);
     }
 
     private drawGrid(): void {
-        this.ctx.save();
-        this.ctx.lineWidth = 0.5;
-        this.ctx.strokeStyle = COLORS[ColorsEnum.BLACK];
-        for (let i = 0; i < Config.CANVAS_HEIGHT; i += 1) {
-            this.ctx.beginPath();
-            this.ctx.moveTo(0, i * Config.PIXEL_SIZE);
-            this.ctx.lineTo(Config.CANVAS_WIDTH * Config.PIXEL_SIZE, i * Config.PIXEL_SIZE);
-            this.ctx.stroke();
-        }
-        for (let i = 0; i < Config.CANVAS_WIDTH; i += 1) {
-            this.ctx.beginPath();
-            this.ctx.moveTo(i * Config.PIXEL_SIZE, 0);
-            this.ctx.lineTo(i * Config.PIXEL_SIZE, Config.CANVAS_HEIGHT * Config.PIXEL_SIZE);
-            this.ctx.stroke();
-        }
-        this.ctx.restore();
+        // TODO refactor this when after refactoring drawPixels
+        // this.ctx.save();
+        // this.ctx.lineWidth = 0.5;
+        // this.ctx.strokeStyle = COLORS[ColorsEnum.BLACK];
+        // for (let i = 0; i < Config.CANVAS_HEIGHT; i += 1) {
+        //     this.ctx.beginPath();
+        //     this.ctx.moveTo(0, i * Config.PIXEL_SIZE);
+        //     this.ctx.lineTo(Config.CANVAS_WIDTH * Config.PIXEL_SIZE, i * Config.PIXEL_SIZE);
+        //     this.ctx.stroke();
+        // }
+        // for (let i = 0; i < Config.CANVAS_WIDTH; i += 1) {
+        //     this.ctx.beginPath();
+        //     this.ctx.moveTo(i * Config.PIXEL_SIZE, 0);
+        //     this.ctx.lineTo(i * Config.PIXEL_SIZE, Config.CANVAS_HEIGHT * Config.PIXEL_SIZE);
+        //     this.ctx.stroke();
+        // }
+        // this.ctx.restore();
     }
 
 }

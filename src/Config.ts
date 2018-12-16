@@ -1,6 +1,7 @@
 import {Observable} from 'rxjs/index';
 import {WindowParams} from './app/common/model/window-params.model';
 import {map} from 'rxjs/internal/operators';
+import {DrawingConfigInterface} from './app/common/interfaces/drawing-config.interface';
 
 declare global {
     interface Window {
@@ -47,12 +48,8 @@ export class Config {
     public static readonly TOP_BAR_HEIGHT = 9;
     public static readonly INIT_LENGTH = 3;
 
-    public static readonly PIXEL_SIZE = 10;
-
     public static readonly CANVAS_WIDTH = Config.GAME_CANVAS_WIDTH;
     public static readonly CANVAS_HEIGHT = Config.GAME_CANVAS_HEIGHT + Config.TOP_BAR_HEIGHT;
-    public static readonly CANVAS_WIDTH_PX = Config.PIXEL_SIZE * Config.CANVAS_WIDTH;
-    public static readonly CANVAS_HEIGHT_PX = Config.PIXEL_SIZE * Config.CANVAS_HEIGHT;
     public static readonly BOARD_HEIGHT = Config.GAME_CANVAS_HEIGHT - 4;
     public static readonly BOARD_WIDTH = Config.GAME_CANVAS_WIDTH - 4;
     public static readonly BOARD = {
@@ -66,13 +63,50 @@ export class Config {
         },
     };
 
-    constructor(private windowParams: Observable<WindowParams>) {
+    private static readonly WIDTH_STEPS = 96;
+    private static HORIZONTAL_PADDING = 10;
+
+    public drawingConfigSnapshot: DrawingConfigInterface;
+
+    constructor(private windowParams$: Observable<WindowParams>) {
     }
 
-    public get pixelSpace$() {
-        return this.windowParams.pipe(
-            map((params) => (Config.isMobile && params.isHorizontal ? params.height : params.width) >= 480 ? 1 : 1),
+    public get drawingConfig$(): Observable<DrawingConfigInterface> {
+        return this.windowParams$.pipe(
+            map((params) => {
+                let pixelSize = 6;
+
+                let horizontalParam;
+                if (Config.isMobile && params.isHorizontal) {
+                    horizontalParam =  params.height;
+                } else {
+                    horizontalParam =  params.width;
+                }
+
+                if (horizontalParam - Config.HORIZONTAL_PADDING >= 10 * Config.WIDTH_STEPS / 2) {
+                    pixelSize = 10;
+                } else if (horizontalParam - Config.HORIZONTAL_PADDING >= 9 * Config.WIDTH_STEPS / 2) {
+                    pixelSize = 9;
+                } else if (horizontalParam - Config.HORIZONTAL_PADDING >= 8 * Config.WIDTH_STEPS / 2) {
+                    pixelSize = 8;
+                } else if (horizontalParam - Config.HORIZONTAL_PADDING >= 7 * Config.WIDTH_STEPS / 2) {
+                    pixelSize = 7;
+                } else {
+                    pixelSize = 6;
+                }
+
+                const height = pixelSize * Config.CANVAS_HEIGHT;
+                const width = pixelSize * Config.CANVAS_WIDTH;
+                const config = {
+                    pixelSpace: horizontalParam - Config.HORIZONTAL_PADDING >= 288 ? 1 : 0,
+                    pixelSize,
+                    height,
+                    width,
+                };
+
+                this.drawingConfigSnapshot = {...config};
+                return config;
+            }),
         );
     }
-
 }

@@ -1,4 +1,4 @@
-import {fromEvent} from 'rxjs/index';
+import {fromEvent} from 'rxjs';
 import {Pixel} from './model/pixel.model';
 import {Canvas} from './canvas';
 import {Config} from '../../Config';
@@ -11,7 +11,9 @@ export class Blackboard {
     private lastPosition: Position = new Position(0 ,0);
     private toggle = true;
 
-    constructor(private canvas: Canvas, pixels: Pixel[] = []) {
+    constructor(private canvas: Canvas,
+                private config: Config,
+                pixels: Pixel[] = []) {
         this.pixels = pixels;
         const move$ = fromEvent(document, 'mousemove');
         const down$ = fromEvent(document, 'mousedown');
@@ -58,8 +60,8 @@ export class Blackboard {
 
     private drawPixel(e: MouseEvent, type: number): void {
         const newPixel = new Pixel(
-            Math.round(this.getX(e) / Config.PIXEL_SIZE),
-            Math.round(this.getY(e) / Config.PIXEL_SIZE),
+            Math.round(this.getX(e) / this.config.drawingConfigSnapshot.pixelSize),
+            Math.round(this.getY(e) / this.config.drawingConfigSnapshot.pixelSize),
             ColorsEnum.RED,
         );
 

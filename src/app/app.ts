@@ -117,7 +117,7 @@ export class App {
     }
 
     private createBlackBoard() {
-        this.board = new Blackboard(this.canvas);
+        this.board = new Blackboard(this.canvas, this.config);
     }
 
 }
