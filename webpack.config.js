@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const webpack = require('webpack');
 
 module.exports = (env, argv) => {
     const mode = argv.mode;
@@ -33,7 +34,10 @@ module.exports = (env, argv) => {
             }),
             new CopyWebpackPlugin([
                 path.join(__dirname, 'src', 'web'),
-            ])
+            ]),
+            new webpack.DefinePlugin({
+                __PRODUCTION__: mode === 'production',
+            }),
         ],
         devServer: {
             contentBase: path.join(__dirname, 'dist'),

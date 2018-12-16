@@ -25,6 +25,7 @@ export class Config {
     public static readonly DEBUG_INTRO = false;
     public static readonly DEBUG_CANVAS = false;
     public static readonly DEBUG_MOVING = false;
+    public static readonly DEBUG_SERVICE_WORKER = false;
 
     public static readonly MOVE = 4;
 
