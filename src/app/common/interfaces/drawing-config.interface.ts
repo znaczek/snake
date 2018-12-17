@@ -3,4 +3,5 @@ export interface DrawingConfigInterface {
     pixelSpace: number;
     height: number;
     width: number;
+    widthPx: number;
 }

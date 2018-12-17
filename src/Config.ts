@@ -102,6 +102,7 @@ export class Config {
                     pixelSize,
                     height,
                     width,
+                    widthPx: width / 2,
                 };
 
                 this.drawingConfigSnapshot = {...config};

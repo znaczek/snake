@@ -24,10 +24,16 @@ html:not(.mobile) canvas {
     html.mobile canvas {
         max-width: calc(100vh - 10px);
     }
+    html.mobile #keyboard {
+        max-width: calc(100vh - 10px);
+    }
 }
 
 @media (orientation: portrait) {
     html.mobile canvas {
+        max-width: calc(100vw - 10px);
+    }
+    html.mobile #keyboard {
         max-width: calc(100vw - 10px);
     }
 }

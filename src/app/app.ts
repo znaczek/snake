@@ -13,6 +13,7 @@ import {DrawingUtils} from './modules/menu/utils/drawing.utils';
 import {Blackboard} from './common/blackboard';
 import {WindowParams} from './common/model/window-params.model';
 import {Config} from '../Config';
+import {DrawingConfigInterface} from './common/interfaces/drawing-config.interface';
 
 export class App {
     private canvas: Canvas;
@@ -23,7 +24,6 @@ export class App {
     private mealFactory: MealFactory;
     private textWriter: TextWriter;
     private onClick$: Observable<ClicksEnum>;
-    private windowParams$: Observable<WindowParams>;
     private stageHandler$: Subject<AppEvent>;
     private menuItemFactory: MenuItemFactory;
     private drawingUtils: DrawingUtils;
@@ -46,16 +46,18 @@ export class App {
                 filter((event) =>  event in ClicksEnum),
             ),
         );
-        this.windowParams$ = fromEvent(window, 'resize').pipe(
+
+        this.config = new Config(fromEvent(window, 'resize').pipe(
             debounceTime(500),
             map((event: Event ) => {
                 const eventTarget = <Window>event.target;
                 return new WindowParams(eventTarget.innerWidth, eventTarget.innerHeight);
             }),
             startWith(new WindowParams(window.innerWidth, window.innerHeight)),
-        );
-
-        this.config = new Config(this.windowParams$);
+        ));
+        this.config.drawingConfig$.subscribe((config: DrawingConfigInterface) => {
+           keyboard.style.width = config.widthPx + 'px';
+        });
         this.stageHandler$ = new Subject<AppEvent>();
         this.mealFactory = new MealFactory();
         this.canvas = new Canvas(canvas, this.config);

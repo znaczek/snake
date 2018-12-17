@@ -5,6 +5,7 @@ import {Position} from './model/position.model';
 import {combineLatest, Subject} from 'rxjs';
 import {scan, tap} from 'rxjs/internal/operators';
 import {DrawingConfigInterface} from './interfaces/drawing-config.interface';
+import {ColorsEnum} from './enums/color.enums';
 
 export class Canvas {
     private ctx: CanvasRenderingContext2D = null;
@@ -47,7 +48,7 @@ export class Canvas {
         this.canvas.width = config.width;
         this.canvas.height = config.height;
         this.canvas.style.display = 'block';
-        this.canvas.style.width = (config.width / 2).toString() + 'px';
+        this.canvas.style.width = config.widthPx + 'px';
     }
 
     private drawPixel(pixel: Pixel, config: DrawingConfigInterface): void {
@@ -75,23 +76,22 @@ export class Canvas {
     }
 
     private drawGrid(): void {
-        // TODO refactor this when after refactoring drawPixels
-        // this.ctx.save();
-        // this.ctx.lineWidth = 0.5;
-        // this.ctx.strokeStyle = COLORS[ColorsEnum.BLACK];
-        // for (let i = 0; i < Config.CANVAS_HEIGHT; i += 1) {
-        //     this.ctx.beginPath();
-        //     this.ctx.moveTo(0, i * Config.PIXEL_SIZE);
-        //     this.ctx.lineTo(Config.CANVAS_WIDTH * Config.PIXEL_SIZE, i * Config.PIXEL_SIZE);
-        //     this.ctx.stroke();
-        // }
-        // for (let i = 0; i < Config.CANVAS_WIDTH; i += 1) {
-        //     this.ctx.beginPath();
-        //     this.ctx.moveTo(i * Config.PIXEL_SIZE, 0);
-        //     this.ctx.lineTo(i * Config.PIXEL_SIZE, Config.CANVAS_HEIGHT * Config.PIXEL_SIZE);
-        //     this.ctx.stroke();
-        // }
-        // this.ctx.restore();
+        this.ctx.save();
+        this.ctx.lineWidth = 0.5;
+        this.ctx.strokeStyle = COLORS[ColorsEnum.BLACK];
+        for (let i = 0; i < Config.CANVAS_HEIGHT; i += 1) {
+            this.ctx.beginPath();
+            this.ctx.moveTo(0, i * this.config.drawingConfigSnapshot.pixelSize);
+            this.ctx.lineTo(Config.CANVAS_WIDTH * this.config.drawingConfigSnapshot.pixelSize, i * this.config.drawingConfigSnapshot.pixelSize);
+            this.ctx.stroke();
+        }
+        for (let i = 0; i < Config.CANVAS_WIDTH; i += 1) {
+            this.ctx.beginPath();
+            this.ctx.moveTo(i * this.config.drawingConfigSnapshot.pixelSize, 0);
+            this.ctx.lineTo(i * this.config.drawingConfigSnapshot.pixelSize, Config.CANVAS_HEIGHT * this.config.drawingConfigSnapshot.pixelSize);
+            this.ctx.stroke();
+        }
+        this.ctx.restore();
     }
 
 }
