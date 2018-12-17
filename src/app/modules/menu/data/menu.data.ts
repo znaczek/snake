@@ -70,22 +70,12 @@ export const menuData: MenuDataInterface = {
                     setCursorCondition() {return this.checkMazeCursor(6);},
                     callback() {return this.setMaze(6);},
                 },
-                {
-                    text: 'Back',
-                    id: 147,
-                    back: true,
-                },
             ],
         },
         {
             text: 'Top score',
             id: 15,
             customView: TopScoreView,
-        },
-        {
-            text: 'Exit',
-            id: 16,
-            callback() {},
         },
     ],
 };

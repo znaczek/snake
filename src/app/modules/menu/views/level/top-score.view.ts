@@ -105,6 +105,7 @@ export class LevelView implements CustomViewInterface {
 
     private loop(): void {
         this.snake.move();
+        this.snake.handleMoveEnd();
         this.interval = setTimeout(this.loop.bind(this), this.loopTick);
         this.draw();
     }
