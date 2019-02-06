@@ -51,9 +51,10 @@ export class Game {
 
         if (resumed) {
             const gameData = AppState.getGameData();
-            this.snake.set(gameData.snake);
-            this.apple = new Apple(gameData.apple.x, gameData.apple.y);
-            this.bug = gameData.bug ? new Bug(gameData.bug.x, gameData.bug.y, gameData.bug.type, gameData.bug.value) : null;
+            this.snake.deserialize(gameData.snake);
+            const forbiddenPoints = this.getForbiddenPositionsForApple();
+            this.apple = this.mealFactory.regenerateApple(gameData.apple, forbiddenPoints);
+            this.bug = gameData.bug ? this.mealFactory.regenerateBug(gameData.bug, forbiddenPoints) : null;
             this.points = gameData.points;
             this.paused = true;
         } else {

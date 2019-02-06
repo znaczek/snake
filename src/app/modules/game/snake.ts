@@ -38,7 +38,7 @@ export class Snake implements DrawableInterface {
         });
     }
 
-    public set(data: SavedSnake) {
+    public deserialize(data: SavedSnake) {
         this.body = data.body;
         this.length = data.length;
         this.oldBody = data.oldBody;

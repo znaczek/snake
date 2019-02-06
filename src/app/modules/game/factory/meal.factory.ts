@@ -42,6 +42,34 @@ export class MealFactory {
         return new Bug(chosenPosition.x, chosenPosition.y, type);
     }
 
+    public regenerateApple(apple: Apple, forbiddenPositions: Position[]): Apple {
+        let isValid: boolean = true;
+        for (const forbidden of forbiddenPositions) {
+            if (!this.isMealPositionNotForbidden(forbidden, {x: apple.x, y: apple.y}, Apple.width, Apple.height)) {
+                isValid = false;
+                break;
+            }
+        }
+        return isValid ? new Apple(apple.x, apple.y) : this.generateApple(forbiddenPositions);
+    }
+
+    public regenerateBug(bug: Bug, forbiddenPositions: Position[]): Bug{
+        let isValid: boolean = true;
+        for (const forbidden of forbiddenPositions) {
+            if (!this.isMealPositionNotForbidden(forbidden, {x: bug.x, y: bug.y}, Bug.width, Bug.height)) {
+                isValid = false;
+                break;
+            }
+        }
+
+        if (!isValid) {
+            const newBug = this.generateBug(forbiddenPositions);
+            newBug.value = bug.value;
+            return newBug;
+        }
+        return new Bug(bug.x, bug.y, bug.type, bug.value);
+    }
+
     private getAvailableStartPosition(
             type: MealsEnum,
             forbiddenPosition: Position[],
@@ -52,15 +80,12 @@ export class MealFactory {
         this.allAvailableMealPositions[type].forEach((availableMealPosition) => {
             const positionsForFutureChecking: Position[] = [];
             const forbiddenPositionsNotOnGivenAvailablePosition = forbiddenPosition.filter((forbidden) => {
-                const isAboveOrOnLeft = forbidden.x < availableMealPosition.x || forbidden.y < availableMealPosition.y;
-                const isBelowOrOnRight = forbidden.x >= availableMealPosition.x + xSpace ||
-                    forbidden.y >= availableMealPosition.y + ySpace;
                 const shouldBeCheckedInFuture = forbidden.x >= availableMealPosition.x + Config.MOVE ||
                     forbidden.y >= availableMealPosition.y + Config.MOVE;
                 if (shouldBeCheckedInFuture) {
                     positionsForFutureChecking.push(forbidden);
                 }
-                return isAboveOrOnLeft || isBelowOrOnRight;
+                return this.isMealPositionNotForbidden(forbidden, availableMealPosition, xSpace, ySpace);
             });
             if (forbiddenPositionsNotOnGivenAvailablePosition.length === forbiddenPosition.length) {
                 availablePositions.push(new Position(availableMealPosition.x, availableMealPosition.y));
@@ -69,6 +94,13 @@ export class MealFactory {
             }
         });
         return availablePositions[Math.floor(Math.random() * (availablePositions.length))];
+    }
+
+    private isMealPositionNotForbidden(forbidden: Position, mealPosition: Position, xSpace: number, ySpace: number): boolean {
+        const isAboveOrOnLeft = forbidden.x < mealPosition.x || forbidden.y < mealPosition.y;
+        const isBelowOrOnRight = forbidden.x >= mealPosition.x + xSpace ||
+            forbidden.y >= mealPosition.y + ySpace;
+        return isAboveOrOnLeft || isBelowOrOnRight;
     }
 
 }
