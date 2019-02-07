@@ -10,7 +10,7 @@ import {textSmallData} from '../../common/data/text-small.data';
 import {Position} from '../../common/model/position.model';
 import {Pixel} from '../../common/model/pixel.model';
 import {getGameBoarderPixels, getGameBoardOffset, getMaskPixels} from './utils/utils';
-import {AppEvent} from '../../common/model/game-event.model';
+import {AppEvent, EndGameEvent} from '../../common/model/AppEvents';
 import {ClicksEnum} from '../../common/enums/clicks.enum';
 import {AppState} from '../../common/app-state';
 import {ScoreView} from './views/score.view';
@@ -162,7 +162,7 @@ export class Game implements GameStageInterface {
             bug: this.bug,
         });
         this.close();
-        this.stageHandler$.next(AppEvent.endGame());
+        this.stageHandler$.next(new EndGameEvent());
     }
 
     private drawEndState(counter: number = 7): void {
@@ -185,7 +185,7 @@ export class Game implements GameStageInterface {
         const subscription = scoreView.exit$.subscribe(() => {
             subscription.unsubscribe();
             this.close();
-            this.stageHandler$.next(AppEvent.endGame());
+            this.stageHandler$.next(new EndGameEvent());
         });
         scoreView.draw(this.points);
     }

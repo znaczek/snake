@@ -1,5 +1,5 @@
 import {MenuDataInterface} from '../interfaces/menu-data.interface';
-import {AppEvent} from '../../../common/model/game-event.model';
+import {AppEvent, StartGameEvent} from '../../../common/model/AppEvents';
 import {TopScoreView} from '../views/topScore/top-score.view';
 import {AppState} from '../../../common/app-state';
 import {LevelView} from '../views/level/top-score.view';
@@ -13,7 +13,7 @@ export const menuData: MenuDataInterface = {
             id: 11,
             callback() {
                 this.close();
-                this.stageHandler$.next(AppEvent.startGame(true));
+                this.stageHandler$.next(new StartGameEvent(true));
             },
             visible: () => !!AppState.getGameData(),
         },
@@ -22,7 +22,7 @@ export const menuData: MenuDataInterface = {
             id: 12,
             callback() {
                 this.close();
-                this.stageHandler$.next(AppEvent.startGame());
+                this.stageHandler$.next(new StartGameEvent(false));
             },
         },
         {

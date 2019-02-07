@@ -1,5 +1,5 @@
 import {Observable, Subject, Subscription} from 'rxjs';
-import {AppEvent} from '../../common/model/game-event.model';
+import {AppEvent} from '../../common/model/AppEvents';
 import {Canvas} from '../../common/canvas';
 import {MenuItem} from './model/menu-item.model';
 import {TextWriter} from '../../common/text-writer';

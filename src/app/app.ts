@@ -3,7 +3,7 @@ import {Canvas} from './common/canvas';
 import {MealFactory} from './modules/game/factory/meal.factory';
 import {fromEvent, merge, Observable, Subject} from 'rxjs';
 import {TextWriter} from './common/text-writer';
-import {AppEvent} from './common/model/game-event.model';
+import {AppEvent, AppEventTypes, StartGameEvent, StartMenuEvent} from './common/model/AppEvents';
 import {Intro} from './modules/intro/intro';
 import {Menu} from './modules/menu/menu';
 import {filter, map, startWith, debounceTime} from 'rxjs/operators';
@@ -18,9 +18,6 @@ import {GameStageInterface} from './common/interfaces/game-stage.interface';
 
 export class App {
     private canvas: Canvas;
-    private intro: Intro;
-    private menu: Menu;
-    private game: Game;
     private config: Config;
     private mealFactory: MealFactory;
     private textWriter: TextWriter;
@@ -76,16 +73,16 @@ export class App {
             this.canvas.clear();
             let startData = null;
             switch (event.type) {
-                case AppEvent.START_MENU: {
+                case AppEventTypes.START_MENU: {
                     this.currentStage = this.createMenu();
                     break;
                 }
-                case AppEvent.START_GAME: {
+                case AppEventTypes.START_GAME: {
                     this.currentStage = this.createGame();
-                    startData = event.payload.resumed;
+                    startData = (<StartGameEvent>event).payload.resumed;
                     break;
                 }
-                case AppEvent.END_GAME: {
+                case AppEventTypes.END_GAME: {
                     this.currentStage = this.createMenu();
                     break;
                 }
@@ -93,7 +90,7 @@ export class App {
             this.currentStage.start(startData);
         });
 
-        this.stageHandler$.next(AppEvent.startMenu());
+        this.stageHandler$.next(new StartMenuEvent());
     }
 
     private createIntro(): Intro {
