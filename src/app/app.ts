@@ -14,6 +14,7 @@ import {Blackboard} from './common/blackboard';
 import {WindowParams} from './common/model/window-params.model';
 import {Config} from '../Config';
 import {DrawingConfigInterface} from './common/interfaces/drawing-config.interface';
+import {GameStageInterface} from './common/interfaces/game-stage.interface';
 
 export class App {
     private canvas: Canvas;
@@ -28,6 +29,7 @@ export class App {
     private menuItemFactory: MenuItemFactory;
     private drawingUtils: DrawingUtils;
     private board: Blackboard;
+    private currentStage: GameStageInterface;
 
     constructor(canvas: HTMLCanvasElement, keyboard: HTMLElement) {
         this.onClick$ = merge(
@@ -68,35 +70,41 @@ export class App {
 
     public run() {
         this.stageHandler$.subscribe((event) => {
+            if (this.currentStage) {
+                this.currentStage.close();
+            }
             this.canvas.clear();
+            let startData = null;
             switch (event.type) {
                 case AppEvent.START_MENU: {
-                    this.createMenu();
+                    this.currentStage = this.createMenu();
                     break;
                 }
                 case AppEvent.START_GAME: {
-                    this.createGame(event.payload);
+                    this.currentStage = this.createGame();
+                    startData = event.payload.resumed;
                     break;
                 }
                 case AppEvent.END_GAME: {
-                    this.createMenu();
+                    this.currentStage = this.createMenu();
                     break;
                 }
             }
+            this.currentStage.start(startData);
         });
-        // this.createIntro();
-        this.createMenu();
+
+        this.stageHandler$.next(AppEvent.startMenu());
     }
 
-    private createIntro() {
-        this.intro = new Intro(
+    private createIntro(): Intro {
+        return new Intro(
             this.stageHandler$,
             this.canvas,
-        ).start();
+        );
     }
 
-    private createMenu() {
-        this.menu = new Menu(
+    private createMenu(): Menu {
+        return new Menu(
             this.config,
             this.stageHandler$,
             this.canvas,
@@ -104,20 +112,23 @@ export class App {
             this.textWriter,
             this.menuItemFactory,
             this.drawingUtils,
-        ).start();
+        );
     }
 
-    private createGame(payload: {resumed: boolean}) {
-        this.game = new Game(
+    private createGame(): Game {
+        return new Game(
             this.config,
             this.stageHandler$,
             this.canvas,
             this.onClick$,
             this.textWriter,
             this.mealFactory,
-        ).start(payload.resumed);
+        );
     }
 
+    /**
+     * For debugging purpose
+     */
     private createBlackBoard() {
         this.board = new Blackboard(this.canvas, this.config);
     }

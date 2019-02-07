@@ -14,8 +14,9 @@ import {AppState} from '../../common/app-state';
 import {DrawingUtils} from './utils/drawing.utils';
 import {Config} from '../../../Config';
 import {CustomViewInterface} from '../../common/interfaces/custom-view.interface';
+import {GameStageInterface} from '../../common/interfaces/game-stage.interface';
 
-export class Menu {
+export class Menu implements GameStageInterface {
 
     private onClickSubscription: Subscription;
     private cursor: number = null;

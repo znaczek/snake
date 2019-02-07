@@ -17,8 +17,9 @@ import {ScoreView} from './views/score.view';
 import {GameStateEnum} from './enums/game-state.enum';
 import {Mazez} from './data/mazes.data';
 import {INIT_HEAD} from './data/snake.data';
+import {GameStageInterface} from '../../common/interfaces/game-stage.interface';
 
-export class Game {
+export class Game implements GameStageInterface {
     private snake: Snake;
     private loopTick: number;
     private maze: number;
@@ -41,6 +42,10 @@ export class Game {
 
         this.snake = new Snake(INIT_HEAD[this.maze]);
         this.textWriter.setCharData(textSmallData);
+
+        window.addEventListener('beforeunload', () => {
+            this.pauseGame();
+        });
     }
 
     public start(resumed: boolean): Game {
@@ -66,6 +71,11 @@ export class Game {
         this.draw();
 
         return this;
+    }
+
+    public close() {
+        this.gameState = GameStateEnum.HIGH_SCORE;
+        this.onClickSubscribe.unsubscribe();
     }
 
     private bindEvents(): void {
@@ -142,11 +152,6 @@ export class Game {
         AppState.refreshTopScore(this.points);
         this.gameState = GameStateEnum.GAME_END;
         this.drawEndState();
-    }
-
-    private close() {
-        this.gameState = GameStateEnum.HIGH_SCORE;
-        this.onClickSubscribe.unsubscribe();
     }
 
     private pauseGame() {
@@ -271,7 +276,7 @@ export class Game {
     }
 
     private handleBugGeneration(): void {
-        if (!this.bug && (Math.random() * 10 > 9)) {
+        if (!this.bug && (Math.random() * 10 > 0)) {
             this.bug = this.mealFactory.generateBug(this.getForbiddenPixelsForBug());
         }
     }
