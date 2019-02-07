@@ -12,7 +12,6 @@ export const menuData: MenuDataInterface = {
             text: 'Continue',
             id: 11,
             callback() {
-                this.close();
                 this.stageHandler$.next(new StartGameEvent(true));
             },
             visible: () => !!AppState.getGameData(),
@@ -21,7 +20,6 @@ export const menuData: MenuDataInterface = {
             text: 'New game',
             id: 12,
             callback() {
-                this.close();
                 this.stageHandler$.next(new StartGameEvent(false));
             },
         },

@@ -90,6 +90,12 @@ export class App {
             this.currentStage.start(startData);
         });
 
+        window.addEventListener('beforeunload', () => {
+            if (this.currentStage instanceof Game) {
+                this.currentStage.pauseGame();
+            }
+        });
+
         this.stageHandler$.next(new StartMenuEvent());
     }
 

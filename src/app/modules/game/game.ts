@@ -42,10 +42,6 @@ export class Game implements GameStageInterface {
 
         this.snake = new Snake(INIT_HEAD[this.maze]);
         this.textWriter.setCharData(textSmallData);
-
-        window.addEventListener('beforeunload', () => {
-            this.pauseGame();
-        });
     }
 
     public start(resumed: boolean): Game {
@@ -74,8 +70,19 @@ export class Game implements GameStageInterface {
     }
 
     public close() {
-        this.gameState = GameStateEnum.HIGH_SCORE;
         this.onClickSubscribe.unsubscribe();
+    }
+
+    public pauseGame() {
+        if (this.gameState === GameStateEnum.GAME) {
+            AppState.saveGame({
+                snake: this.snake.serialize(),
+                points: this.points,
+                apple: this.apple,
+                bug: this.bug,
+            });
+        }
+        this.stageHandler$.next(new EndGameEvent());
     }
 
     private bindEvents(): void {
@@ -154,17 +161,6 @@ export class Game implements GameStageInterface {
         this.drawEndState();
     }
 
-    private pauseGame() {
-        AppState.saveGame({
-            snake: this.snake.serialize(),
-            points: this.points,
-            apple: this.apple,
-            bug: this.bug,
-        });
-        this.close();
-        this.stageHandler$.next(new EndGameEvent());
-    }
-
     private drawEndState(counter: number = 7): void {
         if (this.gameState !== GameStateEnum.GAME_END) {
             return;
@@ -184,7 +180,6 @@ export class Game implements GameStageInterface {
         const scoreView = new ScoreView(this.canvas, this.textWriter, this.onClick$);
         const subscription = scoreView.exit$.subscribe(() => {
             subscription.unsubscribe();
-            this.close();
             this.stageHandler$.next(new EndGameEvent());
         });
         scoreView.draw(this.points);
