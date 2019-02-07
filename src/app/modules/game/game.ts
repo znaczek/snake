@@ -82,6 +82,7 @@ export class Game implements GameStageInterface {
                 bug: this.bug,
             });
         }
+        this.gameState = GameStateEnum.PAUSED;
         this.stageHandler$.next(new EndGameEvent());
     }
 
@@ -271,7 +272,7 @@ export class Game implements GameStageInterface {
     }
 
     private handleBugGeneration(): void {
-        if (!this.bug && (Math.random() * 10 > 0)) {
+        if (!this.bug && (Math.random() * 10 > 9)) {
             this.bug = this.mealFactory.generateBug(this.getForbiddenPixelsForBug());
         }
     }
