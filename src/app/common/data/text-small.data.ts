@@ -8,6 +8,9 @@ export const textSmallData: CharDataInterface = {
         new Pixel(1, 2),
         new Pixel(2, 2),
     ]),
+    ':': new Char(2, [
+        new Pixel(0, 1), new Pixel(0, 3),
+    ]),
     '0': new Char(4, [
         new Pixel(0, 0), new Pixel(0, 1), new Pixel(0, 2), new Pixel(0, 3), new Pixel(0, 4),
         new Pixel(1, 0), new Pixel(1, 4),
@@ -57,22 +60,36 @@ export const textSmallData: CharDataInterface = {
         new Pixel(1, 0), new Pixel(1, 2), new Pixel(1, 4),
         new Pixel(2, 0), new Pixel(2, 1), new Pixel(2, 2), new Pixel(2, 3), new Pixel(2, 4),
     ]),
-    'S': new Char(4, [
-        new Pixel(0, 0), new Pixel(0, 1), new Pixel(0, 2), new Pixel(0, 4),
-        new Pixel(1, 0), new Pixel(1, 2), new Pixel(1, 4),
-        new Pixel(2, 0), new Pixel(2, 2), new Pixel(2, 3), new Pixel(2, 4),
-    ]),
-    'N': new Char(5, [
-        new Pixel(0, 0), new Pixel(0, 1), new Pixel(0, 2), new Pixel(0, 3), new Pixel(0, 4),
-        new Pixel(1, 1),
-        new Pixel(2, 2),
-        new Pixel(3, 0), new Pixel(3, 1), new Pixel(3, 2), new Pixel(3, 3), new Pixel(3, 4),
-    ]),
     'A': new Char(5, [
         new Pixel(0, 0), new Pixel(0, 1), new Pixel(0, 2), new Pixel(0, 3), new Pixel(0, 4),
         new Pixel(1, 0), new Pixel(1, 2),
         new Pixel(2, 0), new Pixel(2, 2),
         new Pixel(3, 0), new Pixel(3, 1), new Pixel(3, 2), new Pixel(3, 3), new Pixel(3, 4),
+    ]),
+    'C': new Char(4, [
+        new Pixel(0, 0), new Pixel(0, 1), new Pixel(0, 2), new Pixel(0, 3), new Pixel(0, 4),
+        new Pixel(1, 0), new Pixel(1, 4),
+        new Pixel(2, 0), new Pixel(2, 4),
+    ]),
+    'E': new Char(4, [
+        new Pixel(0, 0), new Pixel(0, 1), new Pixel(0, 2), new Pixel(0, 3), new Pixel(0, 4),
+        new Pixel(1, 0), new Pixel(1, 2), new Pixel(1, 4),
+        new Pixel(2, 0), new Pixel(2, 2), new Pixel(2, 4),
+    ]),
+    'G': new Char(5, [
+        new Pixel(0, 0), new Pixel(0, 1), new Pixel(0, 2), new Pixel(0, 3), new Pixel(0, 4),
+        new Pixel(1, 0), new Pixel(1, 4),
+        new Pixel(2, 0), new Pixel(2, 2), new Pixel(2, 4),
+        new Pixel(3, 0), new Pixel(3, 2), new Pixel(3, 3), new Pixel(3, 4),
+    ]),
+    'H': new Char(5, [
+        new Pixel(0, 0), new Pixel(0, 1), new Pixel(0, 2), new Pixel(0, 3), new Pixel(0, 4),
+        new Pixel(1, 2),
+        new Pixel(2, 2),
+        new Pixel(3, 0), new Pixel(3, 1), new Pixel(3, 2), new Pixel(3, 3), new Pixel(3, 4),
+    ]),
+    'I': new Char(2, [
+        new Pixel(0, 0), new Pixel(0, 1), new Pixel(0, 2), new Pixel(0, 3), new Pixel(0, 4),
     ]),
     'K': new Char(5, [
         new Pixel(0, 0), new Pixel(0, 1), new Pixel(0, 2), new Pixel(0, 3), new Pixel(0, 4),
@@ -80,29 +97,10 @@ export const textSmallData: CharDataInterface = {
         new Pixel(2, 1), new Pixel(2, 3),
         new Pixel(3, 0), new Pixel(3, 4),
     ]),
-    'E': new Char(4, [
+    'L': new Char(5, [
         new Pixel(0, 0), new Pixel(0, 1), new Pixel(0, 2), new Pixel(0, 3), new Pixel(0, 4),
-        new Pixel(1, 0), new Pixel(1, 2), new Pixel(1, 4),
-        new Pixel(2, 0), new Pixel(2, 2), new Pixel(2, 4),
-    ]),
-    'I': new Char(2, [
-        new Pixel(0, 0), new Pixel(0, 1), new Pixel(0, 2), new Pixel(0, 3), new Pixel(0, 4),
-    ]),
-    ':': new Char(2, [
-        new Pixel(0, 1), new Pixel(0, 3),
-    ]),
-    'W': new Char(6, [
-        new Pixel(0, 0), new Pixel(0, 1), new Pixel(0, 2), new Pixel(0, 3), new Pixel(0, 4),
-        new Pixel(1, 3),
-        new Pixel(2, 2),
-        new Pixel(3, 3),
-        new Pixel(4, 0), new Pixel(4, 1), new Pixel(4, 2), new Pixel(4, 3), new Pixel(4, 4),
-    ]),
-    'G': new Char(5, [
-        new Pixel(0, 0), new Pixel(0, 1), new Pixel(0, 2), new Pixel(0, 3), new Pixel(0, 4),
-        new Pixel(1, 0), new Pixel(1, 4),
-        new Pixel(2, 0), new Pixel(2, 2), new Pixel(2, 4),
-        new Pixel(3, 0), new Pixel(3, 2), new Pixel(3, 3), new Pixel(3, 4),
+        new Pixel(1, 4),
+        new Pixel(2, 4),
     ]),
     'M': new Char(6, [
         new Pixel(0, 0), new Pixel(0, 1), new Pixel(0, 2), new Pixel(0, 3), new Pixel(0, 4),
@@ -111,10 +109,41 @@ export const textSmallData: CharDataInterface = {
         new Pixel(3, 1),
         new Pixel(4, 0), new Pixel(4, 1), new Pixel(4, 2), new Pixel(4, 3), new Pixel(4, 4),
     ]),
-    'L': new Char(5, [
+    'N': new Char(5, [
+        new Pixel(0, 0), new Pixel(0, 1), new Pixel(0, 2), new Pixel(0, 3), new Pixel(0, 4),
+        new Pixel(1, 1),
+        new Pixel(2, 2),
+        new Pixel(3, 0), new Pixel(3, 1), new Pixel(3, 2), new Pixel(3, 3), new Pixel(3, 4),
+    ]),
+    'O': new Char(4, [
+        new Pixel(0, 0), new Pixel(0, 1), new Pixel(0, 2), new Pixel(0, 3), new Pixel(0, 4),
+        new Pixel(1, 0), new Pixel(1, 4),
+        new Pixel(2, 0), new Pixel(2, 1), new Pixel(2, 2), new Pixel(2, 3), new Pixel(2, 4),
+    ]),
+    'P': new Char(4, [
+        new Pixel(0, 0), new Pixel(0, 1), new Pixel(0, 2), new Pixel(0, 3), new Pixel(0, 4),
+        new Pixel(1, 0), new Pixel(1, 2),
+        new Pixel(2, 0), new Pixel(2, 1), new Pixel(2, 2),
+    ]),
+    'R': new Char(4, [
+        new Pixel(0, 0), new Pixel(0, 1), new Pixel(0, 2), new Pixel(0, 3), new Pixel(0, 4),
+        new Pixel(1, 0), new Pixel(1, 2), new Pixel(1, 3),
+        new Pixel(2, 0), new Pixel(2, 1), new Pixel(2, 2), new Pixel(2, 4),
+    ]),
+    'S': new Char(4, [
+        new Pixel(0, 0), new Pixel(0, 1), new Pixel(0, 2), new Pixel(0, 4),
+        new Pixel(1, 0), new Pixel(1, 2), new Pixel(1, 4),
+        new Pixel(2, 0), new Pixel(2, 2), new Pixel(2, 3), new Pixel(2, 4),
+    ]),
+    'T': new Char(4, [
+        new Pixel(0, 0),
+        new Pixel(1, 0), new Pixel(1, 1), new Pixel(1, 2), new Pixel(1, 3), new Pixel(1, 4),
+        new Pixel(2, 0),
+    ]),
+    'U': new Char(4, [
         new Pixel(0, 0), new Pixel(0, 1), new Pixel(0, 2), new Pixel(0, 3), new Pixel(0, 4),
         new Pixel(1, 4),
-        new Pixel(2, 4),
+        new Pixel(2, 0), new Pixel(2, 1), new Pixel(2, 2), new Pixel(2, 3), new Pixel(2, 4),
     ]),
     'V': new Char(6, [
         new Pixel(0, 0), new Pixel(0, 1), new Pixel(0, 2),
@@ -123,47 +152,17 @@ export const textSmallData: CharDataInterface = {
         new Pixel(3, 2), new Pixel(3, 3),
         new Pixel(4, 0), new Pixel(4, 1), new Pixel(4, 2),
     ]),
+    'W': new Char(6, [
+        new Pixel(0, 0), new Pixel(0, 1), new Pixel(0, 2), new Pixel(0, 3), new Pixel(0, 4),
+        new Pixel(1, 3),
+        new Pixel(2, 2),
+        new Pixel(3, 3),
+        new Pixel(4, 0), new Pixel(4, 1), new Pixel(4, 2), new Pixel(4, 3), new Pixel(4, 4),
+    ]),
     'Z': new Char(5, [
         new Pixel(0, 0), new Pixel(0, 4),
         new Pixel(1, 0), new Pixel(0, 3), new Pixel(1, 4),
         new Pixel(2, 0), new Pixel(1, 2), new Pixel(2, 4),
         new Pixel(3, 0), new Pixel(2, 1), new Pixel(3, 4),
     ]),
-    'H': new Char(5, [
-        new Pixel(0, 0), new Pixel(0, 1), new Pixel(0, 2), new Pixel(0, 3), new Pixel(0, 4),
-        new Pixel(1, 2),
-        new Pixel(2, 2),
-        new Pixel(3, 0), new Pixel(3, 1), new Pixel(3, 2), new Pixel(3, 3), new Pixel(3, 4),
-    ]),
-    'T': new Char(4, [
-        new Pixel(0, 0),
-        new Pixel(1, 0), new Pixel(1, 1), new Pixel(1, 2), new Pixel(1, 3), new Pixel(1, 4),
-        new Pixel(2, 0),
-    ]),
-    'C': new Char(4, [
-        new Pixel(0, 0), new Pixel(0, 1), new Pixel(0, 2), new Pixel(0, 3), new Pixel(0, 4),
-        new Pixel(1, 0), new Pixel(1, 4),
-        new Pixel(2, 0), new Pixel(2, 4),
-    ]),
-    'O': new Char(4, [
-        new Pixel(0, 0), new Pixel(0, 1), new Pixel(0, 2), new Pixel(0, 3), new Pixel(0, 4),
-        new Pixel(1, 0), new Pixel(1, 4),
-        new Pixel(2, 0), new Pixel(2, 1), new Pixel(2, 2), new Pixel(2, 3), new Pixel(2, 4),
-    ]),
-    'R': new Char(4, [
-        new Pixel(0, 0), new Pixel(0, 1), new Pixel(0, 2), new Pixel(0, 3), new Pixel(0, 4),
-        new Pixel(1, 0), new Pixel(1, 2), new Pixel(1, 3),
-        new Pixel(2, 0), new Pixel(2, 1), new Pixel(2, 2), new Pixel(2, 4),
-    ]),
-    'P': new Char(4, [
-        new Pixel(0, 0), new Pixel(0, 1), new Pixel(0, 2), new Pixel(0, 3), new Pixel(0, 4),
-        new Pixel(1, 0), new Pixel(1, 2),
-        new Pixel(2, 0), new Pixel(2, 1), new Pixel(2, 2),
-    ]),
-    'U': new Char(4, [
-        new Pixel(0, 0), new Pixel(0, 1), new Pixel(0, 2), new Pixel(0, 3), new Pixel(0, 4),
-        new Pixel(1, 4),
-        new Pixel(2, 0), new Pixel(2, 1), new Pixel(2, 2), new Pixel(2, 3), new Pixel(2, 4),
-    ]),
-
 };
