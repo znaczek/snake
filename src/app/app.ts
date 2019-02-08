@@ -6,7 +6,7 @@ import {TextWriter} from './common/text-writer';
 import {AppEvent, AppEventTypes, StartGameEvent, StartMenuEvent} from './common/model/AppEvents';
 import {Intro} from './modules/intro/intro';
 import {Menu} from './modules/menu/menu';
-import {filter, map, startWith, debounceTime} from 'rxjs/operators';
+import {debounceTime, filter, map, startWith} from 'rxjs/operators';
 import {ClicksEnum} from './common/enums/clicks.enum';
 import {MenuItemFactory} from './modules/menu/factory/menu-item.factory';
 import {DrawingUtils} from './modules/menu/utils/drawing.utils';

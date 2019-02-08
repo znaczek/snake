@@ -1,5 +1,5 @@
 import {MenuDataInterface} from '../interfaces/menu-data.interface';
-import {AppEvent, StartGameEvent} from '../../../common/model/AppEvents';
+import {StartGameEvent} from '../../../common/model/AppEvents';
 import {TopScoreView} from '../views/topScore/top-score.view';
 import {AppState} from '../../../common/app-state';
 import {LevelView} from '../views/level/top-score.view';

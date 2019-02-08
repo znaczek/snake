@@ -1,6 +1,5 @@
 import {Rectangle} from '../../../common/model/rectangle.model';
 import {getRectangleFromPixels} from '../../../common/utils/utils';
-import {Pixel} from '../../../common/model/pixel.model';
 import {Position} from '../../../common/model/position.model';
 
 export abstract class Eatable extends Position {
