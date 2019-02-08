@@ -5,6 +5,7 @@ import {Position} from '../../../common/model/position.model';
 import {textLargeData} from '../../../common/data/text-large.data';
 import {Observable, Subject} from 'rxjs/index';
 import {ClicksEnum} from '../../../common/enums/clicks.enum';
+import {first} from 'rxjs/internal/operators';
 
 export class ScoreView implements CustomViewInterface {
     private static readonly GAME_OVER = 'Game over!';
@@ -17,8 +18,7 @@ export class ScoreView implements CustomViewInterface {
                 private onClick$: Observable<ClicksEnum>) {
         this.textWriter.setCharData(textLargeData);
 
-        const onClickSubscription = this.onClick$.subscribe(() => {
-            onClickSubscription.unsubscribe();
+        this.onClick$.pipe(first()).subscribe(() => {
             this.exit$.next();
         });
         setTimeout(() => {

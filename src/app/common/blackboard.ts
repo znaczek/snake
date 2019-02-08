@@ -1,24 +1,32 @@
-import {fromEvent} from 'rxjs';
+import {fromEvent, Subject} from 'rxjs';
 import {Pixel} from './model/pixel.model';
 import {Canvas} from './canvas';
 import {Config} from '../../Config';
 import {mergeMap, takeUntil, tap} from 'rxjs/internal/operators';
 import {ColorsEnum} from './enums/color.enums';
 import {Position} from './model/position.model';
+import {GameStageInterface} from './interfaces/game-stage.interface';
 
-export class Blackboard {
+export class Blackboard implements GameStageInterface {
     private pixels: Pixel[] = [];
     private lastPosition: Position = new Position(0 ,0);
     private toggle = true;
+    private unsubscribe$: Subject<void> = new Subject();
 
     constructor(private canvas: Canvas,
                 private config: Config,
                 pixels: Pixel[] = []) {
         this.pixels = pixels;
+    }
+
+    public start(): void {
         const move$ = fromEvent(document, 'mousemove');
         const down$ = fromEvent(document, 'mousedown');
         const up$ = fromEvent(document, 'mouseup');
-        fromEvent(document, 'contextmenu').subscribe((e: MouseEvent) => e.preventDefault());
+        fromEvent(document, 'contextmenu').pipe(
+            takeUntil(this.unsubscribe$),
+        ).subscribe((e: MouseEvent) => e.preventDefault());
+
         down$.pipe(
             tap((event: MouseEvent) => {
                 event.preventDefault();
@@ -28,6 +36,7 @@ export class Blackboard {
                 event.preventDefault();
                 return move$.pipe(takeUntil(up$));
             }),
+            takeUntil(this.unsubscribe$),
         ).subscribe((event: MouseEvent) => {
             event.preventDefault();
             this.drawPixel(event, event.which);
@@ -56,6 +65,10 @@ export class Blackboard {
         };
 
         this.draw();
+    }
+
+    public close() {
+        this.unsubscribe$.next();
     }
 
     private drawPixel(e: MouseEvent, type: number): void {

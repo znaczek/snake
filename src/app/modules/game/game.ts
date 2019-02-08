@@ -18,6 +18,7 @@ import {GameStateEnum} from './enums/game-state.enum';
 import {Mazez} from './data/mazes.data';
 import {INIT_HEAD} from './data/snake.data';
 import {GameStageInterface} from '../../common/interfaces/game-stage.interface';
+import {first} from 'rxjs/internal/operators';
 
 export class Game implements GameStageInterface {
     private snake: Snake;
@@ -179,8 +180,7 @@ export class Game implements GameStageInterface {
     private drawHighScore() {
         this.gameState = GameStateEnum.HIGH_SCORE;
         const scoreView = new ScoreView(this.canvas, this.textWriter, this.onClick$);
-        const subscription = scoreView.exit$.subscribe(() => {
-            subscription.unsubscribe();
+        scoreView.exit$.pipe(first()).subscribe(() => {
             this.stageHandler$.next(new EndGameEvent());
         });
         scoreView.draw(this.points);

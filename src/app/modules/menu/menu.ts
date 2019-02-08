@@ -15,6 +15,7 @@ import {DrawingUtils} from './utils/drawing.utils';
 import {Config} from '../../../Config';
 import {CustomViewInterface} from '../../common/interfaces/custom-view.interface';
 import {GameStageInterface} from '../../common/interfaces/game-stage.interface';
+import {first} from 'rxjs/internal/operators';
 
 export class Menu implements GameStageInterface {
 
@@ -107,8 +108,7 @@ export class Menu implements GameStageInterface {
             this.customView = new this.currentMenuItem.customView(
                 this.canvas, this.textWriter, this.onClick$, this.drawingUtils,
             );
-            const exitSubscription = this.customView.exit$.subscribe(() => {
-                exitSubscription.unsubscribe();
+            this.customView.exit$.pipe(first()).subscribe(() => {
                 this.currentMenuItem = this.currentMenuItem.parent;
                 this.customView = null;
                 this.drawMenu();
