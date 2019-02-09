@@ -45,6 +45,7 @@
         "no-string-literal": {
             "severity": "warning"
         },
-        "variable-name": [true, "check-format", "allow-leading-underscore", "ban-keywords"]
+        "variable-name": [true, "check-format", "allow-leading-underscore", "ban-keywords"],
+        "no-bitwise": false
     }
 }

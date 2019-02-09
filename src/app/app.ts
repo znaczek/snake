@@ -15,6 +15,7 @@ import {WindowParams} from './common/model/window-params.model';
 import {Config} from '../Config';
 import {DrawingConfigInterface} from './common/interfaces/drawing-config.interface';
 import {GameStageInterface} from './common/interfaces/game-stage.interface';
+import {AppState} from './common/app-state';
 
 export class App {
     private canvas: Canvas;
@@ -66,6 +67,7 @@ export class App {
     }
 
     public run() {
+        AppState.validateState();
         this.stageHandler$.subscribe((event) => {
             if (this.currentStage) {
                 this.currentStage.close();

@@ -1,6 +1,6 @@
 import {Rectangle} from '../../../common/model/rectangle.model';
-import {getRectangleFromPixels} from '../../../common/utils/utils';
 import {Position} from '../../../common/model/position.model';
+import {Utils} from '../../../common/utils/utils';
 
 export abstract class Eatable extends Position {
     constructor(public x: number, public y: number) {
@@ -14,7 +14,7 @@ export abstract class Eatable extends Position {
                 positions.push(new Position(this.x + x, this.y + y));
             }
         }
-        return getRectangleFromPixels(positions);
+        return Utils.getRectangleFromPixels(positions);
     }
 
     protected abstract getWidth(): number;

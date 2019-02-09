@@ -3,7 +3,7 @@ import {DirectionEnum} from '../../common/enums/direction.enum';
 import {BodyPartEnum} from './enums/body-part.enum';
 import {Position} from '../../common/model/position.model';
 import {BodyPart} from './model/body-part.model';
-import {clone, getRectangleFromPixels, isOverlapping} from '../../common/utils/utils';
+import {Utils} from '../../common/utils/utils';
 import {Pixel} from '../../common/model/pixel.model';
 import {DRAW_DATA} from './data/snake.data';
 import {Rectangle} from '../../common/model/rectangle.model';
@@ -11,7 +11,7 @@ import {Eatable} from './model/eatable.model';
 import {EatenMeal} from './model/eaten-meal.model';
 import {DrawableInterface} from '../../common/interfaces/drawable.interface';
 import {SavedSnake} from './model/saved-snake.model';
-import {checkCollision} from './utils/utils';
+import {GameUtils} from './utils/utils';
 
 export class Snake implements DrawableInterface {
     private body: BodyPart[];
@@ -23,7 +23,7 @@ export class Snake implements DrawableInterface {
 
     constructor(start: Position) {
         this.body = this.getInitialState(start);
-        this.oldBody = clone(this.body);
+        this.oldBody = Utils.clone(this.body);
         this.length = this.body.length;
     }
 
@@ -116,7 +116,7 @@ export class Snake implements DrawableInterface {
     }
 
     public didHit(meal: Eatable): boolean {
-        return isOverlapping(meal.getBoundary(), this.getPartBoundary(0));
+        return Utils.isOverlapping(meal.getBoundary(), this.getPartBoundary(0));
     }
 
     public grow(): void {
@@ -168,7 +168,7 @@ export class Snake implements DrawableInterface {
     }
 
     public chekMazeColission(mazePixels: Pixel[]): boolean {
-        return checkCollision(mazePixels, this.getPartPixels(0));
+        return GameUtils.checkCollision(mazePixels, this.getPartPixels(0));
     }
 
     public restore() {
@@ -190,7 +190,12 @@ export class Snake implements DrawableInterface {
                 );
                 if (options) {
                     (options.additionalPixelsSets || []).forEach((pxs) => {
-                        if (isOverlapping(getRectangleFromPixels(pxs),getRectangleFromPixels(this.getPartPixels(0, futureHead)))) {
+                        if (
+                            Utils.isOverlapping(
+                                Utils.getRectangleFromPixels(pxs),
+                                Utils.getRectangleFromPixels(this.getPartPixels(0, futureHead)),
+                            )
+                        ) {
                             switch (head.direction) {
                                 case DirectionEnum.RIGHT: {
                                     pixels[0].y -= 1;
@@ -368,7 +373,7 @@ export class Snake implements DrawableInterface {
     }
 
     private getBodyData(): BodyPart[] {
-        return clone(this.body);
+        return Utils.clone(this.body);
     }
 
     private getPartPixels(index: number, relativePart: BodyPart = null): Pixel[] {
@@ -399,7 +404,7 @@ export class Snake implements DrawableInterface {
     }
 
     private getPartBoundary(index: number): Rectangle {
-        return getRectangleFromPixels(this.getPartPixels(index));
+        return Utils.getRectangleFromPixels(this.getPartPixels(index));
     }
 
     private getHead(): BodyPart {

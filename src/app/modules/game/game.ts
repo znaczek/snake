@@ -9,7 +9,6 @@ import {Bug} from './model/bug.model';
 import {textSmallData} from '../../common/data/text-small.data';
 import {Position} from '../../common/model/position.model';
 import {Pixel} from '../../common/model/pixel.model';
-import {getGameBoarderPixels, getGameBoardOffset, getMaskPixels} from './utils/utils';
 import {AppEvent, EndGameEvent} from '../../common/model/AppEvents';
 import {ClicksEnum} from '../../common/enums/clicks.enum';
 import {AppState} from '../../common/app-state';
@@ -19,6 +18,7 @@ import {Mazez} from './data/mazes.data';
 import {INIT_HEAD} from './data/snake.data';
 import {GameStageInterface} from '../../common/interfaces/game-stage.interface';
 import {first} from 'rxjs/internal/operators';
+import {GameUtils} from './utils/utils';
 
 export class Game implements GameStageInterface {
     private snake: Snake;
@@ -227,12 +227,12 @@ export class Game implements GameStageInterface {
                 offset: new Position(xBugPointsOffset, 1),
             }));
         }
-        absolutePixels.push(...getGameBoarderPixels());
+        absolutePixels.push(...GameUtils.getGameBoarderPixels());
 
         this.canvas.prepareBoard();
-        this.canvas.drawPixels(gameBoardPixels, getGameBoardOffset());
+        this.canvas.drawPixels(gameBoardPixels, GameUtils.getGameBoardOffset());
         this.canvas.drawPixels(absolutePixels);
-        this.canvas.drawPixels(getMaskPixels());
+        this.canvas.drawPixels(GameUtils.getMaskPixels());
     }
 
     private loop(): void {
