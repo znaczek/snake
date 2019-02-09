@@ -1,7 +1,9 @@
 import {Observable} from 'rxjs/index';
-import {WindowParams} from './app/common/model/window-params.model';
 import {map} from 'rxjs/internal/operators';
 import {DrawingConfigInterface} from './app/common/interfaces/drawing-config.interface';
+import {Injectable} from './app/common/di/injectable';
+import {WindowParams} from './app/common/observables/window-params';
+import {WindowParamsModel} from './app/common/model/window-params.model';
 
 declare global {
     interface Window {
@@ -21,6 +23,7 @@ declare global {
  * INIT_LENGTH = 3;
  * INIT_HEAD = {x: 34, y: 18};
  */
+@Injectable
 export class Config {
 
     public static readonly DEBUG_INTRO = false;
@@ -68,7 +71,7 @@ export class Config {
 
     public drawingConfigSnapshot: DrawingConfigInterface;
 
-    constructor(private windowParams$: Observable<WindowParams>) {
+    constructor(private windowParams$: WindowParams<WindowParamsModel>) {
     }
 
     public get drawingConfig$(): Observable<DrawingConfigInterface> {

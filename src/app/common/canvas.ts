@@ -6,18 +6,22 @@ import {combineLatest, Subject} from 'rxjs';
 import {scan, tap} from 'rxjs/internal/operators';
 import {DrawingConfigInterface} from './interfaces/drawing-config.interface';
 import {ColorsEnum} from './enums/color.enums';
+import {Injectable} from './di/injectable';
 
+@Injectable
 export class Canvas {
     private ctx: CanvasRenderingContext2D = null;
-    private drawer$: Subject<Pixel[]> = new Subject();
+    private drawer$: Subject<Pixel[]>;
 
-    constructor(private canvas: HTMLCanvasElement,
-                private config: Config) {
+    constructor(private config: Config,
+                private canvas: HTMLCanvasElement) {
         if (this.ctx !== null) {
             throw new Error('Canvas element is already set');
         }
 
         this.ctx = this.canvas.getContext('2d');
+
+        this.drawer$  = new Subject();
         combineLatest(
             this.config.drawingConfig$.pipe(tap((drawingConfig) => {
                 this._clear(drawingConfig);

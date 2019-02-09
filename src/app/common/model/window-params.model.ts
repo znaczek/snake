@@ -1,6 +1,6 @@
 import {OrientationEnum} from '../enums/orientation.enum';
 
-export class WindowParams {
+export class WindowParamsModel {
 
     public orientation: OrientationEnum;
 

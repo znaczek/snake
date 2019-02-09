@@ -4,9 +4,12 @@ import {AppEvent, StartMenuEvent} from '../../common/model/AppEvents';
 import {stageData} from './data/stage.data';
 import {Pixel} from '../../common/model/pixel.model';
 import {GameStageInterface} from '../../common/interfaces/game-stage.interface';
+import {StageHandler} from '../../common/observables/stage-handler';
+import {Injectable} from '../../common/di/injectable';
 
+@Injectable
 export class Intro implements GameStageInterface {
-    constructor (private stageHandler$: Subject<AppEvent>, private canvas: Canvas) {
+    constructor (private stageHandler$: StageHandler<AppEvent>, private canvas: Canvas) {
     }
 
     public start(): void {

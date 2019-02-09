@@ -16,7 +16,15 @@ import {Config} from '../../../Config';
 import {CustomViewInterface} from '../../common/interfaces/custom-view.interface';
 import {GameStageInterface} from '../../common/interfaces/game-stage.interface';
 import {first} from 'rxjs/internal/operators';
+import {StageHandler} from '../../common/observables/stage-handler';
+import {ClickObservable} from '../../common/observables/click-observable';
+import {Injectable} from '../../common/di/injectable';
+import {Provide} from '../../common/di/provide';
 
+@Injectable
+@Provide({
+    singleton: false,
+})
 export class Menu implements GameStageInterface {
 
     private onClickSubscription: Subscription;
@@ -28,9 +36,9 @@ export class Menu implements GameStageInterface {
     private customView: CustomViewInterface = null;
 
     constructor(private config: Config,
-                private stageHandler$: Subject<AppEvent>,
+                private stageHandler$: StageHandler<AppEvent>,
                 private canvas: Canvas,
-                private onClick$: Observable<ClicksEnum>,
+                private onClick$: ClickObservable<ClicksEnum>,
                 private textWriter: TextWriter,
                 private menuItemFactory: MenuItemFactory,
                 private drawingUtils: DrawingUtils) {

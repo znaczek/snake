@@ -6,38 +6,42 @@ import {TextWriter} from './common/text-writer';
 import {AppEvent, AppEventTypes, StartGameEvent, StartIntroEvent, StartMenuEvent} from './common/model/AppEvents';
 import {Intro} from './modules/intro/intro';
 import {Menu} from './modules/menu/menu';
-import {debounceTime, filter, map, startWith} from 'rxjs/operators';
 import {ClicksEnum} from './common/enums/clicks.enum';
 import {MenuItemFactory} from './modules/menu/factory/menu-item.factory';
 import {DrawingUtils} from './modules/menu/utils/drawing.utils';
 import {Blackboard} from './common/blackboard';
-import {WindowParams} from './common/model/window-params.model';
 import {Config} from '../Config';
-import {DrawingConfigInterface} from './common/interfaces/drawing-config.interface';
 import {GameStageInterface} from './common/interfaces/game-stage.interface';
+import 'reflect-metadata';
+import {Injector} from './common/di/injector';
+import {StageHandler} from './common/observables/stage-handler';
+import {debounceTime, filter, map, startWith} from 'rxjs/internal/operators';
+import {WindowParamsModel} from './common/model/window-params.model';
+import {DrawingConfigInterface} from './common/interfaces/drawing-config.interface';
+import {ClickObservable} from './common/observables/click-observable';
 import {AppState} from './common/app-state';
 
 export class App {
-    private canvas: Canvas;
-    private config: Config;
-    private mealFactory: MealFactory;
-    private textWriter: TextWriter;
-    private onClick$: Observable<ClicksEnum>;
-    private stageHandler$: Subject<AppEvent>;
-    private menuItemFactory: MenuItemFactory;
-    private drawingUtils: DrawingUtils;
-    private board: Blackboard;
+    private canvasElement: HTMLCanvasElement;
+    private keyboardElement: HTMLElement;
     private currentStage: GameStageInterface;
+    private injector: Injector;
 
     constructor(canvas: HTMLCanvasElement, keyboard: HTMLElement) {
-        this.onClick$ = merge(
+        this.keyboardElement = keyboard;
+        this.canvasElement = canvas;
+        this.injector = new Injector();
+    }
+
+    public run() {
+        const onClick$ = merge(
             fromEvent(document, 'keydown').pipe(
                 map((event: KeyboardEvent) => {
                     return <ClicksEnum>event.keyCode;
                 }),
                 filter((event) =>  event in ClicksEnum),
             ),
-            fromEvent(keyboard, 'click').pipe(
+            fromEvent(this.keyboardElement, 'click').pipe(
                 map((event: MouseEvent) => {
                     const code = (<HTMLElement>(event.target)).dataset.code ||
                         (<HTMLElement>(event.target)).parentElement.dataset.code;
@@ -47,49 +51,47 @@ export class App {
             ),
         );
 
-        this.config = new Config(fromEvent(window, 'resize').pipe(
+        const config = new Config(fromEvent(window, 'resize').pipe(
             debounceTime(500),
             map((event: Event ) => {
                 const eventTarget = <Window>event.target;
-                return new WindowParams(eventTarget.innerWidth, eventTarget.innerHeight);
+                return new WindowParamsModel(eventTarget.innerWidth, eventTarget.innerHeight);
             }),
-            startWith(new WindowParams(window.innerWidth, window.innerHeight)),
+            startWith(new WindowParamsModel(window.innerWidth, window.innerHeight)),
         ));
-        this.config.drawingConfig$.subscribe((config: DrawingConfigInterface) => {
-           keyboard.style.width = config.widthPx + 'px';
+        config.drawingConfig$.subscribe((cfg: DrawingConfigInterface) => {
+            this.keyboardElement.style.width = cfg.widthPx + 'px';
         });
-        this.stageHandler$ = new Subject<AppEvent>();
-        this.mealFactory = new MealFactory();
-        this.canvas = new Canvas(canvas, this.config);
-        this.textWriter = new TextWriter();
-        this.menuItemFactory = new MenuItemFactory(this.textWriter);
-        this.drawingUtils = new DrawingUtils(this.textWriter);
-    }
 
-    public run() {
+        const stageHandler$ = new Subject<AppEvent>();
+        this.injector.provide(StageHandler, stageHandler$);
+        this.injector.provide(HTMLCanvasElement, this.canvasElement);
+        this.injector.provide(ClickObservable, onClick$);
+        this.injector.provide(Config, config);
+
         AppState.validateState();
-        this.stageHandler$.subscribe((event) => {
+        stageHandler$.subscribe((event) => {
             if (this.currentStage) {
                 this.currentStage.close();
             }
-            this.canvas.clear();
+
             let startData = null;
             switch (event.type) {
                 case AppEventTypes.START_INTRO: {
-                    this.currentStage = this.createIntro();
+                    this.currentStage = this.injector.resolve(Intro);
                     break;
                 }
                 case AppEventTypes.START_MENU: {
-                    this.currentStage = this.createMenu();
+                    this.currentStage = this.injector.resolve(Menu);
                     break;
                 }
                 case AppEventTypes.START_GAME: {
-                    this.currentStage = this.createGame();
+                    this.currentStage = this.injector.resolve(Game);
                     startData = (<StartGameEvent>event).payload.resumed;
                     break;
                 }
                 case AppEventTypes.END_GAME: {
-                    this.currentStage = this.createMenu();
+                    this.currentStage = this.injector.resolve(Menu);
                     break;
                 }
             }
@@ -102,44 +104,16 @@ export class App {
             }
         });
 
-        this.stageHandler$.next(new StartIntroEvent());
-    }
-
-    private createIntro(): Intro {
-        return new Intro(
-            this.stageHandler$,
-            this.canvas,
-        );
-    }
-
-    private createMenu(): Menu {
-        return new Menu(
-            this.config,
-            this.stageHandler$,
-            this.canvas,
-            this.onClick$,
-            this.textWriter,
-            this.menuItemFactory,
-            this.drawingUtils,
-        );
-    }
-
-    private createGame(): Game {
-        return new Game(
-            this.config,
-            this.stageHandler$,
-            this.canvas,
-            this.onClick$,
-            this.textWriter,
-            this.mealFactory,
-        );
+        // stageHandler$.next(new StartIntroEvent());
+        stageHandler$.next(new StartMenuEvent());
     }
 
     /**
      * For debugging purpose
      */
     private createBlackBoard() {
-        this.board = new Blackboard(this.canvas, this.config);
+        this.currentStage = this.injector.resolve(Blackboard);
+        this.currentStage.start();
     }
 
 }

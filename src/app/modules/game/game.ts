@@ -3,7 +3,7 @@ import {Snake} from './snake';
 import {Config} from '../../../Config';
 import {MealFactory} from './factory/meal.factory';
 import {Apple} from './model/apple.model';
-import {Observable, Subject, Subscription} from 'rxjs/index';
+import {Subscription} from 'rxjs/index';
 import {TextWriter} from '../../common/text-writer';
 import {Bug} from './model/bug.model';
 import {textSmallData} from '../../common/data/text-small.data';
@@ -19,7 +19,15 @@ import {INIT_HEAD} from './data/snake.data';
 import {GameStageInterface} from '../../common/interfaces/game-stage.interface';
 import {first} from 'rxjs/internal/operators';
 import {GameUtils} from './utils/utils';
+import {Injectable} from '../../common/di/injectable';
+import {StageHandler} from '../../common/observables/stage-handler';
+import {ClickObservable} from '../../common/observables/click-observable';
+import {Provide} from '../../common/di/provide';
 
+@Injectable
+@Provide({
+    singleton: false,
+})
 export class Game implements GameStageInterface {
     private snake: Snake;
     private loopTick: number;
@@ -33,14 +41,12 @@ export class Game implements GameStageInterface {
     private paused: boolean = false;
 
     constructor(private config: Config,
-                private stageHandler$: Subject<AppEvent>,
+                private stageHandler$: StageHandler<AppEvent>,
                 private canvas: Canvas,
-                private onClick$: Observable<ClicksEnum>,
+                private onClick$: ClickObservable<ClicksEnum>,
                 private textWriter: TextWriter,
-                private mealFactory: MealFactory,
-                ) {
+                private mealFactory: MealFactory) {
         this.maze = AppState.getMaze();
-
         this.snake = new Snake(INIT_HEAD[this.maze]);
         this.textWriter.setCharData(textSmallData);
     }

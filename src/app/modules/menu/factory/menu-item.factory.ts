@@ -1,7 +1,9 @@
 import {TextWriter} from '../../../common/text-writer';
 import {MenuItem} from '../model/menu-item.model';
 import {MenuDataInterface} from '../interfaces/menu-data.interface';
+import {Injectable} from '../../../common/di/injectable';
 
+@Injectable
 export class MenuItemFactory {
     constructor(private textWriter: TextWriter) {
     }

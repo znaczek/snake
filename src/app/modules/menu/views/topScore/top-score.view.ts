@@ -11,7 +11,10 @@ import {Config} from '../../../../../Config';
 import {AnimationDataInterface} from './animation-data.interface';
 import {animationData} from './animation.data';
 import {takeUntil} from 'rxjs/internal/operators';
+import {ClickObservable} from '../../../../common/observables/click-observable';
+import {Injectable} from '../../../../common/di/injectable';
 
+@Injectable
 export class TopScoreView implements CustomViewInterface {
     private static readonly TITLE = 'Top score:';
     private static STAR_WIDTH = 5;
@@ -22,7 +25,7 @@ export class TopScoreView implements CustomViewInterface {
 
     constructor(private canvas: Canvas,
                 private textWriter: TextWriter,
-                private onClick$: Observable<ClicksEnum>) {
+                private onClick$: ClickObservable<ClicksEnum>) {
         this.onClick$.pipe(takeUntil(this.exit$)).subscribe((event) => {
             if (event === ClicksEnum.ENTER || event === ClicksEnum.ESCAPE) {
                 clearTimeout(this.timer);

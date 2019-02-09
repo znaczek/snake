@@ -4,7 +4,9 @@ import {Position} from '../../../common/model/position.model';
 import {Bug} from '../model/bug.model';
 import {BugTypesEnum} from '../enums/bug-types.enum';
 import {MealsEnum} from '../enums/meals.enum';
+import {Injectable} from '../../../common/di/injectable';
 
+@Injectable
 export class MealFactory {
     private readonly allAvailableMealPositions: {[index in MealsEnum]: Position[]} = {
         [MealsEnum.APPLE]: [],

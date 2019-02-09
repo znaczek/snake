@@ -11,7 +11,10 @@ import {Config} from '../../../../../Config';
 import {AppState} from '../../../../common/app-state';
 import {Snake} from '../../../game/snake';
 import {ColorsEnum} from '../../../../common/enums/color.enums';
+import {ClickObservable} from '../../../../common/observables/click-observable';
+import {Injectable} from '../../../../common/di/injectable';
 
+@Injectable
 export class LevelView implements CustomViewInterface {
     private static readonly NAME = 'LEVEL';
     private static readonly SNAKE_POSITION = new Position(44, 52);
@@ -24,7 +27,7 @@ export class LevelView implements CustomViewInterface {
 
     constructor(private canvas: Canvas,
                 private textWriter: TextWriter,
-                private onClick$: Observable<ClicksEnum>,
+                private onClick$: ClickObservable<ClicksEnum>,
                 private drawingUtils: DrawingUtils) {
         this.snake = new Snake(LevelView.SNAKE_POSITION);
         this.loopTick = Config.SPEED / this.level;

@@ -5,7 +5,10 @@ import {Config} from '../../../../Config';
 import {MENU_ITEM_HEIGHT} from '../constants/menu-item.constants';
 import {Position} from '../../../common/model/position.model';
 import {ColorsEnum} from '../../../common/enums/color.enums';
+import {Injectable} from '../../../common/di/injectable';
 
+// TODO it's not an util (not pure functions set);
+@Injectable
 export class DrawingUtils {
     public static getMenuItemBackground(yOffset: number = 0): Pixel[] {
         const pixels: Pixel[] = [];

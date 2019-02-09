@@ -6,7 +6,10 @@ import {textLargeData} from '../../../common/data/text-large.data';
 import {Observable, Subject} from 'rxjs/index';
 import {ClicksEnum} from '../../../common/enums/clicks.enum';
 import {first} from 'rxjs/internal/operators';
+import {ClickObservable} from '../../../common/observables/click-observable';
+import {Injectable} from '../../../common/di/injectable';
 
+@Injectable
 export class ScoreView implements CustomViewInterface {
     private static readonly GAME_OVER = 'Game over!';
     private static readonly YOUR_SCORE = 'Your score:';
@@ -15,7 +18,7 @@ export class ScoreView implements CustomViewInterface {
 
     constructor(private canvas: Canvas,
                 private textWriter: TextWriter,
-                private onClick$: Observable<ClicksEnum>) {
+                private onClick$: ClickObservable<ClicksEnum>) {
         this.textWriter.setCharData(textLargeData);
 
         this.onClick$.pipe(first()).subscribe(() => {
