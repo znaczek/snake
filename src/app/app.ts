@@ -3,7 +3,7 @@ import {Canvas} from './common/canvas';
 import {MealFactory} from './modules/game/factory/meal.factory';
 import {fromEvent, merge, Observable, Subject} from 'rxjs';
 import {TextWriter} from './common/text-writer';
-import {AppEvent, AppEventTypes, StartGameEvent, StartMenuEvent} from './common/model/AppEvents';
+import {AppEvent, AppEventTypes, StartGameEvent, StartIntroEvent, StartMenuEvent} from './common/model/AppEvents';
 import {Intro} from './modules/intro/intro';
 import {Menu} from './modules/menu/menu';
 import {debounceTime, filter, map, startWith} from 'rxjs/operators';
@@ -75,6 +75,10 @@ export class App {
             this.canvas.clear();
             let startData = null;
             switch (event.type) {
+                case AppEventTypes.START_INTRO: {
+                    this.currentStage = this.createIntro();
+                    break;
+                }
                 case AppEventTypes.START_MENU: {
                     this.currentStage = this.createMenu();
                     break;
@@ -98,7 +102,7 @@ export class App {
             }
         });
 
-        this.stageHandler$.next(new StartMenuEvent());
+        this.stageHandler$.next(new StartIntroEvent());
     }
 
     private createIntro(): Intro {

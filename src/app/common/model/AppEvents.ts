@@ -1,5 +1,6 @@
 /* tslint:disable:max-classes-per-file */
 export enum AppEventTypes {
+    START_INTRO,
     START_MENU,
     START_GAME,
     END_GAME,
@@ -8,6 +9,14 @@ export enum AppEventTypes {
 export interface AppEvent<T = undefined> {
     type: AppEventTypes;
     payload?: T;
+}
+
+export class StartIntroEvent implements AppEvent {
+    public type: AppEventTypes;
+
+    constructor() {
+        this.type = AppEventTypes.START_INTRO;
+    }
 }
 
 export class StartMenuEvent implements AppEvent {
