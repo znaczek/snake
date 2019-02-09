@@ -5,14 +5,14 @@ import {ColorsEnum} from '../../../common/enums/color.enums';
 
 export class GameUtils {
 
-    public static getGameBoardOffset = (): Position => {
+    public static getGameBoardOffset(): Position {
         return new Position(
             Config.BOARD.start.x,
             Config.BOARD.start.y + Config.TOP_BAR_HEIGHT,
         );
     }
 
-    public static getGameBoarderPixels = (): Pixel[] => {
+    public static getGameBoarderPixels(): Pixel[] {
         const pixels: Pixel[] = [];
         for (
             let i = Config.TOP_BAR_HEIGHT;
@@ -34,7 +34,7 @@ export class GameUtils {
         return pixels;
     }
 
-    public static getMaskPixels = (): Pixel[] => {
+    public static getMaskPixels(): Pixel[] {
         const pixels: Pixel[] = [];
         const color = Config.DEBUG_CANVAS ? ColorsEnum.RED : ColorsEnum.GREEN;
         for (
@@ -58,7 +58,7 @@ export class GameUtils {
         return pixels;
     }
 
-    public static checkCollision = (a: Pixel[], b: Pixel[]) => {
+    public static checkCollision(a: Pixel[], b: Pixel[]): boolean {
         return a.some((pixelA) => b.some((pixelB) => {
             return pixelA.x === pixelB.x && pixelA.y === pixelB.y;
         }));

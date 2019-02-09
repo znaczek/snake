@@ -4,11 +4,11 @@ import {Position} from '../model/position.model';
 
 export class Utils {
 
-    public static clone = <T>(obj: T): T => {
+    public static clone<T>(obj: T): T {
         return JSON.parse(JSON.stringify(obj));
     }
 
-    public static isOverlapping = (figure1: Rectangle, figure2: Rectangle) => {
+    public static isOverlapping(figure1: Rectangle, figure2: Rectangle): boolean{
         return !(
             figure1.begin.x >= figure2.end.x ||
             figure2.begin.x >= figure1.end.x ||
@@ -17,7 +17,7 @@ export class Utils {
         );
     }
 
-    public static getRectangleFromPixels = (positions: Position[]) => {
+    public static getRectangleFromPixels(positions: Position[]): Rectangle {
         let minX = 1000;
         let maxX = 0;
         let minY = 1000;
@@ -45,7 +45,7 @@ export class Utils {
         );
     }
 
-    public static isInt = (value: any): boolean => {
+    public static isInt(value: any): boolean {
         if (isNaN(value)) {
             return false;
         }
