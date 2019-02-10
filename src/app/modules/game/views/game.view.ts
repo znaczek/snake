@@ -1,34 +1,35 @@
-import {Canvas} from '../../common/canvas';
-import {Snake} from './snake';
-import {Config} from '../../../Config';
-import {MealFactory} from './factory/meal.factory';
-import {Apple} from './model/apple.model';
-import {Subscription} from 'rxjs/index';
-import {TextWriter} from '../../common/text-writer';
-import {Bug} from './model/bug.model';
-import {textSmallData} from '../../common/data/text-small.data';
-import {Position} from '../../common/model/position.model';
-import {Pixel} from '../../common/model/pixel.model';
-import {AppEvent, EndGameEvent} from '../../common/model/AppEvents';
-import {ClicksEnum} from '../../common/enums/clicks.enum';
-import {AppState} from '../../common/app-state';
-import {ScoreView} from './views/score.view';
-import {GameStateEnum} from './enums/game-state.enum';
-import {Mazez} from './data/mazes.data';
-import {INIT_HEAD} from './data/snake.data';
-import {GameStageInterface} from '../../common/interfaces/game-stage.interface';
-import {first} from 'rxjs/internal/operators';
-import {GameUtils} from './utils/utils';
-import {Injectable} from '../../common/di/injectable';
-import {StageHandler} from '../../common/observables/stage-handler';
-import {ClickObservable} from '../../common/observables/click-observable';
-import {Provide} from '../../common/di/provide';
+import {Canvas} from '../../../common/canvas';
+import {Snake} from '../model/snake';
+import {Config} from '../../../../Config';
+import {MealFactory} from '../factory/meal.factory';
+import {Apple} from '../model/apple.model';
+import {Subject} from 'rxjs/index';
+import {TextWriter} from '../../../common/text-writer';
+import {Bug} from '../model/bug.model';
+import {textSmallData} from '../../../common/data/text-small.data';
+import {Position} from '../../../common/model/position.model';
+import {Pixel} from '../../../common/model/pixel.model';
+import {StageEvent} from '../../../common/model/StageEvents';
+import {ClicksEnum} from '../../../common/enums/clicks.enum';
+import {AppState} from '../../../common/app-state';
+import {ScoreView} from './score.view';
+import {GameStateEnum} from '../enums/game-state.enum';
+import {Mazez} from '../data/mazes.data';
+import {INIT_HEAD} from '../data/snake.data';
+import {ViewInterface} from '../../../common/interfaces/view.interface';
+import {GameUtils} from '../utils/utils';
+import {Injectable} from '../../../common/di/injectable';
+import {StageHandler} from '../../../common/observables/stage-handler';
+import {ClickObservable} from '../../../common/observables/click-observable';
+import {Provide} from '../../../common/di/provide';
+import {MainMenu} from '../../menu/views/main-menu.view';
+import {takeUntil} from 'rxjs/internal/operators';
 
 @Injectable
 @Provide({
     singleton: false,
 })
-export class Game implements GameStageInterface {
+export class Game implements ViewInterface {
     private snake: Snake;
     private loopTick: number;
     private maze: number;
@@ -36,12 +37,12 @@ export class Game implements GameStageInterface {
     private apple: Apple;
     private bug: Bug = null;
     private points: number = 0;
-    private onClickSubscribe: Subscription;
     private gameState: GameStateEnum;
     private paused: boolean = false;
+    private unsubscribe$: Subject<void> = new Subject();
 
     constructor(private config: Config,
-                private stageHandler$: StageHandler<AppEvent>,
+                private stageHandler$: StageHandler<StageEvent<number>>,
                 private canvas: Canvas,
                 private onClick$: ClickObservable<ClicksEnum>,
                 private textWriter: TextWriter,
@@ -77,7 +78,7 @@ export class Game implements GameStageInterface {
     }
 
     public close() {
-        this.onClickSubscribe.unsubscribe();
+        this.unsubscribe$.next();
     }
 
     public pauseGame() {
@@ -90,11 +91,11 @@ export class Game implements GameStageInterface {
             });
         }
         this.gameState = GameStateEnum.PAUSED;
-        this.stageHandler$.next(new EndGameEvent());
+        this.stageHandler$.next(new StageEvent(MainMenu));
     }
 
     private bindEvents(): void {
-        this.onClickSubscribe = this.onClick$.subscribe((event) => {
+        this.onClick$.pipe(takeUntil(this.unsubscribe$)).subscribe((event) => {
             if (this.gameState === GameStateEnum.GAME) {
                 switch (event) {
                     case ClicksEnum.LEFT:
@@ -184,12 +185,7 @@ export class Game implements GameStageInterface {
     }
 
     private drawHighScore() {
-        this.gameState = GameStateEnum.HIGH_SCORE;
-        const scoreView = new ScoreView(this.canvas, this.textWriter, this.onClick$);
-        scoreView.exit$.pipe(first()).subscribe(() => {
-            this.stageHandler$.next(new EndGameEvent());
-        });
-        scoreView.draw(this.points);
+        this.stageHandler$.next(new StageEvent(ScoreView, this.points));
     }
 
     private testMove(): void {

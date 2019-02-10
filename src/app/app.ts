@@ -1,17 +1,11 @@
-import {Game} from './modules/game/game';
-import {Canvas} from './common/canvas';
-import {MealFactory} from './modules/game/factory/meal.factory';
-import {fromEvent, merge, Observable, Subject} from 'rxjs';
-import {TextWriter} from './common/text-writer';
-import {AppEvent, AppEventTypes, StartGameEvent, StartIntroEvent, StartMenuEvent} from './common/model/AppEvents';
-import {Intro} from './modules/intro/intro';
-import {Menu} from './modules/menu/menu';
+import {Game} from './modules/game/views/game.view';
+import {fromEvent, merge, Subject} from 'rxjs';
+import {StageEvent,} from './common/model/StageEvents';
+import {MainMenu} from './modules/menu/views/main-menu.view';
 import {ClicksEnum} from './common/enums/clicks.enum';
-import {MenuItemFactory} from './modules/menu/factory/menu-item.factory';
-import {DrawingUtils} from './modules/menu/utils/drawing.utils';
 import {Blackboard} from './common/blackboard';
 import {Config} from '../Config';
-import {GameStageInterface} from './common/interfaces/game-stage.interface';
+import {ViewInterface} from './common/interfaces/view.interface';
 import 'reflect-metadata';
 import {Injector} from './common/di/injector';
 import {StageHandler} from './common/observables/stage-handler';
@@ -20,11 +14,12 @@ import {WindowParamsModel} from './common/model/window-params.model';
 import {DrawingConfigInterface} from './common/interfaces/drawing-config.interface';
 import {ClickObservable} from './common/observables/click-observable';
 import {AppState} from './common/app-state';
+import {Intro} from './modules/intro/intro';
 
 export class App {
     private canvasElement: HTMLCanvasElement;
     private keyboardElement: HTMLElement;
-    private currentStage: GameStageInterface;
+    private currentStage: ViewInterface;
     private injector: Injector;
 
     constructor(canvas: HTMLCanvasElement, keyboard: HTMLElement) {
@@ -63,39 +58,21 @@ export class App {
             this.keyboardElement.style.width = cfg.widthPx + 'px';
         });
 
-        const stageHandler$ = new Subject<AppEvent>();
+        const stageHandler$ = new Subject<StageEvent>();
         this.injector.provide(StageHandler, stageHandler$);
         this.injector.provide(HTMLCanvasElement, this.canvasElement);
         this.injector.provide(ClickObservable, onClick$);
         this.injector.provide(Config, config);
 
         AppState.validateState();
+
         stageHandler$.subscribe((event) => {
             if (this.currentStage) {
                 this.currentStage.close();
             }
 
-            let startData = null;
-            switch (event.type) {
-                case AppEventTypes.START_INTRO: {
-                    this.currentStage = this.injector.resolve(Intro);
-                    break;
-                }
-                case AppEventTypes.START_MENU: {
-                    this.currentStage = this.injector.resolve(Menu);
-                    break;
-                }
-                case AppEventTypes.START_GAME: {
-                    this.currentStage = this.injector.resolve(Game);
-                    startData = (<StartGameEvent>event).payload.resumed;
-                    break;
-                }
-                case AppEventTypes.END_GAME: {
-                    this.currentStage = this.injector.resolve(Menu);
-                    break;
-                }
-            }
-            this.currentStage.start(startData);
+            this.currentStage = this.injector.resolve(event.view);
+            this.currentStage.start(event.startData);
         });
 
         window.addEventListener('beforeunload', () => {
@@ -103,9 +80,8 @@ export class App {
                 this.currentStage.pauseGame();
             }
         });
-
-        // stageHandler$.next(new StartIntroEvent());
-        stageHandler$.next(new StartMenuEvent());
+        
+        stageHandler$.next(new StageEvent(Intro));
     }
 
     /**

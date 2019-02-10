@@ -7,9 +7,8 @@ import {Position} from '../../../common/model/position.model';
 import {ColorsEnum} from '../../../common/enums/color.enums';
 import {Injectable} from '../../../common/di/injectable';
 
-// TODO it's not an util (not pure functions set);
 @Injectable
-export class DrawingUtils {
+export class DrawingService {
     public static getMenuItemBackground(yOffset: number = 0): Pixel[] {
         const pixels: Pixel[] = [];
         for(let x = 0; x < Config.CANVAS_WIDTH - 7; x += 1) {
@@ -22,16 +21,16 @@ export class DrawingUtils {
 
     public static drawScrollBar(cursor: number, count: number): Pixel[] {
         const pixels: Pixel[] = [];
-        const availableOffsetHeight = DrawingUtils.scrollbarHeight - Config.TOP_BAR_HEIGHT - DrawingUtils.scrollbarIndicatorHeight;
+        const availableOffsetHeight = DrawingService.scrollbarHeight - Config.TOP_BAR_HEIGHT - DrawingService.scrollbarIndicatorHeight;
         const offset = Math.round((cursor / (count - 1)) * (availableOffsetHeight));
-        for (let i = Config.TOP_BAR_HEIGHT; i < DrawingUtils.scrollbarHeight; i += 1) {
+        for (let i = Config.TOP_BAR_HEIGHT; i < DrawingService.scrollbarHeight; i += 1) {
             pixels.push(new Pixel(Config.GAME_CANVAS_WIDTH - 6, i));
         }
         for (let i = 0; i < 3; i += 1) {
             pixels.push(new Pixel(Config.GAME_CANVAS_WIDTH - 5 + i, Config.TOP_BAR_HEIGHT + offset));
             pixels.push(new Pixel(Config.GAME_CANVAS_WIDTH - 5 + i, Config.TOP_BAR_HEIGHT + 6 + offset));
         }
-        for (let i = 0; i < DrawingUtils.scrollbarIndicatorHeight - 2; i += 1) {
+        for (let i = 0; i < DrawingService.scrollbarIndicatorHeight - 2; i += 1) {
             pixels.push(new Pixel(Config.GAME_CANVAS_WIDTH - 2, i + Config.TOP_BAR_HEIGHT + 1 + offset));
             pixels.push(new Pixel(Config.GAME_CANVAS_WIDTH - 6, i + Config.TOP_BAR_HEIGHT + 1 + offset, ColorsEnum.GREEN));
         }

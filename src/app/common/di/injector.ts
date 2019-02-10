@@ -4,8 +4,7 @@ import {PROVIDE_CONFIG_KEY} from './provide';
 import {ConstructorInterface} from '../interfaces/constructor.interface';
 import {ProvideConfigInterface} from '../interfaces/provide-config.interface';
 
-
-
+// TODO resolve "any" types
 export class Injector {
     private static readonly METADATA = 'design:paramtypes';
 
@@ -21,13 +20,8 @@ export class Injector {
 
     private dependencies: { [key: string]: any } = {};
 
-    constructor() {
-        // @ts-ignore
-        window.ld = () => console.log(this.dependencies);
-    }
-
     public resolve(cls: ConstructorInterface): any {
-        const dependenciesMeta = <ConstructorInterface[]>Reflect.getMetadata(Injector.METADATA, cls);
+        const dependenciesMeta = this.getDependenciesMetaRecursive(cls);
         const dependencies = (dependenciesMeta || []).map((depth) => {
             return this.resolve(depth);
         });
@@ -57,6 +51,11 @@ export class Injector {
             throw new Error('Dependency for class "' + cls.name + '" already exists.');
         }
         this.dependencies[qualifier] = object;
+    }
+
+    private getDependenciesMetaRecursive(cls: ConstructorInterface): ConstructorInterface[] {
+        const dependencies = <ConstructorInterface[]>Reflect.getMetadata(Injector.METADATA, cls) || [];
+        return !cls.prototype ? dependencies : dependencies.concat(this.getDependenciesMetaRecursive(cls.prototype));
     }
 
 }

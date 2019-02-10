@@ -10,7 +10,7 @@ export class AppState {
     public static readonly TOP_SCORE = btoa('TOP_SCORE');
     public static readonly GAME_DATA = btoa('GAME_DATA');
 
-    public static validateState() {
+    public static validateState(): void {
         const version = AppState.getItem(AppState.VERSION_KEY);
         if (version !== AppState.VERSION) {
             AppState.removeItem(AppState.LEVEL);
@@ -29,7 +29,7 @@ export class AppState {
         return parseInt(AppState.getItem(AppState.LEVEL), 10) || 1;
     }
 
-    public static setLevel(level: number) {
+    public static setLevel(level: number): void {
         AppState.setItem(AppState.LEVEL, level.toString());
     }
 
@@ -37,7 +37,7 @@ export class AppState {
         return parseInt(AppState.getItem(AppState.MAZE), 10) || 1;
     }
 
-    public static setMaze(maze: number) {
+    public static setMaze(maze: number): void {
         AppState.setItem(AppState.MAZE, maze.toString());
     }
 

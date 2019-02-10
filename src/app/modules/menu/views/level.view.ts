@@ -1,37 +1,48 @@
-import {CustomViewInterface} from '../../../../common/interfaces/custom-view.interface';
-import {Observable, Subject} from 'rxjs/index';
-import {Canvas} from '../../../../common/canvas';
-import {TextWriter} from '../../../../common/text-writer';
-import {ClicksEnum} from '../../../../common/enums/clicks.enum';
-import {Pixel} from '../../../../common/model/pixel.model';
+import {Subject} from 'rxjs/index';
+import {Canvas} from '../../../common/canvas';
+import {TextWriter} from '../../../common/text-writer';
+import {ClicksEnum} from '../../../common/enums/clicks.enum';
+import {Pixel} from '../../../common/model/pixel.model';
 import {takeUntil} from 'rxjs/internal/operators';
-import {DrawingUtils} from '../../utils/drawing.utils';
-import {Position} from '../../../../common/model/position.model';
-import {Config} from '../../../../../Config';
-import {AppState} from '../../../../common/app-state';
-import {Snake} from '../../../game/snake';
-import {ColorsEnum} from '../../../../common/enums/color.enums';
-import {ClickObservable} from '../../../../common/observables/click-observable';
-import {Injectable} from '../../../../common/di/injectable';
+import {Position} from '../../../common/model/position.model';
+import {Config} from '../../../../Config';
+import {AppState} from '../../../common/app-state';
+import {Snake} from '../../game/model/snake';
+import {ColorsEnum} from '../../../common/enums/color.enums';
+import {ClickObservable} from '../../../common/observables/click-observable';
+import {Injectable} from '../../../common/di/injectable';
+import {DrawingService} from '../service/drawing.service';
+import {ViewInterface} from '../../../common/interfaces/view.interface';
+import {StageHandler} from '../../../common/observables/stage-handler';
+import {StageEvent} from '../../../common/model/StageEvents';
+import {MainMenu, MainMenuKeysEnum} from './main-menu.view';
+import {Provide} from '../../../common/di/provide';
 
 @Injectable
-export class LevelView implements CustomViewInterface {
+@Provide({
+    singleton: false,
+})
+export class LevelView implements ViewInterface {
     private static readonly NAME = 'LEVEL';
     private static readonly SNAKE_POSITION = new Position(44, 52);
-    public exit$: Subject<void> = new Subject();
 
     private level: number = AppState.getLevel();
     private snake: Snake;
     private loopTick: number;
     private interval: number;
+    private unsubscribe$: Subject<void> = new Subject();
 
     constructor(private canvas: Canvas,
                 private textWriter: TextWriter,
                 private onClick$: ClickObservable<ClicksEnum>,
-                private drawingUtils: DrawingUtils) {
+                private drawingService: DrawingService,
+                private stageHandler$: StageHandler<StageEvent<number>>) {
+    }
+
+    public start() {
         this.snake = new Snake(LevelView.SNAKE_POSITION);
         this.loopTick = Config.SPEED / this.level;
-        this.onClick$.pipe(takeUntil(this.exit$))
+        this.onClick$.pipe(takeUntil(this.unsubscribe$))
             .subscribe((event) => {
                 switch (event) {
                     case ClicksEnum.LEFT:
@@ -43,18 +54,21 @@ export class LevelView implements CustomViewInterface {
                         this.draw();
                         break;
                     case ClicksEnum.ESCAPE:
-                        clearInterval(this.interval);
-                        this.exit$.next();
+                        this.stageHandler$.next(new StageEvent(MainMenu, MainMenuKeysEnum.LEVEL));
                         return;
                     case ClicksEnum.ENTER:
-                        clearInterval(this.interval);
                         AppState.setLevel(this.level);
-                        this.exit$.next();
+                        this.stageHandler$.next(new StageEvent(MainMenu, MainMenuKeysEnum.LEVEL));
                         return;
                 }
                 this.loopTick = Config.SPEED / this.level;
             });
         this.loop();
+    }
+
+    public close() {
+        this.unsubscribe$.next();
+        clearInterval(this.interval);
     }
 
     public draw() {
@@ -63,7 +77,7 @@ export class LevelView implements CustomViewInterface {
         for (let i = 1; i <= 9; i += 1) {
             pixels.push(...this.getBarPixels(i, i <= this.level));
         }
-        pixels.push(...this.drawingUtils.drawMenuHeader(LevelView.NAME));
+        pixels.push(...this.drawingService.drawMenuHeader(LevelView.NAME));
         pixels.push(...this.snake.getPixels());
         pixels.push(...this.getMaskPixels());
         this.canvas.drawPixels(pixels);

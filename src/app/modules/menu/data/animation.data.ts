@@ -1,5 +1,5 @@
-import {Position} from '../../../../common/model/position.model';
-import {AnimationDataInterface} from './animation-data.interface';
+import {Position} from '../../../common/model/position.model';
+import {AnimationDataInterface} from '../interfaces/animation-data.interface';
 
 export const animationData: AnimationDataInterface[][] = [
     /* tslint:disable:max-line-length */

@@ -1,17 +1,17 @@
-import {Config} from '../../../Config';
-import {DirectionEnum} from '../../common/enums/direction.enum';
-import {BodyPartEnum} from './enums/body-part.enum';
-import {Position} from '../../common/model/position.model';
-import {BodyPart} from './model/body-part.model';
-import {Utils} from '../../common/utils/utils';
-import {Pixel} from '../../common/model/pixel.model';
-import {DRAW_DATA} from './data/snake.data';
-import {Rectangle} from '../../common/model/rectangle.model';
-import {Eatable} from './model/eatable.model';
-import {EatenMeal} from './model/eaten-meal.model';
-import {DrawableInterface} from '../../common/interfaces/drawable.interface';
-import {SavedSnake} from './model/saved-snake.model';
-import {GameUtils} from './utils/utils';
+import {Config} from '../../../../Config';
+import {DirectionEnum} from '../../../common/enums/direction.enum';
+import {BodyPartEnum} from '../enums/body-part.enum';
+import {Position} from '../../../common/model/position.model';
+import {BodyPart} from './body-part.model';
+import {Utils} from '../../../common/utils/utils';
+import {Pixel} from '../../../common/model/pixel.model';
+import {DRAW_DATA} from '../data/snake.data';
+import {Rectangle} from '../../../common/model/rectangle.model';
+import {Eatable} from './eatable.model';
+import {EatenMeal} from './eaten-meal.model';
+import {DrawableInterface} from '../../../common/interfaces/drawable.interface';
+import {SavedSnake} from './saved-snake.model';
+import {GameUtils} from '../utils/utils';
 
 export class Snake implements DrawableInterface {
     private body: BodyPart[];

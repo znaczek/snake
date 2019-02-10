@@ -1,41 +1,52 @@
-import {CustomViewInterface} from '../../../../common/interfaces/custom-view.interface';
-import {Canvas} from '../../../../common/canvas';
-import {TextWriter} from '../../../../common/text-writer';
-import {Observable, Subject} from 'rxjs/index';
-import {AppState} from '../../../../common/app-state';
-import {Position} from '../../../../common/model/position.model';
-import {ClicksEnum} from '../../../../common/enums/clicks.enum';
-import {textLargeData} from '../../../../common/data/text-large.data';
-import {Pixel} from '../../../../common/model/pixel.model';
-import {Config} from '../../../../../Config';
-import {AnimationDataInterface} from './animation-data.interface';
-import {animationData} from './animation.data';
+import {Canvas} from '../../../common/canvas';
+import {TextWriter} from '../../../common/text-writer';
+import {Subject, timer} from 'rxjs/index';
+import {AppState} from '../../../common/app-state';
+import {Position} from '../../../common/model/position.model';
+import {ClicksEnum} from '../../../common/enums/clicks.enum';
+import {textLargeData} from '../../../common/data/text-large.data';
+import {Pixel} from '../../../common/model/pixel.model';
+import {Config} from '../../../../Config';
+import {AnimationDataInterface} from '../interfaces/animation-data.interface';
+import {animationData} from '../data/animation.data';
 import {takeUntil} from 'rxjs/internal/operators';
-import {ClickObservable} from '../../../../common/observables/click-observable';
-import {Injectable} from '../../../../common/di/injectable';
+import {ClickObservable} from '../../../common/observables/click-observable';
+import {Injectable} from '../../../common/di/injectable';
+import {StageEvent} from '../../../common/model/StageEvents';
+import {StageHandler} from '../../../common/observables/stage-handler';
+import {MainMenu, MainMenuKeysEnum} from './main-menu.view';
+import {ViewInterface} from '../../../common/interfaces/view.interface';
 
 @Injectable
-export class TopScoreView implements CustomViewInterface {
+export class TopScoreView implements ViewInterface {
     private static readonly TITLE = 'Top score:';
     private static STAR_WIDTH = 5;
     private static STAR_HEIGHT = 4;
+    private static ANIMATION_TIME = 150;
 
-    public exit$: Subject<void> = new Subject();
     private timer: number;
+    private unsubscribe$: Subject<void> = new Subject();
 
     constructor(private canvas: Canvas,
                 private textWriter: TextWriter,
-                private onClick$: ClickObservable<ClicksEnum>) {
-        this.onClick$.pipe(takeUntil(this.exit$)).subscribe((event) => {
+                private onClick$: ClickObservable<ClicksEnum>,
+                private stageHandler$: StageHandler<StageEvent<number>>) {
+    }
+
+    public start(): void {
+        this.onClick$.pipe(takeUntil(this.unsubscribe$)).subscribe((event) => {
             if (event === ClicksEnum.ENTER || event === ClicksEnum.ESCAPE) {
                 clearTimeout(this.timer);
-                this.exit$.next();
+                this.stageHandler$.next(new StageEvent(MainMenu, MainMenuKeysEnum.TOP_SCORE));
             }
+        });
+        timer(0, TopScoreView.ANIMATION_TIME).pipe(takeUntil(this.unsubscribe$)).subscribe((i) => {
+            this.drawFrame(i < 9 ? i : (i - 8) % 2 + 9);
         });
     }
 
-    public draw(): void {
-        this.drawFrame();
+    public close() {
+        this.unsubscribe$.next();
     }
 
     private drawFrame(counter: number = 0) {
@@ -53,13 +64,6 @@ export class TopScoreView implements CustomViewInterface {
 
         this.canvas.prepareBoard();
         this.canvas.drawPixels(pixels);
-
-        this.timer = setTimeout(() => {
-            if (counter > 9) {
-                counter = 8;
-            }
-            this.drawFrame(counter + 1);
-        }, 150);
     }
 
     private getAnimationPixels(counter: number, offset: Position): Pixel[] {
