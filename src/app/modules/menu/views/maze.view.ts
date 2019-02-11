@@ -15,9 +15,6 @@ import {DrawingService} from '../service/drawing.service';
 import {TextWriter} from '../../../common/text-writer';
 
 @Injectable
-@Provide({
-    singleton: false,
-})
 export class MazeView extends AbstractListMenuView {
 
     protected static readonly listData: MenuListItemInterface[] = [

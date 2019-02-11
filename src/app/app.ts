@@ -1,11 +1,10 @@
 import {Game} from './modules/game/views/game.view';
 import {fromEvent, merge, Subject} from 'rxjs';
-import {StageEvent,} from './common/model/StageEvents';
-import {MainMenu} from './modules/menu/views/main-menu.view';
+import {StageEvent} from './common/model/StageEvents';
 import {ClicksEnum} from './common/enums/clicks.enum';
 import {Blackboard} from './common/blackboard';
 import {Config} from '../Config';
-import {ViewInterface} from './common/interfaces/view.interface';
+import {AbstractView} from './common/views/abstract.view';
 import 'reflect-metadata';
 import {Injector} from './common/di/injector';
 import {StageHandler} from './common/observables/stage-handler';
@@ -19,7 +18,7 @@ import {Intro} from './modules/intro/intro';
 export class App {
     private canvasElement: HTMLCanvasElement;
     private keyboardElement: HTMLElement;
-    private currentStage: ViewInterface;
+    private currentStage: AbstractView;
     private injector: Injector;
 
     constructor(canvas: HTMLCanvasElement, keyboard: HTMLElement) {
@@ -80,7 +79,7 @@ export class App {
                 this.currentStage.pauseGame();
             }
         });
-        
+
         stageHandler$.next(new StageEvent(Intro));
     }
 

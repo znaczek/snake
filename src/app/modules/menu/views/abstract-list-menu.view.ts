@@ -7,7 +7,7 @@ import {ColorsEnum} from '../../../common/enums/color.enums';
 import {MENU_ITEM_HEIGHT} from '../constants/menu-item.constants';
 import {ClicksEnum} from '../../../common/enums/clicks.enum';
 import {Config} from '../../../../Config';
-import {ViewInterface} from '../../../common/interfaces/view.interface';
+import {AbstractView} from '../../../common/views/abstract.view';
 import {StageHandler} from '../../../common/observables/stage-handler';
 import {ClickObservable} from '../../../common/observables/click-observable';
 import {MenuListItemInterface} from '../interfaces/menu-list-item.interface';
@@ -18,7 +18,7 @@ import {takeUntil} from 'rxjs/internal/operators';
 import {ConstructorInterface} from '../../../common/interfaces/constructor.interface';
 
 @Injectable
-export abstract class AbstractListMenuView implements ViewInterface {
+export abstract class AbstractListMenuView extends AbstractView {
 
     protected abstract readonly header: string;
     protected abstract readonly parentView: ConstructorInterface;
@@ -35,6 +35,7 @@ export abstract class AbstractListMenuView implements ViewInterface {
                 protected onClick$: ClickObservable<ClicksEnum>,
                 protected textWriter: TextWriter,
                 protected drawingService: DrawingService) {
+        super();
     }
 
     public start(startItem: number): void {

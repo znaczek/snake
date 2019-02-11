@@ -19,9 +19,6 @@ export enum MainMenuKeysEnum {
 }
 
 @Injectable
-@Provide({
-    singleton: false,
-})
 export class MainMenu extends AbstractListMenuView {
 
     public static readonly listData: MenuListItemInterface[] = [

@@ -10,14 +10,11 @@ import {Injectable} from '../../../common/di/injectable';
 import {StageHandler} from '../../../common/observables/stage-handler';
 import {StageEvent} from '../../../common/model/StageEvents';
 import {MainMenu} from '../../menu/views/main-menu.view';
-import {ViewInterface} from '../../../common/interfaces/view.interface';
+import {AbstractView} from '../../../common/views/abstract.view';
 import {Provide} from '../../../common/di/provide';
 
 @Injectable
-@Provide({
-    singleton: false,
-})
-export class ScoreView implements ViewInterface {
+export class ScoreView extends AbstractView {
     private static readonly GAME_OVER = 'Game over!';
     private static readonly YOUR_SCORE = 'Your score:';
 
@@ -25,15 +22,17 @@ export class ScoreView implements ViewInterface {
                 private textWriter: TextWriter,
                 private onClick$: ClickObservable<ClicksEnum>,
                 private stageHandler$: StageHandler<StageEvent>) {
+        super();
+    }
+
+    public start(points: number): void {
         this.textWriter.setCharData(textLargeData);
 
         merge(
             this.onClick$,
             timer(3000),
         ).pipe(first()).subscribe(() => this.end());
-    }
 
-    public start(points: number): void {
         this.canvas.prepareBoard();
         this.canvas.drawPixels(this.textWriter.write(ScoreView.GAME_OVER).getPixels({
             offset: new Position(2, 3),

@@ -16,7 +16,7 @@ import {ScoreView} from './score.view';
 import {GameStateEnum} from '../enums/game-state.enum';
 import {Mazez} from '../data/mazes.data';
 import {INIT_HEAD} from '../data/snake.data';
-import {ViewInterface} from '../../../common/interfaces/view.interface';
+import {AbstractView} from '../../../common/views/abstract.view';
 import {GameUtils} from '../utils/utils';
 import {Injectable} from '../../../common/di/injectable';
 import {StageHandler} from '../../../common/observables/stage-handler';
@@ -26,10 +26,7 @@ import {MainMenu} from '../../menu/views/main-menu.view';
 import {takeUntil} from 'rxjs/internal/operators';
 
 @Injectable
-@Provide({
-    singleton: false,
-})
-export class Game implements ViewInterface {
+export class Game extends AbstractView {
     private snake: Snake;
     private loopTick: number;
     private maze: number;
@@ -47,12 +44,13 @@ export class Game implements ViewInterface {
                 private onClick$: ClickObservable<ClicksEnum>,
                 private textWriter: TextWriter,
                 private mealFactory: MealFactory) {
-        this.maze = AppState.getMaze();
-        this.snake = new Snake(INIT_HEAD[this.maze]);
-        this.textWriter.setCharData(textSmallData);
+        super();
     }
 
     public start(resumed: boolean): Game {
+        this.maze = AppState.getMaze();
+        this.snake = new Snake(INIT_HEAD[this.maze]);
+        this.textWriter.setCharData(textSmallData);
         this.loopTick = Config.SPEED / AppState.getLevel();
         this.bindEvents();
         this.canvas.clear();

@@ -5,11 +5,11 @@ import {Config} from '../../Config';
 import {mergeMap, takeUntil, tap} from 'rxjs/internal/operators';
 import {ColorsEnum} from './enums/color.enums';
 import {Position} from './model/position.model';
-import {ViewInterface} from './interfaces/view.interface';
+import {AbstractView} from './views/abstract.view';
 import {Injectable} from './di/injectable';
 
 @Injectable
-export class Blackboard implements ViewInterface {
+export class Blackboard extends AbstractView {
     private pixels: Pixel[] = [];
     private lastPosition: Position = new Position(0 ,0);
     private toggle = true;
@@ -18,6 +18,7 @@ export class Blackboard implements ViewInterface {
     constructor(private canvas: Canvas,
                 private config: Config,
                 pixels: Pixel[] = []) {
+        super();
         this.pixels = pixels;
     }
 

@@ -4,7 +4,6 @@ import {PROVIDE_CONFIG_KEY} from './provide';
 import {ConstructorInterface} from '../interfaces/constructor.interface';
 import {ProvideConfigInterface} from '../interfaces/provide-config.interface';
 
-// TODO resolve "any" types
 export class Injector {
     private static readonly METADATA = 'design:paramtypes';
 
@@ -20,14 +19,14 @@ export class Injector {
 
     private dependencies: { [key: string]: any } = {};
 
-    public resolve(cls: ConstructorInterface): any {
+    public resolve<T extends {}>(cls: ConstructorInterface<T>): T {
         const dependenciesMeta = this.getDependenciesMetaRecursive(cls);
         const dependencies = (dependenciesMeta || []).map((depth) => {
             return this.resolve(depth);
         });
         const qualifier = Injector.getQualifier(cls);
 
-        const provideConfig = <ProvideConfigInterface>Reflect.getMetadata(PROVIDE_CONFIG_KEY, cls);
+        const provideConfig = this.getMostRecentProvide(cls);
         if (!provideConfig || provideConfig.singleton) {
             const existingDependency = this.dependencies[qualifier];
             if (existingDependency) {
@@ -35,7 +34,7 @@ export class Injector {
             }
         }
 
-        const dependency = {};
+        const dependency = <T>{};
         // @ts-ignore
         dependency.__proto__ = cls.prototype;
 
@@ -44,13 +43,21 @@ export class Injector {
         return dependency;
     }
 
-    public provide(cls: ConstructorInterface, object: any): any {
+    public provide<T extends object>(cls: ConstructorInterface<T>, object: T): void {
         const qualifier = Injector.getQualifier(cls);
         const existingDependency = this.dependencies[qualifier];
         if (existingDependency) {
             throw new Error('Dependency for class "' + cls.name + '" already exists.');
         }
         this.dependencies[qualifier] = object;
+    }
+
+    private getMostRecentProvide(cls: ConstructorInterface): ProvideConfigInterface {
+        const provide = <ProvideConfigInterface>Reflect.getMetadata(PROVIDE_CONFIG_KEY, cls);
+        if (!provide && cls.prototype) {
+            return this.getMostRecentProvide(cls.prototype);
+        }
+        return provide;
     }
 
     private getDependenciesMetaRecursive(cls: ConstructorInterface): ConstructorInterface[] {

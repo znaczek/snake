@@ -15,10 +15,11 @@ import {Injectable} from '../../../common/di/injectable';
 import {StageEvent} from '../../../common/model/StageEvents';
 import {StageHandler} from '../../../common/observables/stage-handler';
 import {MainMenu, MainMenuKeysEnum} from './main-menu.view';
-import {ViewInterface} from '../../../common/interfaces/view.interface';
+import {AbstractView} from '../../../common/views/abstract.view';
+import {Provide} from '../../../common/di/provide';
 
 @Injectable
-export class TopScoreView implements ViewInterface {
+export class TopScoreView extends AbstractView {
     private static readonly TITLE = 'Top score:';
     private static STAR_WIDTH = 5;
     private static STAR_HEIGHT = 4;
@@ -31,6 +32,7 @@ export class TopScoreView implements ViewInterface {
                 private textWriter: TextWriter,
                 private onClick$: ClickObservable<ClicksEnum>,
                 private stageHandler$: StageHandler<StageEvent<number>>) {
+        super();
     }
 
     public start(): void {

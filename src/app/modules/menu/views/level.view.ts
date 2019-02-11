@@ -12,17 +12,13 @@ import {ColorsEnum} from '../../../common/enums/color.enums';
 import {ClickObservable} from '../../../common/observables/click-observable';
 import {Injectable} from '../../../common/di/injectable';
 import {DrawingService} from '../service/drawing.service';
-import {ViewInterface} from '../../../common/interfaces/view.interface';
+import {AbstractView} from '../../../common/views/abstract.view';
 import {StageHandler} from '../../../common/observables/stage-handler';
 import {StageEvent} from '../../../common/model/StageEvents';
 import {MainMenu, MainMenuKeysEnum} from './main-menu.view';
-import {Provide} from '../../../common/di/provide';
 
 @Injectable
-@Provide({
-    singleton: false,
-})
-export class LevelView implements ViewInterface {
+export class LevelView extends AbstractView {
     private static readonly NAME = 'LEVEL';
     private static readonly SNAKE_POSITION = new Position(44, 52);
 
@@ -37,6 +33,7 @@ export class LevelView implements ViewInterface {
                 private onClick$: ClickObservable<ClicksEnum>,
                 private drawingService: DrawingService,
                 private stageHandler$: StageHandler<StageEvent<number>>) {
+        super();
     }
 
     public start() {

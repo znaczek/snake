@@ -1,5 +1,5 @@
-export interface ConstructorInterface {
-    new (...args: any[]): any;
-}
+import {ClassInterface} from './class.interface';
 
-export type Constructor<T> = {prototype: T};
+export interface ConstructorInterface<T = any> extends ClassInterface<T> {
+    new (...args: any[]): T;
+}
