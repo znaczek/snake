@@ -3,7 +3,7 @@ import {Pixel} from './model/pixel.model';
 import {COLORS} from './common.constants';
 import {Position} from './model/position.model';
 import {combineLatest, Subject} from 'rxjs';
-import {scan, tap} from 'rxjs/internal/operators';
+import {tap} from 'rxjs/internal/operators';
 import {DrawingConfigInterface} from './interfaces/drawing-config.interface';
 import {ColorsEnum} from './enums/color.enums';
 import {Injectable} from './di/injectable';
@@ -21,27 +21,21 @@ export class Canvas {
 
         this.ctx = this.canvas.getContext('2d');
 
-        this.drawer$  = new Subject();
+        this.drawer$ = new Subject();
         combineLatest(
-            this.config.drawingConfig$.pipe(tap((drawingConfig) => {
-                this._clear(drawingConfig);
-                this.setCanvasParams(drawingConfig);
-            })),
-            this.drawer$.pipe(scan((a, b) => !b ? [] : [...a, ...b], [])),
+            this.config.drawingConfig$.pipe(
+                tap((drawingConfig) => {
+                    this.setCanvasParams(drawingConfig);
+                })),
+            this.drawer$,
         ).subscribe(([drawingConfig, pixels]) => {
+            this._clear(drawingConfig);
             this._drawPixels(pixels, drawingConfig);
         });
     }
 
     public clear(): void {
         this.drawer$.next();
-    }
-
-    public prepareBoard(): void {
-        this.clear();
-        if (Config.DEBUG_CANVAS) {
-            this.drawGrid();
-        }
     }
 
     public drawPixels(pixels: Pixel[], offset: Position = new Position(0, 0)): void {
@@ -60,8 +54,8 @@ export class Canvas {
         this.ctx.fillRect(
             pixel.x * config.pixelSize,
             pixel.y * config.pixelSize,
-            config.pixelSize- config.pixelSpace,
-            config.pixelSize- config.pixelSpace,
+            config.pixelSize - config.pixelSpace,
+            config.pixelSize - config.pixelSpace,
         );
     }
 

@@ -33,16 +33,11 @@ export class ScoreView extends AbstractView {
             timer(3000),
         ).pipe(first()).subscribe(() => this.end());
 
-        this.canvas.prepareBoard();
-        this.canvas.drawPixels(this.textWriter.write(ScoreView.GAME_OVER).getPixels({
-            offset: new Position(2, 3),
-        }));
-        this.canvas.drawPixels(this.textWriter.write(ScoreView.YOUR_SCORE).getPixels({
-            offset: new Position(2, 18),
-        }));
-        this.canvas.drawPixels(this.textWriter.write(points.toString()).getPixels({
-            offset: new Position(2, 33),
-        }));
+        this.canvas.drawPixels([
+            ...this.textWriter.write(ScoreView.GAME_OVER).getPixels({offset: new Position(2, 3)}),
+            ...this.textWriter.write(points.toString()).getPixels({offset: new Position(2, 33)}),
+            ...this.textWriter.write(ScoreView.YOUR_SCORE).getPixels({offset: new Position(2, 18)}),
+        ]);
     }
 
     public close() {}

@@ -69,7 +69,6 @@ export class LevelView extends AbstractView {
     }
 
     public draw() {
-        this.canvas.clear();
         const pixels: Pixel[] = [];
         for (let i = 1; i <= 9; i += 1) {
             pixels.push(...this.getBarPixels(i, i <= this.level));

@@ -16,9 +16,11 @@ import {textMediumData} from '../../../common/data/text-medium.data';
 import {Injectable} from '../../../common/di/injectable';
 import {takeUntil} from 'rxjs/internal/operators';
 import {ConstructorInterface} from '../../../common/interfaces/constructor.interface';
+import {Pixel} from '../../../common/model/pixel.model';
 
 @Injectable
 export abstract class AbstractListMenuView extends AbstractView {
+    private static readonly MENU_LIST_OFFSET = new Position(2, 2);
 
     protected abstract readonly header: string;
     protected abstract readonly parentView: ConstructorInterface;
@@ -89,25 +91,27 @@ export abstract class AbstractListMenuView extends AbstractView {
             return index >= this.offset && (index - this.offset + 1) * MENU_ITEM_HEIGHT < Config.CANVAS_HEIGHT - Config.TOP_BAR_HEIGHT;
         });
 
-        this.canvas.prepareBoard();
-        this.canvas.drawPixels(this.drawingService.drawMenuHeader(this.header));
+        const headerPixels = this.drawingService.drawMenuHeader(this.header);
         this.textWriter.setCharData(textMediumData);
 
-        drawableChildren
-            .forEach((item: MenuListItemInterface, index: number) => {
+        const listPixels = drawableChildren.reduce((acc: Pixel[], item: MenuListItemInterface, index: number) => {
                 let color = ColorsEnum.BLACK;
+                let currentItemPixels: Pixel[] = [];
                 if (this.cursor === index + this.offset) {
-                    this.canvas.drawPixels(DrawingService.getMenuItemBackground(index * MENU_ITEM_HEIGHT + Config.TOP_BAR_HEIGHT));
+                    currentItemPixels = DrawingService.getMenuItemBackground(index * MENU_ITEM_HEIGHT + Config.TOP_BAR_HEIGHT);
                     color = ColorsEnum.GREEN;
                 }
-                const pixels = this.textWriter.write(item.text).getPixels({
-                    offset: new Position(0, index * MENU_ITEM_HEIGHT + Config.TOP_BAR_HEIGHT),
+                const itemsPixels = this.textWriter.write(item.text).getPixels({
+                    offset: new Position(
+                        AbstractListMenuView.MENU_LIST_OFFSET.x,
+                        index * MENU_ITEM_HEIGHT + Config.TOP_BAR_HEIGHT + AbstractListMenuView.MENU_LIST_OFFSET.y),
                     color,
                 });
-                this.canvas.drawPixels(pixels, new Position(2, 2));
-            });
+                return [...acc, ...currentItemPixels, ...itemsPixels];
+            }, []);
 
-        this.canvas.drawPixels(DrawingService.drawScrollBar(this.cursor, this.list.length));
+        const scrollbarPixels = DrawingService.drawScrollBar(this.cursor, this.list.length);
+        this.canvas.drawPixels([...headerPixels, ...listPixels, ...scrollbarPixels]);
     }
 
     private goToPreviousMenuItem() {

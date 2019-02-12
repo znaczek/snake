@@ -15,7 +15,6 @@ export class Intro extends AbstractView {
     }
 
     public start(): void {
-        this.canvas.prepareBoard();
         this.canvas.drawPixels(stageData.map((item) => new Pixel(item.x, item.y)));
         setTimeout(() => {
             this.stageHandler$.next(new StageEvent(MainMenu));

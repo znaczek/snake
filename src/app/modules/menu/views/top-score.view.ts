@@ -64,7 +64,6 @@ export class TopScoreView extends AbstractView {
         }));
         pixels.push(...this.getAnimationPixels(counter, new Position(Config.CANVAS_WIDTH - 4 * TopScoreView.STAR_WIDTH, 1)));
 
-        this.canvas.prepareBoard();
         this.canvas.drawPixels(pixels);
     }
 

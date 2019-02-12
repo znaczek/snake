@@ -120,7 +120,6 @@ export class Blackboard extends AbstractView {
     }
 
     private draw() {
-        this.canvas.prepareBoard();
         this.canvas.drawPixels(this.pixels);
     }
 

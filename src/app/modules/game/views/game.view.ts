@@ -21,7 +21,6 @@ import {GameUtils} from '../utils/utils';
 import {Injectable} from '../../../common/di/injectable';
 import {StageHandler} from '../../../common/observables/stage-handler';
 import {ClickObservable} from '../../../common/observables/click-observable';
-import {Provide} from '../../../common/di/provide';
 import {MainMenu} from '../../menu/views/main-menu.view';
 import {takeUntil} from 'rxjs/internal/operators';
 
@@ -53,7 +52,6 @@ export class Game extends AbstractView {
         this.textWriter.setCharData(textSmallData);
         this.loopTick = Config.SPEED / AppState.getLevel();
         this.bindEvents();
-        this.canvas.clear();
         this.gameState = GameStateEnum.GAME;
 
         if (resumed) {
@@ -195,7 +193,6 @@ export class Game extends AbstractView {
     }
 
     private draw(withSnake: boolean = true) {
-        this.canvas.clear();
         const gameBoardPixels: Pixel[] = [];
         const absolutePixels: Pixel[] = [];
 
@@ -227,12 +224,14 @@ export class Game extends AbstractView {
                 offset: new Position(xBugPointsOffset, 1),
             }));
         }
+        const gameBoarderPixels = GameUtils.getGameBoardOffset();
+        const absoluteGameBoardPixels = gameBoardPixels.map((pixel) => new Pixel(
+            pixel.x + gameBoarderPixels.x,
+            pixel.y + gameBoarderPixels.y,
+        ));
         absolutePixels.push(...GameUtils.getGameBoarderPixels());
 
-        this.canvas.prepareBoard();
-        this.canvas.drawPixels(gameBoardPixels, GameUtils.getGameBoardOffset());
-        this.canvas.drawPixels(absolutePixels);
-        this.canvas.drawPixels(GameUtils.getMaskPixels());
+        this.canvas.drawPixels([...absoluteGameBoardPixels, ...absolutePixels, ...GameUtils.getMaskPixels()]);
     }
 
     private loop(): void {
