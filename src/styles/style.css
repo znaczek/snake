@@ -9,6 +9,9 @@ canvas.debug {
     background-size: 1709px;
 }
 
+#app-root {
+    margin-top: auto;
+}
 #keyboard {
     margin-top: 20px;
 }
@@ -48,4 +51,17 @@ button.escape {
 
 button.enter {
     right: 0;
+}
+
+.github-link {
+    margin-top: auto;
+    align-self: flex-end;
+    margin-right: 10px;
+    margin-bottom: 8px;
+}
+
+@media (max-width: 599px) {
+    .github-link img {
+        width: 24px;
+    }
 }
