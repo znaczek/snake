@@ -1,7 +1,7 @@
 import {Eatable} from './eatable.model';
 import {DrawableInterface} from '../../../common/interfaces/drawable.interface';
 import {Pixel} from '../../../common/model/pixel.model';
-import {Config} from '../../../../Config';
+import {Config} from '../../../../config';
 
 export class Apple extends Eatable implements DrawableInterface {
     public static readonly width = Config.MOVE;

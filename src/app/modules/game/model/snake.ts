@@ -1,4 +1,4 @@
-import {Config} from '../../../../Config';
+import {Config} from '../../../../config';
 import {DirectionEnum} from '../../../common/enums/direction.enum';
 import {BodyPartEnum} from '../enums/body-part.enum';
 import {Position} from '../../../common/model/position.model';

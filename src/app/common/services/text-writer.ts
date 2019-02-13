@@ -1,8 +1,8 @@
-import {Position} from './model/position.model';
-import {Char} from './model/char.model';
-import {AppText} from './model/game-text.model';
-import {CharDataInterface} from './interfaces/char-data.interface';
-import {Injectable} from './di/injectable';
+import {Position} from '../model/position.model';
+import {Char} from '../model/char.model';
+import {AppText} from '../model/game-text.model';
+import {CharDataInterface} from '../interfaces/char-data.interface';
+import {Injectable} from '../di/injectable';
 
 @Injectable
 export class TextWriter {

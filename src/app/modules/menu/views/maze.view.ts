@@ -7,12 +7,12 @@ import {MainMenu, MainMenuKeysEnum} from './main-menu.view';
 import {AppState} from '../../../common/app-state';
 import {ConstructorInterface} from '../../../common/interfaces/constructor.interface';
 import {ClicksEnum} from '../../../common/enums/clicks.enum';
-import {Canvas} from '../../../common/canvas';
+import {Canvas} from '../../../common/services/canvas';
 import {ClickObservable} from '../../../common/observables/click-observable';
-import {Config} from '../../../../Config';
+import {Config} from '../../../../config';
 import {StageHandler} from '../../../common/observables/stage-handler';
 import {DrawingService} from '../service/drawing.service';
-import {TextWriter} from '../../../common/text-writer';
+import {TextWriter} from '../../../common/services/text-writer';
 
 @Injectable
 export class MazeView extends AbstractListMenuView {

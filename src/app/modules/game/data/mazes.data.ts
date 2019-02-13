@@ -1,5 +1,5 @@
 import {Pixel} from '../../../common/model/pixel.model';
-import {Config} from '../../../../Config';
+import {Config} from '../../../../config';
 import {Position} from '../../../common/model/position.model';
 
 export class Mazez {

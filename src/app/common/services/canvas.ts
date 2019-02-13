@@ -1,12 +1,12 @@
-import {Config} from '../../Config';
-import {Pixel} from './model/pixel.model';
-import {COLORS} from './common.constants';
-import {Position} from './model/position.model';
+import {Config} from '../../../config';
+import {Pixel} from '../model/pixel.model';
+import {COLORS} from '../common.constants';
+import {Position} from '../model/position.model';
 import {combineLatest, Subject} from 'rxjs';
 import {tap} from 'rxjs/internal/operators';
-import {DrawingConfigInterface} from './interfaces/drawing-config.interface';
-import {ColorsEnum} from './enums/color.enums';
-import {Injectable} from './di/injectable';
+import {DrawingConfigInterface} from '../interfaces/drawing-config.interface';
+import {ColorsEnum} from '../enums/color.enums';
+import {Injectable} from '../di/injectable';
 
 @Injectable
 export class Canvas {
@@ -35,11 +35,18 @@ export class Canvas {
     }
 
     public clear(): void {
-        this.drawer$.next();
+        this.drawer$.next([]);
     }
 
     public drawPixels(pixels: Pixel[], offset: Position = new Position(0, 0)): void {
         this.drawer$.next(pixels.map((pixel: Pixel) => new Pixel(pixel.x + offset.x, pixel.y + offset.y, pixel.color)));
+        if (Config.DEBUG_CANVAS) {
+            this.drawGrid();
+        }
+    }
+
+    public getCanvas(): HTMLCanvasElement {
+        return this.canvas;
     }
 
     private setCanvasParams(config: DrawingConfigInterface) {

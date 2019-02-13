@@ -1,12 +1,12 @@
-import {Canvas} from '../../../common/canvas';
-import {TextWriter} from '../../../common/text-writer';
+import {Canvas} from '../../../common/services/canvas';
+import {TextWriter} from '../../../common/services/text-writer';
 import {Subject, timer} from 'rxjs/index';
 import {AppState} from '../../../common/app-state';
 import {Position} from '../../../common/model/position.model';
 import {ClicksEnum} from '../../../common/enums/clicks.enum';
 import {textLargeData} from '../../../common/data/text-large.data';
 import {Pixel} from '../../../common/model/pixel.model';
-import {Config} from '../../../../Config';
+import {Config} from '../../../../config';
 import {AnimationDataInterface} from '../interfaces/animation-data.interface';
 import {animationData} from '../data/animation.data';
 import {takeUntil} from 'rxjs/internal/operators';

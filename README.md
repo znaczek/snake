@@ -1,8 +1,9 @@
 # Snake - HTML game
 ### Tribute to old school Nokia 3310 game
-HTML game in TypeScript using pure JS to control the canvas?<br>
+HTML canvas game in TypeScript (no third-party libraries)?<br>
 Why not :)
 
-The only third-party library is RxJS (in order to improve the readability of the game flow).
+Ok, almost no libraries...
+The only two third-party library are RxJS (in order to improve the readability of the game flow) and reflect-metadata to allow dependency injection.
 
 Enjoy playing :)

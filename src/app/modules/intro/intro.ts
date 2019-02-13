@@ -1,4 +1,4 @@
-import {Canvas} from '../../common/canvas';
+import {Canvas} from '../../common/services/canvas';
 import {StageEvent} from '../../common/model/StageEvents';
 import {stageData} from './data/stage.data';
 import {Pixel} from '../../common/model/pixel.model';

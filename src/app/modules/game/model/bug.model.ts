@@ -3,7 +3,7 @@ import {Eatable} from './eatable.model';
 import {bugData} from '../data/bug.data';
 import {Pixel} from '../../../common/model/pixel.model';
 import {DrawableInterface} from '../../../common/interfaces/drawable.interface';
-import {Config} from '../../../../Config';
+import {Config} from '../../../../config';
 import {Position} from '../../../common/model/position.model';
 
 export class Bug extends Eatable implements DrawableInterface {

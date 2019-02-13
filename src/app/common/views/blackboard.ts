@@ -1,12 +1,12 @@
 import {fromEvent, Subject} from 'rxjs';
-import {Pixel} from './model/pixel.model';
-import {Canvas} from './canvas';
-import {Config} from '../../Config';
+import {Pixel} from '../model/pixel.model';
+import {Canvas} from '../services/canvas';
+import {Config} from '../../../config';
 import {mergeMap, takeUntil, tap} from 'rxjs/internal/operators';
-import {ColorsEnum} from './enums/color.enums';
-import {Position} from './model/position.model';
-import {AbstractView} from './views/abstract.view';
-import {Injectable} from './di/injectable';
+import {ColorsEnum} from '../enums/color.enums';
+import {Position} from '../model/position.model';
+import {AbstractView} from './abstract.view';
+import {Injectable} from '../di/injectable';
 
 @Injectable
 export class Blackboard extends AbstractView {
@@ -42,6 +42,7 @@ export class Blackboard extends AbstractView {
             takeUntil(this.unsubscribe$),
         ).subscribe((event: MouseEvent) => {
             event.preventDefault();
+            this.toggle = true;
             this.drawPixel(event, event.which);
         });
 
@@ -67,6 +68,12 @@ export class Blackboard extends AbstractView {
             this.toggle = !this.toggle;
         };
 
+        window.clearBoard = () => {
+            this.pixels = [];
+            this.canvas.clear();
+            this.toggle = true;
+        };
+
         this.draw();
     }
 
@@ -76,8 +83,8 @@ export class Blackboard extends AbstractView {
 
     private drawPixel(e: MouseEvent, type: number): void {
         const newPixel = new Pixel(
-            Math.round(this.getX(e) / this.config.drawingConfigSnapshot.pixelSize),
-            Math.round(this.getY(e) / this.config.drawingConfigSnapshot.pixelSize),
+            Math.round(this.getX(e) / this.config.drawingConfigSnapshot.pixelSize * Config.CANVAS_SCALE_FACTOR),
+            Math.round(this.getY(e) / this.config.drawingConfigSnapshot.pixelSize * Config.CANVAS_SCALE_FACTOR),
             ColorsEnum.RED,
         );
 
@@ -103,12 +110,8 @@ export class Blackboard extends AbstractView {
         this.draw();
     }
 
-    private getCavnas(): HTMLCanvasElement {
-        return document.querySelector('canvas');
-    }
-
     private getCanvasBoundary(): DOMRectInit {
-        return this.getCavnas().getBoundingClientRect();
+        return this.canvas.getCanvas().getBoundingClientRect();
     }
 
     private getX(e: MouseEvent): number {

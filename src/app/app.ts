@@ -2,8 +2,8 @@ import {Game} from './modules/game/views/game.view';
 import {fromEvent, merge, Subject} from 'rxjs';
 import {StageEvent} from './common/model/StageEvents';
 import {ClicksEnum} from './common/enums/clicks.enum';
-import {Blackboard} from './common/blackboard';
-import {Config} from '../Config';
+import {Blackboard} from './common/views/blackboard';
+import {Config} from '../config';
 import {AbstractView} from './common/views/abstract.view';
 import 'reflect-metadata';
 import {Injector} from './common/di/injector';
@@ -35,7 +35,7 @@ export class App {
                 }),
                 filter((event) =>  event in ClicksEnum),
             ),
-            fromEvent(this.keyboardElement, 'click').pipe(
+            fromEvent(this.keyboardElement, 'mousedown').pipe(
                 map((event: MouseEvent) => {
                     const code = (<HTMLElement>(event.target)).dataset.code ||
                         (<HTMLElement>(event.target)).parentElement.dataset.code;
@@ -80,7 +80,11 @@ export class App {
             }
         });
 
-        stageHandler$.next(new StageEvent(Intro));
+        if (!Config.BLACKBOARD) {
+            stageHandler$.next(new StageEvent(Intro));
+        } else {
+            this.createBlackBoard();
+        }
     }
 
     /**

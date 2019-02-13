@@ -1,4 +1,4 @@
-import {Config} from '../../../../Config';
+import {Config} from '../../../../config';
 import {Position} from '../../../common/model/position.model';
 import {Pixel} from '../../../common/model/pixel.model';
 import {ColorsEnum} from '../../../common/enums/color.enums';

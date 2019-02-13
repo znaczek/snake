@@ -1,4 +1,4 @@
-import {Config} from '../../../../Config';
+import {Config} from '../../../../config';
 import {Apple} from '../model/apple.model';
 import {Position} from '../../../common/model/position.model';
 import {Bug} from '../model/bug.model';

@@ -11,6 +11,7 @@ const PRECACHE_URLS = [
     'favicon-16x16.png',
     'favicon-32x32.png',
     'mstile-150x150.png',
+    'GitHub-Mark-32px.png',
 ];
 
 self.addEventListener('install', event => {

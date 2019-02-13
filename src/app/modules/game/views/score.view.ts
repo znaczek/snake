@@ -1,5 +1,5 @@
-import {Canvas} from '../../../common/canvas';
-import {TextWriter} from '../../../common/text-writer';
+import {Canvas} from '../../../common/services/canvas';
+import {TextWriter} from '../../../common/services/text-writer';
 import {Position} from '../../../common/model/position.model';
 import {textLargeData} from '../../../common/data/text-large.data';
 import {merge, timer} from 'rxjs/index';
