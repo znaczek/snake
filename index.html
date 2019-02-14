@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Snake</title>
+    <link rel="apple-touch-icon" sizes="144x144" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">
+    <meta name="msapplication-TileColor" content="#a4c70b">
+    <meta name="theme-color" content="#ffffff">
+</head>
+<body style="display: none">
+<div id="app-root"></div>
+<svg id="keyboard" viewBox="0 0 200 130" preserveAspectRatio="xMinYMin slice">
+    <polygon data-code="37" points="0,0 100,50 0,100"/>
+    <polygon data-code="38" points="0,0 100,50 200,0"/>
+    <polygon data-code="39" points="200,0 100,50 200,100"/>
+    <polygon data-code="40" points="0,100 100,50 200,100"/>
+    <rect data-code="27" x="0" y="100" width="100" height="30"></rect>
+    <rect data-code="13" x="100" y="100" width="100" height="30"></rect>
+    <g transform="translate(40, 105)">
+        <path d="M0 0h24v24H0z" fill="none"/>
+        <path d="M19 7v4H5.83l3.58-3.59L8 6l-6 6 6 6 1.41-1.41L5.83 13H21V7z"/>
+    </g>
+    <g transform="translate(140, 104)">
+        <path fill="none" d="M0 0h24v24H0z"/>
+        <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+    </g>
+</svg>
+<a href="https://github.com/znaczek/snake" class="github-link" title="GitHub repository" target="_blank"><img src="GitHub-Mark-32px.png" alt="Projects Github repository"></a>
+<script type="text/javascript" src="bundle.js"></script></body>
+</html>
