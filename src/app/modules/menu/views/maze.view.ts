@@ -1,16 +1,14 @@
 import {Injectable} from '../../../common/di/injectable';
-import {Provide} from '../../../common/di/provide';
 import {AbstractListMenuView} from './abstract-list-menu.view';
 import {MenuListItemInterface} from '../interfaces/menu-list-item.interface';
 import {StageEvent} from '../../../common/model/StageEvents';
 import {MainMenu, MainMenuKeysEnum} from './main-menu.view';
 import {AppState} from '../../../common/app-state';
 import {ConstructorInterface} from '../../../common/interfaces/constructor.interface';
-import {ClicksEnum} from '../../../common/enums/clicks.enum';
 import {Canvas} from '../../../common/services/canvas';
-import {ClickObservable} from '../../../common/observables/click-observable';
+import {ClickHandler} from '../../../common/services/click-handler';
 import {Config} from '../../../../config';
-import {StageHandler} from '../../../common/observables/stage-handler';
+import {StageHandler} from '../../../common/services/stage-handler';
 import {DrawingService} from '../service/drawing.service';
 import {TextWriter} from '../../../common/services/text-writer';
 
@@ -85,12 +83,12 @@ export class MazeView extends AbstractListMenuView {
     private currentMaze: number;
 
     constructor(protected config: Config,
-                protected stageHandler$: StageHandler<StageEvent<any>>,
+                protected stageHandler: StageHandler,
                 protected canvas: Canvas,
-                protected onClick$: ClickObservable<ClicksEnum>,
+                protected clickHandler: ClickHandler,
                 protected textWriter: TextWriter,
                 protected drawingService: DrawingService) {
-        super(config, stageHandler$, canvas, onClick$, textWriter, drawingService );
+        super(config, stageHandler, canvas, clickHandler, textWriter, drawingService );
         this.currentMaze = AppState.getMaze();
     }
 
@@ -99,7 +97,7 @@ export class MazeView extends AbstractListMenuView {
     }
 
     protected back() {
-        this.stageHandler$.next(new StageEvent(MainMenu, MainMenuKeysEnum.MAZES));
+        this.stageHandler.next(new StageEvent(MainMenu, MainMenuKeysEnum.MAZES));
     }
 
 }

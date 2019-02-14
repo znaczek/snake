@@ -8,8 +8,8 @@ import {MENU_ITEM_HEIGHT} from '../constants/menu-item.constants';
 import {ClicksEnum} from '../../../common/enums/clicks.enum';
 import {Config} from '../../../../config';
 import {AbstractView} from '../../../common/views/abstract.view';
-import {StageHandler} from '../../../common/observables/stage-handler';
-import {ClickObservable} from '../../../common/observables/click-observable';
+import {StageHandler} from '../../../common/services/stage-handler';
+import {ClickHandler} from '../../../common/services/click-handler';
 import {MenuListItemInterface} from '../interfaces/menu-list-item.interface';
 import {DrawingService} from '../service/drawing.service';
 import {textMediumData} from '../../../common/data/text-medium.data';
@@ -32,9 +32,9 @@ export abstract class AbstractListMenuView extends AbstractView {
     private unsubscribe$: Subject<void> = new Subject();
 
     constructor(protected config: Config,
-                protected stageHandler$: StageHandler<StageEvent<any>>,
+                protected stageHandler: StageHandler,
                 protected canvas: Canvas,
-                protected onClick$: ClickObservable<ClicksEnum>,
+                protected clickHandler: ClickHandler,
                 protected textWriter: TextWriter,
                 protected drawingService: DrawingService) {
         super();
@@ -43,7 +43,7 @@ export abstract class AbstractListMenuView extends AbstractView {
     public start(startItem: number): void {
         this.list = this.getListData()
             .filter((item: MenuListItemInterface) => typeof item.visible !== 'function' || item.visible());
-        this.onClick$.pipe(takeUntil(this.unsubscribe$)).subscribe((event) => {
+        this.clickHandler.onClick$.pipe(takeUntil(this.unsubscribe$)).subscribe((event) => {
             if (event === ClicksEnum.ENTER) {
                 this.getCurrentItem().callback.apply(this);
             } else if (event === ClicksEnum.ESCAPE) {
@@ -70,7 +70,7 @@ export abstract class AbstractListMenuView extends AbstractView {
     protected abstract getListData(): MenuListItemInterface[];
 
     protected back() {
-        this.stageHandler$.next(new StageEvent<any>(this.parentView));
+        this.stageHandler.next(new StageEvent<any>(this.parentView));
     }
 
     private drawMenu() {

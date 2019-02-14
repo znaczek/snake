@@ -3,15 +3,13 @@ import {TextWriter} from '../../../common/services/text-writer';
 import {Position} from '../../../common/model/position.model';
 import {textLargeData} from '../../../common/data/text-large.data';
 import {merge, timer} from 'rxjs/index';
-import {ClicksEnum} from '../../../common/enums/clicks.enum';
 import {first} from 'rxjs/internal/operators';
-import {ClickObservable} from '../../../common/observables/click-observable';
+import {ClickHandler} from '../../../common/services/click-handler';
 import {Injectable} from '../../../common/di/injectable';
-import {StageHandler} from '../../../common/observables/stage-handler';
+import {StageHandler} from '../../../common/services/stage-handler';
 import {StageEvent} from '../../../common/model/StageEvents';
 import {MainMenu} from '../../menu/views/main-menu.view';
 import {AbstractView} from '../../../common/views/abstract.view';
-import {Provide} from '../../../common/di/provide';
 
 @Injectable
 export class ScoreView extends AbstractView {
@@ -20,8 +18,8 @@ export class ScoreView extends AbstractView {
 
     constructor(private canvas: Canvas,
                 private textWriter: TextWriter,
-                private onClick$: ClickObservable<ClicksEnum>,
-                private stageHandler$: StageHandler<StageEvent>) {
+                private clickHandler: ClickHandler,
+                private stageHandler: StageHandler) {
         super();
     }
 
@@ -29,7 +27,7 @@ export class ScoreView extends AbstractView {
         this.textWriter.setCharData(textLargeData);
 
         merge(
-            this.onClick$,
+            this.clickHandler.onClick$,
             timer(3000),
         ).pipe(first()).subscribe(() => this.end());
 
@@ -43,7 +41,7 @@ export class ScoreView extends AbstractView {
     public close() {}
 
     private end() {
-        this.stageHandler$.next(new StageEvent(MainMenu));
+        this.stageHandler.next(new StageEvent(MainMenu));
     }
 
 }

@@ -26,7 +26,7 @@ export class MainMenu extends AbstractListMenuView {
             key: MainMenuKeysEnum.CONTINUE,
             text: 'Continue',
             callback() {
-                this.stageHandler$.next(new StageEvent(Game, AppState.getGameData()));
+                this.stageHandler.next(new StageEvent(Game, AppState.getGameData()));
             },
             visible: () => !!AppState.getGameData(),
         },
@@ -34,28 +34,28 @@ export class MainMenu extends AbstractListMenuView {
             key: MainMenuKeysEnum.NEW_GAME,
             text: 'New game',
             callback() {
-                this.stageHandler$.next(new StageEvent(Game));
+                this.stageHandler.next(new StageEvent(Game));
             },
         },
         {
             key: MainMenuKeysEnum.LEVEL,
             text: 'Level',
             callback() {
-                this.stageHandler$.next(new StageEvent(LevelView));
+                this.stageHandler.next(new StageEvent(LevelView));
             },
         },
         {
             key: MainMenuKeysEnum.MAZES,
             text: 'Mazes',
             callback() {
-                this.stageHandler$.next(new StageEvent(MazeView));
+                this.stageHandler.next(new StageEvent(MazeView));
             },
         },
         {
             key: MainMenuKeysEnum.TOP_SCORE,
             text: 'Top score',
             callback() {
-                this.stageHandler$.next(new StageEvent(TopScoreView));
+                this.stageHandler.next(new StageEvent(TopScoreView));
             },
         },
     ];

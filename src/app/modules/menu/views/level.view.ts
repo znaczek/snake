@@ -9,11 +9,11 @@ import {Config} from '../../../../config';
 import {AppState} from '../../../common/app-state';
 import {Snake} from '../../game/model/snake';
 import {ColorsEnum} from '../../../common/enums/color.enums';
-import {ClickObservable} from '../../../common/observables/click-observable';
+import {ClickHandler} from '../../../common/services/click-handler';
 import {Injectable} from '../../../common/di/injectable';
 import {DrawingService} from '../service/drawing.service';
 import {AbstractView} from '../../../common/views/abstract.view';
-import {StageHandler} from '../../../common/observables/stage-handler';
+import {StageHandler} from '../../../common/services/stage-handler';
 import {StageEvent} from '../../../common/model/StageEvents';
 import {MainMenu, MainMenuKeysEnum} from './main-menu.view';
 
@@ -30,16 +30,16 @@ export class LevelView extends AbstractView {
 
     constructor(private canvas: Canvas,
                 private textWriter: TextWriter,
-                private onClick$: ClickObservable<ClicksEnum>,
+                private clickHandler: ClickHandler,
                 private drawingService: DrawingService,
-                private stageHandler$: StageHandler<StageEvent<number>>) {
+                private stageHandler: StageHandler) {
         super();
     }
 
     public start() {
         this.snake = new Snake(LevelView.SNAKE_POSITION);
         this.loopTick = Config.SPEED / this.level;
-        this.onClick$.pipe(takeUntil(this.unsubscribe$))
+        this.clickHandler.onClick$.pipe(takeUntil(this.unsubscribe$))
             .subscribe((event) => {
                 switch (event) {
                     case ClicksEnum.LEFT:
@@ -51,11 +51,11 @@ export class LevelView extends AbstractView {
                         this.draw();
                         break;
                     case ClicksEnum.ESCAPE:
-                        this.stageHandler$.next(new StageEvent(MainMenu, MainMenuKeysEnum.LEVEL));
+                        this.stageHandler.next(new StageEvent(MainMenu, MainMenuKeysEnum.LEVEL));
                         return;
                     case ClicksEnum.ENTER:
                         AppState.setLevel(this.level);
-                        this.stageHandler$.next(new StageEvent(MainMenu, MainMenuKeysEnum.LEVEL));
+                        this.stageHandler.next(new StageEvent(MainMenu, MainMenuKeysEnum.LEVEL));
                         return;
                 }
                 this.loopTick = Config.SPEED / this.level;

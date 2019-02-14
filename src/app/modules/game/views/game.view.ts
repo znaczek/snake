@@ -19,10 +19,10 @@ import {INIT_HEAD} from '../data/snake.data';
 import {AbstractView} from '../../../common/views/abstract.view';
 import {GameUtils} from '../utils/utils';
 import {Injectable} from '../../../common/di/injectable';
-import {StageHandler} from '../../../common/observables/stage-handler';
-import {ClickObservable} from '../../../common/observables/click-observable';
+import {StageHandler} from '../../../common/services/stage-handler';
 import {MainMenu} from '../../menu/views/main-menu.view';
 import {takeUntil} from 'rxjs/internal/operators';
+import {ClickHandler} from '../../../common/services/click-handler';
 
 @Injectable
 export class Game extends AbstractView {
@@ -38,9 +38,9 @@ export class Game extends AbstractView {
     private unsubscribe$: Subject<void> = new Subject();
 
     constructor(private config: Config,
-                private stageHandler$: StageHandler<StageEvent<number>>,
+                private stageHandler: StageHandler,
                 private canvas: Canvas,
-                private onClick$: ClickObservable<ClicksEnum>,
+                private clickHandler: ClickHandler,
                 private textWriter: TextWriter,
                 private mealFactory: MealFactory) {
         super();
@@ -87,11 +87,11 @@ export class Game extends AbstractView {
             });
         }
         this.gameState = GameStateEnum.PAUSED;
-        this.stageHandler$.next(new StageEvent(MainMenu));
+        this.stageHandler.next(new StageEvent(MainMenu));
     }
 
     private bindEvents(): void {
-        this.onClick$.pipe(takeUntil(this.unsubscribe$)).subscribe((event) => {
+        this.clickHandler.onClick$.pipe(takeUntil(this.unsubscribe$)).subscribe((event) => {
             if (this.gameState === GameStateEnum.GAME) {
                 switch (event) {
                     case ClicksEnum.LEFT:
@@ -181,7 +181,7 @@ export class Game extends AbstractView {
     }
 
     private drawHighScore() {
-        this.stageHandler$.next(new StageEvent(ScoreView, this.points));
+        this.stageHandler.next(new StageEvent(ScoreView, this.points));
     }
 
     private testMove(): void {

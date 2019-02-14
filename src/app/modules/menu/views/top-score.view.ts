@@ -10,13 +10,12 @@ import {Config} from '../../../../config';
 import {AnimationDataInterface} from '../interfaces/animation-data.interface';
 import {animationData} from '../data/animation.data';
 import {takeUntil} from 'rxjs/internal/operators';
-import {ClickObservable} from '../../../common/observables/click-observable';
+import {ClickHandler} from '../../../common/services/click-handler';
 import {Injectable} from '../../../common/di/injectable';
 import {StageEvent} from '../../../common/model/StageEvents';
-import {StageHandler} from '../../../common/observables/stage-handler';
+import {StageHandler} from '../../../common/services/stage-handler';
 import {MainMenu, MainMenuKeysEnum} from './main-menu.view';
 import {AbstractView} from '../../../common/views/abstract.view';
-import {Provide} from '../../../common/di/provide';
 
 @Injectable
 export class TopScoreView extends AbstractView {
@@ -30,16 +29,16 @@ export class TopScoreView extends AbstractView {
 
     constructor(private canvas: Canvas,
                 private textWriter: TextWriter,
-                private onClick$: ClickObservable<ClicksEnum>,
-                private stageHandler$: StageHandler<StageEvent<number>>) {
+                private clickHandler: ClickHandler,
+                private stageHandler: StageHandler) {
         super();
     }
 
     public start(): void {
-        this.onClick$.pipe(takeUntil(this.unsubscribe$)).subscribe((event) => {
+        this.clickHandler.onClick$.pipe(takeUntil(this.unsubscribe$)).subscribe((event) => {
             if (event === ClicksEnum.ENTER || event === ClicksEnum.ESCAPE) {
                 clearTimeout(this.timer);
-                this.stageHandler$.next(new StageEvent(MainMenu, MainMenuKeysEnum.TOP_SCORE));
+                this.stageHandler.next(new StageEvent(MainMenu, MainMenuKeysEnum.TOP_SCORE));
             }
         });
         timer(0, TopScoreView.ANIMATION_TIME).pipe(takeUntil(this.unsubscribe$)).subscribe((i) => {

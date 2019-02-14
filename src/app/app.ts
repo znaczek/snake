@@ -7,11 +7,11 @@ import {Config} from '../config';
 import {AbstractView} from './common/views/abstract.view';
 import 'reflect-metadata';
 import {Injector} from './common/di/injector';
-import {StageHandler} from './common/observables/stage-handler';
+import {StageHandler} from './common/services/stage-handler';
 import {debounceTime, filter, map, startWith} from 'rxjs/internal/operators';
 import {WindowParamsModel} from './common/model/window-params.model';
 import {DrawingConfigInterface} from './common/interfaces/drawing-config.interface';
-import {ClickObservable} from './common/observables/click-observable';
+import {ClickHandler} from './common/services/click-handler';
 import {AppState} from './common/app-state';
 import {Intro} from './modules/intro/intro';
 
@@ -28,14 +28,15 @@ export class App {
     }
 
     public run() {
-        const onClick$ = merge(
+        const clickHandler = new ClickHandler();
+        clickHandler.onClick$ = merge(
             fromEvent(document, 'keydown').pipe(
                 map((event: KeyboardEvent) => {
                     return <ClicksEnum>event.keyCode;
                 }),
                 filter((event) =>  event in ClicksEnum),
             ),
-            fromEvent(this.keyboardElement, 'mousedown').pipe(
+            fromEvent(this.keyboardElement, 'click').pipe(
                 map((event: MouseEvent) => {
                     const code = (<HTMLElement>(event.target)).dataset.code ||
                         (<HTMLElement>(event.target)).parentElement.dataset.code;
@@ -57,15 +58,15 @@ export class App {
             this.keyboardElement.style.width = cfg.widthPx + 'px';
         });
 
-        const stageHandler$ = new Subject<StageEvent>();
-        this.injector.provide(StageHandler, stageHandler$);
+        const stageHandler = new StageHandler();
+        this.injector.provide(StageHandler, stageHandler);
         this.injector.provide(HTMLCanvasElement, this.canvasElement);
-        this.injector.provide(ClickObservable, onClick$);
+        this.injector.provide(ClickHandler, clickHandler);
         this.injector.provide(Config, config);
 
         AppState.validateState();
 
-        stageHandler$.subscribe((event) => {
+        stageHandler.subject.subscribe((event) => {
             if (this.currentStage) {
                 this.currentStage.close();
             }
@@ -81,7 +82,7 @@ export class App {
         });
 
         if (!Config.BLACKBOARD) {
-            stageHandler$.next(new StageEvent(Intro));
+            stageHandler.next(new StageEvent(Intro));
         } else {
             this.createBlackBoard();
         }

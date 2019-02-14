@@ -2,7 +2,6 @@ import {Observable} from 'rxjs/index';
 import {map} from 'rxjs/internal/operators';
 import {DrawingConfigInterface} from './app/common/interfaces/drawing-config.interface';
 import {Injectable} from './app/common/di/injectable';
-import {WindowParams} from './app/common/observables/window-params';
 import {WindowParamsModel} from './app/common/model/window-params.model';
 
 declare global {
@@ -50,11 +49,9 @@ export class Config {
     public static readonly SPEED = 350;
     public static readonly TOP_BAR_HEIGHT = 9;
     public static readonly INIT_LENGTH = 3;
-    public static readonly CANVAS_WIDTH_FACTOR = 24;
-    public static readonly CANVAS_HEIGHT_FACTOR = 14;
 
-    public static readonly GAME_CANVAS_WIDTH = Config.MOVE * Config.CANVAS_WIDTH_FACTOR;
-    public static readonly GAME_CANVAS_HEIGHT = Config.MOVE * Config.CANVAS_HEIGHT_FACTOR;
+    public static readonly GAME_CANVAS_WIDTH = Config.MOVE * 24;
+    public static readonly GAME_CANVAS_HEIGHT = Config.MOVE * 14;
 
     public static readonly CANVAS_WIDTH = Config.GAME_CANVAS_WIDTH;
     public static readonly CANVAS_HEIGHT = Config.GAME_CANVAS_HEIGHT + Config.TOP_BAR_HEIGHT;
@@ -73,7 +70,7 @@ export class Config {
 
     public drawingConfigSnapshot: DrawingConfigInterface;
 
-    constructor(private windowParams$: WindowParams<WindowParamsModel>) {
+    constructor(private windowParams$: Observable<WindowParamsModel>) {
     }
 
     public get drawingConfig$(): Observable<DrawingConfigInterface> {
